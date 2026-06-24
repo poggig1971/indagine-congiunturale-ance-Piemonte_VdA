@@ -26,7 +26,14 @@
   .dash .panel{margin-bottom:0}
   .panel h2{font-size:13px;letter-spacing:.3px;text-transform:uppercase;color:var(--navy);margin:0 0 4px;font-weight:600}
   .panel .hint{font-size:12px;color:var(--mut);margin:0 0 14px}
-  .kpis{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+  .kpiwrap{display:flex;gap:16px;align-items:stretch}
+  .kpictl{flex:0 0 192px;display:flex;flex-direction:column;gap:7px;border-right:1px solid var(--line);padding-right:16px}
+  .kpictl label{margin-bottom:0}
+  .kpictl select{width:100%;min-width:0}
+  .kpictl button{margin-top:4px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:10px 12px}
+  .kpictl .ctlnote{font-size:10.5px;color:var(--mut);line-height:1.45;margin-top:2px}
+  .kpis{flex:1;min-width:0;display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+  @media(max-width:760px){.kpiwrap{flex-direction:column}.kpictl{flex:1 0 auto;border-right:0;border-bottom:1px solid var(--line);padding-right:0;padding-bottom:12px}}
   .kpi{flex:0 0 152px;border:1px solid var(--line);border-radius:10px;padding:12px 13px;background:#fbfcfe;cursor:pointer;transition:border-color .12s,box-shadow .12s}
   .kpi:hover{border-color:var(--navy2)}
   .kpi.sel{border-color:var(--navy);box-shadow:0 0 0 2px rgba(22,48,107,.18);background:#fff}
@@ -77,19 +84,19 @@
 <div class="wrap">
   <div id="msg"></div>
   <div class="panel">
-    <h2>Quadro del semestre piu recente</h2>
-    <p class="hint" id="kpiHint">Clicca una card per vederne la serie storica; selezionane 2 o 3 per confrontarle. Scorri lateralmente per tutti gli indicatori.</p>
-    <div id="kpis" class="kpis"><div class="loading">Caricamento dati...</div></div>
-  </div>
-  <div class="panel">
-    <h2>Rapporto di confronto tra semestri</h2>
-    <p class="hint">Scegli due semestri qualsiasi, anche di anni diversi, e genera la nota di sintesi e la tabella comparativa degli indicatori regionali: da stampare in PDF o scaricare in Word.</p>
-    <div class="inline">
-      <div><label>Semestre A</label><select id="repA"></select></div>
-      <div><label>Semestre B</label><select id="repB"></select></div>
-      <div><label>&nbsp;</label><button class="hbtn" id="repBtn" type="button" style="background:var(--navy);color:#fff;border-color:var(--navy)">Genera rapporto di confronto</button></div>
+    <h2>Quadro di confronto tra due semestri</h2>
+    <p class="hint" id="kpiHint">Le card mostrano il valore del semestre B e la variazione rispetto al semestre A.</p>
+    <div class="kpiwrap">
+      <div class="kpictl">
+        <label>Semestre A (riferimento)</label>
+        <select id="repA"></select>
+        <label>Semestre B (mostrato nelle card)</label>
+        <select id="repB"></select>
+        <button id="repBtn" type="button">Genera rapporto</button>
+        <div class="ctlnote">Default: ultimi due semestri. Scegline due qualsiasi, anche di anni diversi: le card si aggiornano. Il rapporto (PDF o Word) copre gli indicatori regionali, disponibili dal 2002.</div>
+      </div>
+      <div id="kpis" class="kpis"><div class="loading">Caricamento dati...</div></div>
     </div>
-    <div class="note">Il rapporto copre gli indicatori regionali di sintesi (disponibili per tutti i semestri dal 2002). Il dettaglio provinciale e le caratteristiche del campione restano nel rapporto completo prodotto dai microdati.</div>
   </div>
   <div class="panel">
     <h2>Andamento nel tempo</h2>
@@ -176,13 +183,14 @@ function initDB(rows){
   var seen={}; indicators=[];
   DB.forEach(function(d){ var k=d.grp+'|'+d.ind; if(!seen[k]){ seen[k]=1; indicators.push({grp:d.grp,ind:d.ind,unit:d.unit,key:k}); } });
   selected[indicators[0].key]=true;
-  buildRange(); buildKpis(); buildRepSelect(); buildProvSelect(); buildCaratt(); draw();
+  buildRange(); buildRepSelect(); buildKpis(); buildProvSelect(); buildCaratt(); draw();
 }
 function buildRepSelect(){
   var a=document.getElementById('repA'), b=document.getElementById('repB');
   var opts=periods.map(function(p){ return '<option>'+esc(p)+'</option>'; }).join('');
   a.innerHTML=opts; b.innerHTML=opts;
   a.value=periods[Math.max(0,periods.length-2)]; b.value=periods[periods.length-1];
+  a.addEventListener('change',buildKpis); b.addEventListener('change',buildKpis);
   document.getElementById('repBtn').addEventListener('click',genReport);
 }
 function itnum(v){ return (v===null||v===undefined)?'n.d.':String(v).replace('.',','); }
@@ -231,7 +239,7 @@ function genReport(){
     '<p class="fnt">Fonte: ANCE Piemonte e Valle d\'Aosta - Centro Studi. Serie storica ufficiale degli indicatori regionali. '+
     'I saldi sono calcolati come differenza fra la percentuale di imprese che prevede un aumento e quella che prevede una riduzione. '+
     'Il verde indica miglioramento, il rosso peggioramento.</p>'+
-    '<p class="firma">Cordiali saluti<br><b>'+
+    '<p class="firma">Cordiali saluti<br><b>Il Direttore<br>Gianluca Poggi</b></p>'+
     '</div>';
   var css='body{font-family:Calibri,Arial,sans-serif;color:#1b2230;margin:32px;}'+
     'h1{color:#16306b;font-size:18px;margin:0 0 2px;}h2{color:#16306b;font-size:15px;margin:18px 0 8px;}'+
@@ -268,8 +276,9 @@ function seriesFor(key){
 }
 function buildKpis(){
   var box=document.getElementById('kpis');
-  var last=periods[periods.length-1], prev=periods[periods.length-2];
-  document.getElementById('kpiHint').innerHTML='Clicca una card per vederne la serie storica; selezionane 2 o 3 per confrontarle. Semestre <b>'+esc(last)+'</b> - variazione vs '+esc(prev)+'. Scorri lateralmente per tutti gli indicatori.';
+  var last=document.getElementById('repB').value || periods[periods.length-1];
+  var prev=document.getElementById('repA').value || periods[periods.length-2];
+  document.getElementById('kpiHint').innerHTML='Card: semestre <b>'+esc(last)+'</b>, variazione rispetto a <b>'+esc(prev)+'</b>. Clicca una card per la serie storica; selezionane 2 o 3 per confrontarle.';
   var html='';
   indicators.forEach(function(it){
     var m=seriesFor(it.key), v=m[last], p=m[prev];
