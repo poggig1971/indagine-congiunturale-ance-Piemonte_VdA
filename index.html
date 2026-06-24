@@ -41,7 +41,7 @@
   label{display:block;font-size:12px;font-weight:500;color:var(--mut);margin-bottom:6px}
   select{padding:8px 9px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff;color:var(--ink);min-width:150px}
   .chartbox{position:relative;height:480px}
-  .chartbox.sm{height:340px}
+  .chartbox.sm{height:320px}
   .cgrid{display:grid;grid-template-columns:1fr;gap:14px}
   .cbox h3{font-size:12px;color:var(--navy);margin:0 0 6px;font-weight:600;text-align:center}
   .cbox .cc{position:relative;height:150px}
@@ -49,6 +49,16 @@
   .loading{padding:30px;text-align:center;color:var(--mut)}
   .err{background:#fdecef;color:var(--down);padding:12px 14px;border-radius:8px;font-size:13px}
   .inline{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
+  .helpb{min-width:40px;justify-content:center;font-size:16px}
+  .modal{position:fixed;inset:0;background:rgba(20,30,60,.45);display:none;align-items:flex-start;justify-content:center;z-index:50;padding:36px 16px;overflow:auto}
+  .modal.open{display:flex}
+  .modal .box{background:#fff;max-width:660px;width:100%;border-radius:12px;padding:24px}
+  .modal h3{margin:0 0 6px;color:var(--navy);font-size:16px}
+  .modal p{font-size:13px;color:var(--mut);margin:0 0 10px}
+  .modal ol{margin:8px 0;padding-left:20px;font-size:13.5px;line-height:1.65;color:var(--ink)}
+  .modal b{color:var(--navy)}
+  .modal code{background:#eef2f8;padding:1px 6px;border-radius:5px;font-family:var(--font-mono,monospace);font-size:12.5px}
+  .modal .x{float:right;cursor:pointer;border:0;background:#eef2f8;border-radius:8px;padding:7px 11px;font:inherit;font-weight:600}
   footer{max-width:1320px;margin:0 auto;padding:6px 24px 34px;font-size:11px;color:#8a93a6}
   @media(max-width:980px){.dash{grid-template-columns:1fr}}
 </style>
@@ -61,6 +71,7 @@
     <p>Serie storiche degli indicatori - dal II semestre 2002</p>
   </div>
   <a class="hbtn primary" href="questionario.html">COMPILA</a>
+  <button class="hbtn ghost helpb" id="helpBtn" type="button" aria-label="Guida">?</button>
   <button class="hbtn ghost" id="fsBtn" type="button">Schermo intero</button>
 </header>
 <div class="wrap">
@@ -107,6 +118,21 @@
   </div>
 </div>
 <footer>Fonte: ANCE Piemonte e Valle d'Aosta - Centro Studi. I saldi sono calcolati come percentuale aumento meno percentuale riduzione. Dati letti in tempo reale dai CSV pubblicati del foglio master.</footer>
+<div class="modal" id="helpModal">
+  <div class="box">
+    <button class="x" id="helpClose" type="button">Chiudi</button>
+    <h3>Guida rapida - Centro Studi</h3>
+    <p>Come gestire la raccolta, l'elaborazione e i rapporti dell'indagine semestrale.</p>
+    <ol>
+      <li><b>Aprire la raccolta di un nuovo semestre.</b> Nel Google Sheet master, menu <b>ANCE - Indagine &gt; Imposta semestre aperto alla raccolta</b>, inserire il codice (es. <code>226</code> = II semestre 2026). I questionari compilati dalle imprese arriveranno nel foglio <code>Microdati</code> con quel semestre.</li>
+      <li><b>Inviare il questionario alle imprese.</b> Il link del questionario puo essere inviato via email; le imprese compilano senza passare dalla dashboard.</li>
+      <li><b>Chiudere ed elaborare il semestre.</b> Nel foglio <code>Aggregati I 2026</code>, cella <code>C3</code>, scrivere il codice semestre; poi menu <b>ANCE - Indagine &gt; Accoda semestre</b>: aggiunge la colonna alla <code>Serie storica</code> e le righe al <code>DB_serie_storica</code>. La dashboard si aggiorna da sola.</li>
+      <li><b>Tempi di pagamento committenti (rettifica editoriale).</b> Se serve, modificare a mano le 2 celle nella <code>Serie storica</code> e lanciare <b>Sincronizza pagamenti committenti nel DB</b>.</li>
+      <li><b>Grafici caratteristiche.</b> Il file <code>caratteristiche.csv</code> va rigenerato dai microdati del nuovo semestre e ricaricato nel repository.</li>
+      <li><b>Generare i rapporti.</b> Relazione automatica (nota di sintesi regionale + focus per provincia) in stile ANCE, prodotta dagli aggregati del semestre.</li>
+    </ol>
+  </div>
+</div>
 <script>
 var DB_CSV   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=1413930767&single=true&output=csv";
 var PROV_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=249249362&single=true&output=csv";
@@ -115,6 +141,7 @@ var PALETTE = ['#16306b','#c0392b','#1f9d55','#d68910','#7d3c98','#117a8b'];
 function num(v){ if(v===null||v===undefined||v==='') return null; var n=parseFloat(String(v).replace(',','.')); return isNaN(n)?null:n; }
 function norm(s){ return String(s===null||s===undefined?'':s).replace(/\s+/g,' ').trim(); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function clearLabel(grp,ind){ var g=String(grp).toLowerCase(); if(g.indexOf('investiment')>=0){ return ind==='No'?'Investimenti: No':'Investimenti: '+ind.replace('S\u00ec, ',''); } if(g.indexOf('portafoglio')>=0) return 'Portafoglio: '+ind; if(g.indexOf('reperimento')>=0) return 'Difficolta manodopera: '+ind; if(g.indexOf('committenti')>=0) return 'Pagam. committenti: '+ind; if(g.indexOf('fornitori')>=0) return ind==='Fornitori'?'Pagam. fornitori':'Pagam. fornitori: '+ind; return ind; }
 var DB=[], periods=[], indicators=[], selected={}, range='all', chart=null, provChart=null;
 function selKeys(){ var a=[]; for(var k in selected){ if(selected[k]) a.push(k); } return a; }
 function msgErr(t){ document.getElementById('msg').innerHTML='<div class="err">'+t+'</div>'; }
@@ -122,6 +149,10 @@ document.getElementById('fsBtn').addEventListener('click',function(){
   if(!document.fullscreenElement){ if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); }
   else { if(document.exitFullscreen) document.exitFullscreen(); }
 });
+var hm=document.getElementById('helpModal');
+document.getElementById('helpBtn').addEventListener('click',function(){ hm.classList.add('open'); });
+document.getElementById('helpClose').addEventListener('click',function(){ hm.classList.remove('open'); });
+hm.addEventListener('click',function(e){ if(e.target===hm) hm.classList.remove('open'); });
 Papa.parse(DB_CSV, { download:true, header:true, skipEmptyLines:true,
   complete: function(r){ try{ initDB(r.data); }catch(e){ msgErr('Errore nel caricamento dati: '+e.message); } },
   error: function(e){ msgErr('Impossibile leggere il CSV della serie storica. Verificare che il foglio sia pubblicato sul web.'); }
@@ -153,7 +184,7 @@ function buildKpis(){
     if(v!=null && p!=null){ var diff=Math.round((v-p)*10)/10; cls=diff>0?'up':(diff<0?'down':'flat'); var ar=diff>0?'\u25B2 +':(diff<0?'\u25BC ':'= '); d=ar+diff+' '+it.unit; }
     var val = v!=null ? (v+' <small>'+esc(it.unit)+'</small>') : 'n.d.';
     var selcls = selected[it.key] ? ' sel' : '';
-    html += '<div class="kpi'+selcls+'" data-k="'+esc(it.key)+'"><div class="t">'+esc(it.ind)+'</div><div class="v">'+val+'</div><div class="d '+cls+'">'+d+'</div></div>';
+    html += '<div class="kpi'+selcls+'" data-k="'+esc(it.key)+'"><div class="t">'+esc(clearLabel(it.grp,it.ind))+'</div><div class="v">'+val+'</div><div class="d '+cls+'">'+d+'</div></div>';
   });
   box.innerHTML=html;
   var cards=box.querySelectorAll('.kpi');
@@ -196,7 +227,7 @@ function draw(){
   var units=[]; sel.forEach(function(s){ if(units.indexOf(s.unit)<0) units.push(s.unit); });
   var ds=sel.map(function(it,i){
     var m=seriesFor(it.key);
-    return { label:it.ind+' ('+it.unit+')', data:labels.map(function(p){ return (p in m)?m[p]:null; }),
+    return { label:clearLabel(it.grp,it.ind)+' ('+it.unit+')', data:labels.map(function(p){ return (p in m)?m[p]:null; }),
       borderColor:PALETTE[i%PALETTE.length], backgroundColor:PALETTE[i%PALETTE.length],
       yAxisID: units.indexOf(it.unit)===1?'y2':'y', tension:.25, spanGaps:true,
       pointRadius:labels.length>24?0:2, borderWidth:2 };
