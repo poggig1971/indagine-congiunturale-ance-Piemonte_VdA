@@ -82,6 +82,16 @@
     <div id="kpis" class="kpis"><div class="loading">Caricamento dati...</div></div>
   </div>
   <div class="panel">
+    <h2>Rapporto di confronto tra semestri</h2>
+    <p class="hint">Scegli due semestri qualsiasi, anche di anni diversi, e genera la nota di sintesi e la tabella comparativa degli indicatori regionali: da stampare in PDF o scaricare in Word.</p>
+    <div class="inline">
+      <div><label>Semestre A</label><select id="repA"></select></div>
+      <div><label>Semestre B</label><select id="repB"></select></div>
+      <div><label>&nbsp;</label><button class="hbtn" id="repBtn" type="button" style="background:var(--navy);color:#fff;border-color:var(--navy)">Genera rapporto di confronto</button></div>
+    </div>
+    <div class="note">Il rapporto copre gli indicatori regionali di sintesi (disponibili per tutti i semestri dal 2002). Il dettaglio provinciale e le caratteristiche del campione restano nel rapporto completo prodotto dai microdati.</div>
+  </div>
+  <div class="panel">
     <h2>Andamento nel tempo</h2>
     <div class="inline">
       <div>
@@ -129,7 +139,7 @@
       <li><b>Chiudere ed elaborare il semestre.</b> Nel foglio <code>Aggregati I 2026</code>, cella <code>C3</code>, scrivere il codice semestre; poi menu <b>ANCE - Indagine &gt; Accoda semestre</b>: aggiunge la colonna alla <code>Serie storica</code> e le righe al <code>DB_serie_storica</code>. La dashboard si aggiorna da sola.</li>
       <li><b>Tempi di pagamento committenti (rettifica editoriale).</b> Se serve, modificare a mano le 2 celle nella <code>Serie storica</code> e lanciare <b>Sincronizza pagamenti committenti nel DB</b>.</li>
       <li><b>Grafici caratteristiche.</b> Il file <code>caratteristiche.csv</code> va rigenerato dai microdati del nuovo semestre e ricaricato nel repository.</li>
-      <li><b>Generare i rapporti.</b> Relazione automatica (nota di sintesi regionale + focus per provincia) in stile ANCE, prodotta dagli aggregati del semestre.</li>
+      <li><b>Generare i rapporti.</b> Dalla relazione automatica (nota di sintesi regionale + focus per provincia) in stile ANCE, prodotta dagli aggregati del semestre.</li>
     </ol>
   </div>
 </div>
@@ -166,7 +176,90 @@ function initDB(rows){
   var seen={}; indicators=[];
   DB.forEach(function(d){ var k=d.grp+'|'+d.ind; if(!seen[k]){ seen[k]=1; indicators.push({grp:d.grp,ind:d.ind,unit:d.unit,key:k}); } });
   selected[indicators[0].key]=true;
-  buildRange(); buildKpis(); buildProvSelect(); buildCaratt(); draw();
+  buildRange(); buildKpis(); buildRepSelect(); buildProvSelect(); buildCaratt(); draw();
+}
+function buildRepSelect(){
+  var a=document.getElementById('repA'), b=document.getElementById('repB');
+  var opts=periods.map(function(p){ return '<option>'+esc(p)+'</option>'; }).join('');
+  a.innerHTML=opts; b.innerHTML=opts;
+  a.value=periods[Math.max(0,periods.length-2)]; b.value=periods[periods.length-1];
+  document.getElementById('repBtn').addEventListener('click',genReport);
+}
+function itnum(v){ return (v===null||v===undefined)?'n.d.':String(v).replace('.',','); }
+function hbFor(grp,ind){
+  var g=(String(grp)+' '+String(ind)).toLowerCase();
+  if(g.indexOf('difficolt')>=0||g.indexOf('reperimento')>=0) return false;
+  if(g.indexOf('pagament')>=0||g.indexOf('committenti')>=0||g.indexOf('fornitori')>=0||g.indexOf('noleggi')>=0||g.indexOf('posa')>=0) return false;
+  if(g.indexOf('credito')>=0) return false;
+  if(g.indexOf('extracom')>=0) return null;
+  if(g.indexOf('investiment')>=0 && /^\s*no\b/i.test(String(ind))) return false;
+  return true;
+}
+function genReport(){
+  var a=document.getElementById('repA').value, b=document.getElementById('repB').value;
+  if(a===b){ alert('Scegli due semestri diversi.'); return; }
+  var rows='', lastGrp='', syn=[];
+  indicators.forEach(function(it){
+    var m=seriesFor(it.key), va=(a in m)?m[a]:null, vb=(b in m)?m[b]:null;
+    if(it.grp!==lastGrp){ lastGrp=it.grp;
+      rows+='<tr class="grp"><td colspan="4">'+esc(it.grp)+'</td></tr>'; }
+    var dcell='-', cls='';
+    if(va!=null && vb!=null){
+      var diff=Math.round((vb-va)*10)/10, hb=hbFor(it.grp,it.ind);
+      var arrow=diff>0?(String.fromCharCode(9650)+' +'):(diff<0?(String.fromCharCode(9660)+' '):'= ');
+      cls = diff===0?'flat':((hb===null)?'flat':(((diff>0)===hb)?'up':'down'));
+      dcell='<span class="'+cls+'">'+arrow+itnum(diff)+'</span>';
+    }
+    rows+='<tr><td class="ind">'+esc(clearLabel(it.grp,it.ind))+'</td>'+
+          '<td>'+itnum(va)+'</td><td>'+itnum(vb)+'</td><td>'+dcell+'</td></tr>';
+    var nm=(it.ind||'').toLowerCase();
+    if((nm.indexOf('fatturato')>=0||nm.indexOf('occupazione')>=0||nm.indexOf('manodopera esterna')>=0) && va!=null && vb!=null){
+      var d2=Math.round((vb-va)*10)/10, w=d2>0?'migliora':(d2<0?'peggiora':'resta stabile');
+      syn.push('il saldo su '+clearLabel(it.grp,it.ind).toLowerCase()+' passa da '+itnum(va)+' a '+itnum(vb)+' ('+w+')');
+    }
+  });
+  var synTxt = syn.length ? ('Nel confronto tra '+esc(a)+' e '+esc(b)+', '+syn.join('; ')+'.') :
+               ('Confronto tra '+esc(a)+' e '+esc(b)+'.');
+  var content =
+    '<div id="report">'+
+    '<h1>Indagine Congiunturale ANCE Piemonte e Valle d\'Aosta</h1>'+
+    '<p class="st">Centro Studi - Rapporto sintetico di confronto tra semestri</p>'+
+    '<h2>Confronto: '+esc(a)+' &nbsp;&middot;&nbsp; '+esc(b)+'</h2>'+
+    '<p class="syn">'+synTxt+'</p>'+
+    '<table><thead><tr><th>Indicatore regionale</th><th>'+esc(a)+'</th><th>'+esc(b)+'</th><th>Variazione</th></tr></thead>'+
+    '<tbody>'+rows+'</tbody></table>'+
+    '<p class="fnt">Fonte: ANCE Piemonte e Valle d\'Aosta - Centro Studi. Serie storica ufficiale degli indicatori regionali. '+
+    'I saldi sono calcolati come differenza fra la percentuale di imprese che prevede un aumento e quella che prevede una riduzione. '+
+    'Il verde indica miglioramento, il rosso peggioramento.</p>'+
+    '<p class="firma">Cordiali saluti<br><b>Il Direttore<br>Gianluca Poggi</b></p>'+
+    '</div>';
+  var css='body{font-family:Calibri,Arial,sans-serif;color:#1b2230;margin:32px;}'+
+    'h1{color:#16306b;font-size:18px;margin:0 0 2px;}h2{color:#16306b;font-size:15px;margin:18px 0 8px;}'+
+    '.st{font-size:12px;color:#697086;margin:0 0 4px;}.syn{font-size:13px;text-align:justify;}'+
+    'table{border-collapse:collapse;width:100%;font-size:12px;margin-top:6px;}'+
+    'th,td{border:1px solid #cfd6e4;padding:6px 8px;text-align:right;}th{background:#16306b;color:#fff;text-align:right;}'+
+    'th:first-child,td.ind{text-align:left;}td.ind{width:48%;}'+
+    'tr.grp td{background:#eef2f8;color:#16306b;font-weight:600;text-align:left;}'+
+    '.up{color:#0a7d34;font-weight:600;}.down{color:#c0392b;font-weight:600;}.flat{color:#2c4fb0;font-weight:600;}'+
+    '.fnt{font-size:10px;color:#697086;margin-top:14px;text-align:justify;}.firma{font-size:12px;margin-top:18px;}'+
+    '.toolbar{margin-bottom:16px;}.toolbar button{font:inherit;font-size:13px;font-weight:600;cursor:pointer;'+
+    'background:#16306b;color:#fff;border:0;border-radius:8px;padding:9px 16px;margin-right:8px;}'+
+    '@media print{.toolbar{display:none;}body{margin:0;}}';
+  var dl="function dl(){var pre='<html xmlns:w=\\'urn:schemas-microsoft-com:office:word\\'><head><meta charset=\\'utf-8\\'><style>"+
+    "table{border-collapse:collapse;width:100%;font-size:12px;}th,td{border:1px solid #cfd6e4;padding:6px 8px;}"+
+    "th{background:#16306b;color:#fff;}tr.grp td{background:#eef2f8;font-weight:600;}h1,h2{color:#16306b;}"+
+    ".up{color:#0a7d34;}.down{color:#c0392b;}.flat{color:#2c4fb0;}</style></head><body>';"+
+    "var html=pre+document.getElementById('report').innerHTML+'</body></html>';"+
+    "var blob=new Blob(['\\ufeff'+html],{type:'application/msword'});var u=URL.createObjectURL(blob);"+
+    "var x=document.createElement('a');x.href=u;x.download='Rapporto_confronto_"+a.replace(/\s/g,'_')+"_"+b.replace(/\s/g,'_')+".doc';x.click();URL.revokeObjectURL(u);}";
+  var doc='<!DOCTYPE html><html lang="it"><head><meta charset="utf-8"><title>Rapporto di confronto</title>'+
+    '<style>'+css+'</style></head><body>'+
+    '<div class="toolbar"><button onclick="window.print()">Stampa / Salva PDF</button>'+
+    '<button onclick="dl()">Scarica Word (.doc)</button></div>'+
+    content+'<script>'+dl+'<\/script></body></html>';
+  var w=window.open('','_blank');
+  if(!w){ alert('Abilita i popup per generare il rapporto.'); return; }
+  w.document.open(); w.document.write(doc); w.document.close();
 }
 function seriesFor(key){
   var parts=key.split('|'), g=parts[0], ind=parts[1];
