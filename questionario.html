@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indagine Congiunturale ANCE Piemonte e Valle d'Aosta</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{ --navy:#1E3A8A; --line:#d8dde8; --bg:#f5f7fb; --ok:#0a7d34; --err:#b00020; }
+  *{box-sizing:border-box}
+  body{font-family:'IBM Plex Sans',system-ui,sans-serif;margin:0;background:var(--bg);color:#1b2230;line-height:1.5}
+  header{background:var(--navy);color:#fff;padding:22px 18px}
+  header h1{margin:0;font-size:18px;font-weight:600;letter-spacing:.2px}
+  header p{margin:6px 0 0;font-size:13px;opacity:.85}
+  main{max-width:760px;margin:0 auto;padding:18px}
+  .sez{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;margin:16px 0}
+  .sez h2{font-size:15px;color:var(--navy);margin:0 0 4px}
+  .sez .sub{font-size:12.5px;color:#5a6376;margin:0 0 14px}
+  .campo{margin:14px 0}
+  label{display:block;font-size:13.5px;font-weight:500;margin-bottom:6px}
+  label .req{color:var(--err)}
+  .hint{font-size:12px;color:#6b7280;font-weight:400;margin-top:2px}
+  select,input[type=number],input[type=text]{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:7px;font:inherit;background:#fff}
+  select:focus,input:focus{outline:2px solid #c3d0f0;border-color:var(--navy)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .manual{margin-top:8px}
+  button{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:12px 22px;font:inherit;font-weight:600;cursor:pointer}
+  button:disabled{opacity:.6;cursor:default}
+  .msg{padding:12px 14px;border-radius:8px;margin:14px 0;font-size:14px;display:none}
+  .msg.ok{background:#e7f6ec;color:var(--ok);display:block}
+  .msg.err{background:#fdecef;color:var(--err);display:block}
+  footer{max-width:760px;margin:0 auto;padding:8px 18px 32px;font-size:11.5px;color:#8a93a6}
+  @media(max-width:560px){.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Indagine Congiunturale — ANCE Piemonte e Valle d'Aosta</h1>
+  <p>Questionario semestrale tra le imprese edili · compilazione anonima</p>
+</header>
+
+<main>
+  <div id="msg" class="msg" role="status" aria-live="polite"></div>
+  <form id="q" novalidate>
+
+    <!-- SEZIONE 1 -->
+    <section class="sez">
+      <h2>Sezione 1 — Profilo dell'impresa</h2>
+      <p class="sub">I campi contrassegnati con <span style="color:var(--err)">*</span> sono obbligatori.</p>
+
+      <div class="campo">
+        <label for="nome">Nominativo dell'impresa <span class="hint">(facoltativo)</span></label>
+        <input type="text" id="nome" maxlength="120" autocomplete="off">
+      </div>
+
+      <div class="campo">
+        <label for="prov">Provincia di appartenenza <span class="req">*</span></label>
+        <select id="prov" required>
+          <option value="">— seleziona —</option>
+          <option value="1">Alessandria</option>
+          <option value="2">Asti</option>
+          <option value="3">Biella</option>
+          <option value="4">Vercelli</option>
+          <option value="6">Cuneo</option>
+          <option value="7">Novara</option>
+          <option value="8">Torino</option>
+          <option value="9">Verbania</option>
+          <option value="11">Aosta (Valle d'Aosta)</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="a1">1.1 Area di attività — principale <span class="req">*</span></label>
+        <select id="a1" class="area" required>
+          <option value="">— seleziona —</option>
+          <option value="1">Edilizia privata abitativa</option>
+          <option value="2">Edilizia privata non abitativa</option>
+          <option value="3">Lavori pubblici</option>
+          <option value="4">Lavori complementari e affini</option>
+          <option value="5">Calcestruzzo</option>
+          <option value="6">Altri settori</option>
+        </select>
+      </div>
+      <div class="row2">
+        <div class="campo">
+          <label for="a2">1.2 Seconda area <span class="hint">(facolt.)</span></label>
+          <select id="a2" class="area">
+            <option value="">—</option>
+            <option value="1">Edilizia privata abitativa</option>
+            <option value="2">Edilizia privata non abitativa</option>
+            <option value="3">Lavori pubblici</option>
+            <option value="4">Lavori complementari e affini</option>
+            <option value="5">Calcestruzzo</option>
+            <option value="6">Altri settori</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="a3">1.3 Terza area <span class="hint">(facolt.)</span></label>
+          <select id="a3" class="area">
+            <option value="">—</option>
+            <option value="1">Edilizia privata abitativa</option>
+            <option value="2">Edilizia privata non abitativa</option>
+            <option value="3">Lavori pubblici</option>
+            <option value="4">Lavori complementari e affini</option>
+            <option value="5">Calcestruzzo</option>
+            <option value="6">Altri settori</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="cls">2. Classe dimensionale (dipendenti + soci operativi) <span class="req">*</span></label>
+        <select id="cls" required>
+          <option value="">— seleziona —</option>
+          <option value="1">1-5 addetti</option>
+          <option value="2">6-10 addetti</option>
+          <option value="3">11-20 addetti</option>
+          <option value="4">21-50 addetti</option>
+          <option value="5">51-100 addetti</option>
+          <option value="6">oltre 100 addetti</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="ext">2.1 Percentuale di extracomunitari sul totale degli addetti <span class="req">*</span></label>
+        <select id="ext" required>
+          <option value="">— seleziona —</option>
+          <option value="0">0%</option><option value="5">5%</option><option value="10">10%</option>
+          <option value="20">20%</option><option value="30">30%</option><option value="40">40%</option>
+          <option value="50">50%</option><option value="60">60%</option><option value="70">70%</option>
+          <option value="80">80%</option><option value="90">90%</option><option value="100">100%</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="clf">3. Classe di fatturato (euro) <span class="req">*</span></label>
+        <select id="clf" required>
+          <option value="">— seleziona —</option>
+          <option value="1">fino a 0,5 mln</option>
+          <option value="2">0,5 - 1,5 mln</option>
+          <option value="3">1,5 - 2,5 mln</option>
+          <option value="4">2,5 - 5 mln</option>
+          <option value="5">5 - 15 mln</option>
+          <option value="6">oltre 15 mln</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="ffp">4. Quota di fatturato realizzata fuori provincia <span class="req">*</span></label>
+        <select id="ffp" required>
+          <option value="">— seleziona —</option>
+          <option value="1">nulla</option>
+          <option value="2">fino al 10%</option>
+          <option value="3">10 - 25%</option>
+          <option value="4">25 - 50%</option>
+          <option value="5">oltre il 50%</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- SEZIONE 2 -->
+    <section class="sez">
+      <h2>Sezione 2 — Previsioni semestre gennaio-giugno 2026</h2>
+      <p class="sub">rispetto al semestre precedente</p>
+
+      <div class="campo">
+        <label for="andf">5. Andamento del fatturato <span class="req">*</span></label>
+        <select id="andf" required>
+          <option value="">— seleziona —</option>
+          <option value="1">in aumento</option>
+          <option value="2">nessuna variazione</option>
+          <option value="3">in riduzione</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="pp">6.1 Portafoglio lavori privati — mesi garantiti</label>
+        <select id="pp">
+          <option value="0">— nessuno / non indicato —</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
+          <option value="oltre">oltre 12 mesi…</option>
+        </select>
+        <input class="manual" type="number" id="ppM" min="13" max="120" placeholder="6.1.1 indicare i mesi (solo se oltre 12)" style="display:none">
+      </div>
+
+      <div class="campo">
+        <label for="pb">6.2 Portafoglio lavori pubblici — mesi garantiti</label>
+        <select id="pb">
+          <option value="0">— nessuno / non indicato —</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
+          <option value="oltre">oltre 12 mesi…</option>
+        </select>
+        <input class="manual" type="number" id="pbM" min="13" max="120" placeholder="6.2.1 indicare i mesi (solo se oltre 12)" style="display:none">
+      </div>
+
+      <div class="campo">
+        <label for="inv">7. Investimenti programmati per i prossimi 6 mesi <span class="req">*</span></label>
+        <select id="inv" required>
+          <option value="">— seleziona —</option>
+          <option value="1">No, nessun investimento</option>
+          <option value="2">Sì, solo immobiliari</option>
+          <option value="3">Sì, solo non immobiliari</option>
+          <option value="4">Sì, immobiliari e non immobiliari</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="occ">8. Andamento dell'occupazione dipendente <span class="req">*</span></label>
+        <select id="occ" required>
+          <option value="">— seleziona —</option>
+          <option value="1">in aumento</option>
+          <option value="2">nessuna variazione</option>
+          <option value="3">in riduzione</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="man">9. Ricorso alla manodopera esterna <span class="req">*</span></label>
+        <select id="man" required>
+          <option value="">— seleziona —</option>
+          <option value="1">in aumento</option>
+          <option value="2">nessuna variazione</option>
+          <option value="3">in riduzione</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="dq">10. Difficoltà a reperire manodopera specializzata/qualificata <span class="req">*</span></label>
+        <select id="dq" required>
+          <option value="">— seleziona —</option>
+          <option value="1">Sì</option>
+          <option value="2">No</option>
+          <option value="3">In parte</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="dg">11. Difficoltà a reperire manodopera generica <span class="req">*</span></label>
+        <select id="dg" required>
+          <option value="">— seleziona —</option>
+          <option value="1">Sì</option>
+          <option value="2">No</option>
+          <option value="3">In parte</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- SEZIONE 3 -->
+    <section class="sez">
+      <h2>Sezione 3 — Situazione finanziaria</h2>
+      <p class="sub">semestre luglio-dicembre 2025 · lasciare vuoto se non applicabile</p>
+
+      <div class="row2">
+        <div class="campo">
+          <label for="pagTot">12.1 Tempi di pagamento committenti pubblici + privati <span class="hint">(giorni medi)</span></label>
+          <input type="number" id="pagTot" min="0" max="400" placeholder="giorni">
+        </div>
+        <div class="campo">
+          <label for="pagPubb">12.2 Tempi di pagamento committenti pubblici <span class="hint">(giorni medi)</span></label>
+          <input type="number" id="pagPubb" min="0" max="400" placeholder="giorni">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="campo">
+          <label for="dil1">13.1 Dilazione pattuita con i fornitori <span class="hint">(giorni)</span></label>
+          <input type="number" id="dil1" min="0" max="400" placeholder="giorni">
+        </div>
+        <div class="campo">
+          <label for="dil2">13.2 Dilazione fornitori con posa in opera <span class="hint">(giorni)</span></label>
+          <input type="number" id="dil2" min="0" max="400" placeholder="giorni">
+        </div>
+      </div>
+      <div class="campo">
+        <label for="dil3">13.3 Dilazione con i noleggiatori a caldo <span class="hint">(giorni)</span></label>
+        <input type="number" id="dil3" min="0" max="400" placeholder="giorni">
+      </div>
+
+      <div class="campo">
+        <label for="credBanc">14.1 Il costo del credito bancario a breve è</label>
+        <select id="credBanc">
+          <option value="0">— non indicato —</option>
+          <option value="1">in aumento</option>
+          <option value="2">invariato</option>
+          <option value="3">in riduzione</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="credBreve">14.1 Costo del credito bancario a breve — percentuale</label>
+        <select id="credBreve">
+          <option value="0">— non indicato —</option>
+          <option value="1">1%</option><option value="2">2%</option><option value="3">3%</option>
+          <option value="4">4%</option><option value="5">5%</option><option value="6">6%</option><option value="7">7%</option>
+        </select>
+      </div>
+    </section>
+
+    <button type="submit" id="btn">Invia il questionario</button>
+  </form>
+</main>
+<footer>Centro Studi ANCE Piemonte e Valle d'Aosta · Corso Duca degli Abruzzi 15, 10129 Torino — i dati sono trattati in forma aggregata e anonima.</footer>
+
+<script>
+  // 1) Incollare qui l'URL /exec della Web-App Apps Script dopo la distribuzione:
+  const ENDPOINT = "https://script.google.com/macros/s/AKfycbwL9yJKQb1cQJacZQ6b-ZfTh2HLhWBW0ZuN4d5B8T6_hWXmpJQyFv_65yLKn28gf4JL/exec";
+
+  const $ = id => document.getElementById(id);
+  function toggleManual(sel, man){
+    $(sel).addEventListener('change', e=>{
+      const m=$(man); const on = e.target.value==='oltre';
+      m.style.display = on?'block':'none'; if(!on) m.value='';
+    });
+  }
+  toggleManual('pp','ppM'); toggleManual('pb','pbM');
+
+  function show(type,text){ const m=$('msg'); m.className='msg '+type; m.textContent=text; window.scrollTo({top:0,behavior:'smooth'}); }
+
+  $('q').addEventListener('submit', async (ev)=>{
+    ev.preventDefault();
+    const req = ['prov','a1','cls','ext','clf','ffp','andf','inv','occ','man','dq','dg'];
+    for(const id of req){ if(!$(id).value){ show('err','Compilare tutti i campi obbligatori (manca: '+id+').'); $(id).focus(); return; } }
+
+    const portSel = id => { const v=$(id).value; return v==='oltre'?0:Number(v||0); };
+    const payload = {
+      nome: $('nome').value.trim(),
+      prov: Number($('prov').value),
+      attiv: [$('a1').value, $('a2').value, $('a3').value].filter(Boolean).map(Number),
+      clsDimens: Number($('cls').value),
+      extComun: Number($('ext').value),
+      clFattur: Number($('clf').value),
+      fattFprov: Number($('ffp').value),
+      andamFattur: Number($('andf').value),
+      portPrivSel: portSel('pp'), portPrivManual: Number($('ppM').value||0),
+      portPubbSel: portSel('pb'), portPubbManual: Number($('pbM').value||0),
+      invest: Number($('inv').value),
+      occup: Number($('occ').value),
+      manEst: Number($('man').value),
+      diffQ: Number($('dq').value),
+      diffG: Number($('dg').value),
+      pagTot: Number($('pagTot').value||0),
+      pagPubb: Number($('pagPubb').value||0),
+      dilaz1: Number($('dil1').value||0),
+      dilaz2: Number($('dil2').value||0),
+      dilaz3: Number($('dil3').value||0),
+      credBanc: Number($('credBanc').value||0),
+      credBreve: Number($('credBreve').value||0)
+    };
+
+    const btn=$('btn'); btn.disabled=true; btn.textContent='Invio in corso…';
+    try{
+      const r = await fetch(ENDPOINT, { method:'POST', body: JSON.stringify(payload) });
+      const res = await r.json();
+      if(res.ok){
+        show('ok','Questionario inviato correttamente. Grazie per la collaborazione.');
+        $('q').reset(); $('ppM').style.display='none'; $('pbM').style.display='none';
+      } else {
+        show('err','Invio non riuscito: '+(res.error||'errore sconosciuto'));
+      }
+    }catch(err){
+      show('err','Errore di rete: '+err+'. Verificare la connessione e riprovare.');
+    }finally{ btn.disabled=false; btn.textContent='Invia il questionario'; }
+  });
+</script>
+</body>
+</html>
