@@ -93,7 +93,6 @@
         <label>Semestre B (mostrato nelle card)</label>
         <select id="repB"></select>
         <button id="repBtn" type="button">Genera rapporto</button>
-        <div class="ctlnote">Default: ultimi due semestri. Scegline due qualsiasi, anche di anni diversi: le card si aggiornano. Il rapporto (PDF o Word) copre gli indicatori regionali, disponibili dal 2002.</div>
       </div>
       <div id="kpis" class="kpis"><div class="loading">Caricamento dati...</div></div>
     </div>
@@ -118,6 +117,7 @@
   <div class="dash">
     <div class="panel">
       <h2>Caratteristiche delle imprese del campione</h2>
+      <p class="hint">Riferito a: <b>I sem 2026</b> (ultimo semestre con microdati). Non segue il confronto A/B.</p>
       <div class="inline"><div><label>Territorio</label><select id="carattTerr"></select></div></div>
       <div class="cgrid">
         <div class="cbox"><h3>1.1 Attivita prevalente (% imprese)</h3><div class="cc"><canvas id="cAttiv"></canvas></div></div>
@@ -127,7 +127,8 @@
       <div id="carattNote" class="note"></div>
     </div>
     <div class="panel">
-      <h2>Confronto tra territori - semestre piu recente</h2>
+      <h2>Confronto tra territori - I sem 2026</h2>
+      <p class="hint">Riferito a: <b>I sem 2026</b> (ultimo semestre con microdati). Non segue il confronto A/B.</p>
       <div class="inline"><div><label>Indicatore</label><select id="provInd"></select></div></div>
       <div id="provBox" class="chartbox sm"><canvas id="provChart"></canvas></div>
       <div id="provNote" class="note"></div>
@@ -239,7 +240,6 @@ function genReport(){
     '<p class="fnt">Fonte: ANCE Piemonte e Valle d\'Aosta - Centro Studi. Serie storica ufficiale degli indicatori regionali. '+
     'I saldi sono calcolati come differenza fra la percentuale di imprese che prevede un aumento e quella che prevede una riduzione. '+
     'Il verde indica miglioramento, il rosso peggioramento.</p>'+
-    '<p class="firma">Cordiali saluti<br><b>Il Direttore<br>Gianluca Poggi</b></p>'+
     '</div>';
   var css='body{font-family:Calibri,Arial,sans-serif;color:#1b2230;margin:32px;}'+
     'h1{color:#16306b;font-size:18px;margin:0 0 2px;}h2{color:#16306b;font-size:15px;margin:18px 0 8px;}'+
