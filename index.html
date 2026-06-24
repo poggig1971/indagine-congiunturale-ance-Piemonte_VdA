@@ -37,9 +37,12 @@
   .seg button{padding:8px 13px;border:1px solid var(--line);background:#fff;border-radius:8px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
   .seg button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
   label{display:block;font-size:12px;font-weight:500;color:var(--mut);margin-bottom:6px}
-  select{padding:8px 9px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff;color:var(--ink);min-width:150px}
+  select{padding:8px 9px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff;color:var(--ink);min-width:160px}
   .chartbox{position:relative;height:420px}
   .chartbox.sm{height:360px}
+  .cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+  .cbox h3{font-size:12px;color:var(--navy);margin:0 0 6px;font-weight:600;text-align:center}
+  .cbox .cc{position:relative;height:250px}
   .note{font-size:11.5px;color:var(--mut);margin-top:10px;line-height:1.5}
   .loading{padding:30px;text-align:center;color:var(--mut)}
   .err{background:#fdecef;color:var(--down);padding:12px 14px;border-radius:8px;font-size:13px}
@@ -63,6 +66,16 @@
     <h2>Quadro del semestre piu recente</h2>
     <p class="hint">Clicca una card per vederne la serie storica nel grafico sotto; selezionane 2 o 3 per confrontarle.</p>
     <div id="kpis" class="kpis"><div class="loading">Caricamento dati...</div></div>
+  </div>
+  <div class="panel">
+    <h2>Caratteristiche delle imprese del campione</h2>
+    <div class="inline"><div><label>Territorio</label><select id="carattTerr"></select></div></div>
+    <div class="cgrid">
+      <div class="cbox"><h3>1.1 Attivita prevalente (% imprese)</h3><div class="cc"><canvas id="cAttiv"></canvas></div></div>
+      <div class="cbox"><h3>1.2 Classe dimensionale</h3><div class="cc"><canvas id="cDim"></canvas></div></div>
+      <div class="cbox"><h3>1.3 Classe di fatturato</h3><div class="cc"><canvas id="cFat"></canvas></div></div>
+    </div>
+    <div id="carattNote" class="note"></div>
   </div>
   <div class="panel">
     <h2>Andamento nel tempo</h2>
@@ -92,6 +105,7 @@
 <script>
 var DB_CSV   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=1413930767&single=true&output=csv";
 var PROV_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=249249362&single=true&output=csv";
+var CARATT_CSV = "caratteristiche.csv";
 var PALETTE = ['#16306b','#c0392b','#1f9d55','#d68910','#7d3c98','#117a8b'];
 function num(v){ if(v===null||v===undefined||v==='') return null; var n=parseFloat(String(v).replace(',','.')); return isNaN(n)?null:n; }
 function norm(s){ return String(s===null||s===undefined?'':s).replace(/\s+/g,' ').trim(); }
@@ -118,7 +132,7 @@ function initDB(rows){
   var seen={}; indicators=[];
   DB.forEach(function(d){ var k=d.grp+'|'+d.ind; if(!seen[k]){ seen[k]=1; indicators.push({grp:d.grp,ind:d.ind,unit:d.unit,key:k}); } });
   selected[indicators[0].key]=true;
-  buildRange(); buildKpis(); buildProvSelect(); draw();
+  buildRange(); buildKpis(); buildProvSelect(); buildCaratt(); draw();
 }
 function seriesFor(key){
   var parts=key.split('|'), g=parts[0], ind=parts[1];
@@ -140,11 +154,9 @@ function buildKpis(){
   box.innerHTML=html;
   var cards=box.querySelectorAll('.kpi');
   for(var i=0;i<cards.length;i++){ cards[i].addEventListener('click',function(){
-    var k=this.getAttribute('data-k');
-    selected[k]=!selected[k];
+    var k=this.getAttribute('data-k'); selected[k]=!selected[k];
     if(selKeys().length===0){ selected[k]=true; }
-    this.classList.toggle('sel', !!selected[k]);
-    draw();
+    this.classList.toggle('sel', !!selected[k]); draw();
   }); }
 }
 function buildRange(){
@@ -192,6 +204,45 @@ function draw(){
     options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
       plugins:{ legend:{position:'bottom',labels:{font:{size:11},boxWidth:14}} }, scales:scales } });
 }
+
+var CAR=[], cAttiv=null, cDim=null, cFat=null;
+function buildCaratt(){
+  Papa.parse(CARATT_CSV,{download:true,header:true,skipEmptyLines:true,
+    complete:function(r){ try{ initCaratt(r.data); }catch(e){ document.getElementById('carattNote').innerHTML='Errore caratteristiche: '+e.message; } },
+    error:function(){ document.getElementById('carattNote').innerHTML='File caratteristiche non trovato.'; } });
+}
+function initCaratt(rows){
+  CAR = rows.filter(function(x){ return x.Territorio && x.Categoria; }).map(function(x){ return {terr:norm(x.Territorio),car:norm(x.Caratteristica),cat:norm(x.Categoria),ord:num(x.Ordine),pct:num(x.Percentuale),n:num(x.N_imprese)}; });
+  var terr=[]; CAR.forEach(function(d){ if(terr.indexOf(d.terr)<0) terr.push(d.terr); });
+  var sel=document.getElementById('carattTerr');
+  sel.innerHTML=terr.map(function(t){ return '<option>'+esc(t)+'</option>'; }).join('');
+  sel.addEventListener('change',drawCaratt); drawCaratt();
+}
+function carSeries(terr,car){
+  var a=CAR.filter(function(d){ return d.terr===terr && d.car===car; }).sort(function(x,y){ return x.ord-y.ord; });
+  return { labels:a.map(function(d){ return d.cat; }), data:a.map(function(d){ return d.pct; }), n:a.length?a[0].n:null };
+}
+function barChart(cv,old,s,color){
+  if(old) old.destroy();
+  return new Chart(document.getElementById(cv),{ type:'bar',
+    data:{labels:s.labels,datasets:[{data:s.data,backgroundColor:color}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y+'%';}}}},
+      scales:{x:{ticks:{font:{size:9},maxRotation:55,minRotation:30}},y:{beginAtZero:true,ticks:{callback:function(v){return v+'%';}}}} }});
+}
+function drawCaratt(){
+  var terr=document.getElementById('carattTerr').value;
+  var sA=carSeries(terr,'Attivita prevalente');
+  var sD=carSeries(terr,'Classe dimensionale');
+  var sF=carSeries(terr,'Classe di fatturato');
+  cAttiv=barChart('cAttiv',cAttiv,sA,'#16306b');
+  if(cDim) cDim.destroy();
+  cDim=new Chart(document.getElementById('cDim'),{ type:'doughnut',
+    data:{labels:sD.labels,datasets:[{data:sD.data,backgroundColor:['#16306b','#2c4fb0','#1f9d55','#d68910','#c0392b','#7d3c98']}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:12}},tooltip:{callbacks:{label:function(c){return c.label+': '+c.parsed+'%';}}}}} });
+  cFat=barChart('cFat',cFat,sF,'#e9892f');
+  document.getElementById('carattNote').innerHTML='Territorio: <b>'+esc(terr)+'</b> - '+(sA.n!=null?sA.n+' imprese':'')+'. Attivita prevalente e multi-risposta (la somma supera 100%).';
+}
+
 var PROV={terr:[],regIdx:-1,inds:[]};
 function buildProvSelect(){
   if(!PROV_CSV){ document.getElementById('provBox').style.display='none'; document.getElementById('provNote').innerHTML='Aggregati provinciali non collegati.'; return; }
@@ -207,11 +258,10 @@ function initProv(rows){
   PROV.terr = rows[h].slice(2).map(norm).filter(function(x){ return x; });
   PROV.regIdx = -1;
   for(var t=0;t<PROV.terr.length;t++){ if(/piemonte/i.test(PROV.terr[t])){ PROV.regIdx=t; break; } }
-  var skip = /^(numero imprese|tempi medi|valore pubblicato|note metodolog)/i;
   for(var r2=h+1;r2<rows.length;r2++){
     var ind=norm(rows[r2][0]), unit=norm(rows[r2][1]);
     if(!ind || !unit) continue;
-    if(skip.test(ind)) continue;
+    if(/numero imprese|^tempi medi|valore pubblicato|rettifica|note metodolog/i.test(ind)) continue;
     var vals=PROV.terr.map(function(_,k){ return num(rows[r2][2+k]); });
     var allnull=true; for(var z=0;z<vals.length;z++){ if(vals[z]!==null){ allnull=false; break; } }
     if(allnull) continue;

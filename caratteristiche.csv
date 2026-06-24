@@ -1,0 +1,181 @@
+Territorio,Caratteristica,Categoria,Ordine,Percentuale,N_imprese
+Piemonte e Valle d'Aosta,Attivita prevalente,Edilizia privata abitativa,1,54.7,117
+Piemonte e Valle d'Aosta,Attivita prevalente,Edilizia privata non abitativa,2,59.8,117
+Piemonte e Valle d'Aosta,Attivita prevalente,Lavori pubblici,3,60.7,117
+Piemonte e Valle d'Aosta,Attivita prevalente,Lavori complementari e affini,4,17.9,117
+Piemonte e Valle d'Aosta,Attivita prevalente,Calcestruzzo,5,8.5,117
+Piemonte e Valle d'Aosta,Attivita prevalente,Altri settori,6,11.1,117
+Piemonte e Valle d'Aosta,Classe dimensionale,1-5 addetti,1,12.0,117
+Piemonte e Valle d'Aosta,Classe dimensionale,6-10 addetti,2,27.4,117
+Piemonte e Valle d'Aosta,Classe dimensionale,11-20 addetti,3,23.1,117
+Piemonte e Valle d'Aosta,Classe dimensionale,21-50 addetti,4,22.2,117
+Piemonte e Valle d'Aosta,Classe dimensionale,51-100 addetti,5,10.3,117
+Piemonte e Valle d'Aosta,Classe dimensionale,oltre 100 addetti,6,5.1,117
+Piemonte e Valle d'Aosta,Classe di fatturato,"fino a 0,5 mln",1,8.5,117
+Piemonte e Valle d'Aosta,Classe di fatturato,"0,5-1,5 mln",2,25.6,117
+Piemonte e Valle d'Aosta,Classe di fatturato,"1,5-2,5 mln",3,14.5,117
+Piemonte e Valle d'Aosta,Classe di fatturato,"2,5-5 mln",4,16.2,117
+Piemonte e Valle d'Aosta,Classe di fatturato,5-15 mln,5,19.7,117
+Piemonte e Valle d'Aosta,Classe di fatturato,oltre 15 mln,6,15.4,117
+Alessandria,Attivita prevalente,Edilizia privata abitativa,1,58.3,24
+Alessandria,Attivita prevalente,Edilizia privata non abitativa,2,58.3,24
+Alessandria,Attivita prevalente,Lavori pubblici,3,50.0,24
+Alessandria,Attivita prevalente,Lavori complementari e affini,4,25.0,24
+Alessandria,Attivita prevalente,Calcestruzzo,5,16.7,24
+Alessandria,Attivita prevalente,Altri settori,6,12.5,24
+Alessandria,Classe dimensionale,1-5 addetti,1,4.2,24
+Alessandria,Classe dimensionale,6-10 addetti,2,41.7,24
+Alessandria,Classe dimensionale,11-20 addetti,3,33.3,24
+Alessandria,Classe dimensionale,21-50 addetti,4,12.5,24
+Alessandria,Classe dimensionale,51-100 addetti,5,4.2,24
+Alessandria,Classe dimensionale,oltre 100 addetti,6,4.2,24
+Alessandria,Classe di fatturato,"fino a 0,5 mln",1,12.5,24
+Alessandria,Classe di fatturato,"0,5-1,5 mln",2,33.3,24
+Alessandria,Classe di fatturato,"1,5-2,5 mln",3,12.5,24
+Alessandria,Classe di fatturato,"2,5-5 mln",4,20.8,24
+Alessandria,Classe di fatturato,5-15 mln,5,16.7,24
+Alessandria,Classe di fatturato,oltre 15 mln,6,4.2,24
+Asti,Attivita prevalente,Edilizia privata abitativa,1,57.1,7
+Asti,Attivita prevalente,Edilizia privata non abitativa,2,85.7,7
+Asti,Attivita prevalente,Lavori pubblici,3,85.7,7
+Asti,Attivita prevalente,Lavori complementari e affini,4,0.0,7
+Asti,Attivita prevalente,Calcestruzzo,5,0.0,7
+Asti,Attivita prevalente,Altri settori,6,0.0,7
+Asti,Classe dimensionale,1-5 addetti,1,0.0,7
+Asti,Classe dimensionale,6-10 addetti,2,42.9,7
+Asti,Classe dimensionale,11-20 addetti,3,14.3,7
+Asti,Classe dimensionale,21-50 addetti,4,42.9,7
+Asti,Classe dimensionale,51-100 addetti,5,0.0,7
+Asti,Classe dimensionale,oltre 100 addetti,6,0.0,7
+Asti,Classe di fatturato,"fino a 0,5 mln",1,0.0,7
+Asti,Classe di fatturato,"0,5-1,5 mln",2,42.9,7
+Asti,Classe di fatturato,"1,5-2,5 mln",3,14.3,7
+Asti,Classe di fatturato,"2,5-5 mln",4,0.0,7
+Asti,Classe di fatturato,5-15 mln,5,14.3,7
+Asti,Classe di fatturato,oltre 15 mln,6,28.6,7
+Biella,Attivita prevalente,Edilizia privata abitativa,1,88.9,9
+Biella,Attivita prevalente,Edilizia privata non abitativa,2,88.9,9
+Biella,Attivita prevalente,Lavori pubblici,3,22.2,9
+Biella,Attivita prevalente,Lavori complementari e affini,4,22.2,9
+Biella,Attivita prevalente,Calcestruzzo,5,0.0,9
+Biella,Attivita prevalente,Altri settori,6,11.1,9
+Biella,Classe dimensionale,1-5 addetti,1,22.2,9
+Biella,Classe dimensionale,6-10 addetti,2,44.4,9
+Biella,Classe dimensionale,11-20 addetti,3,22.2,9
+Biella,Classe dimensionale,21-50 addetti,4,11.1,9
+Biella,Classe dimensionale,51-100 addetti,5,0.0,9
+Biella,Classe dimensionale,oltre 100 addetti,6,0.0,9
+Biella,Classe di fatturato,"fino a 0,5 mln",1,11.1,9
+Biella,Classe di fatturato,"0,5-1,5 mln",2,44.4,9
+Biella,Classe di fatturato,"1,5-2,5 mln",3,33.3,9
+Biella,Classe di fatturato,"2,5-5 mln",4,11.1,9
+Biella,Classe di fatturato,5-15 mln,5,0.0,9
+Biella,Classe di fatturato,oltre 15 mln,6,0.0,9
+Vercelli,Attivita prevalente,Edilizia privata abitativa,1,33.3,3
+Vercelli,Attivita prevalente,Edilizia privata non abitativa,2,100.0,3
+Vercelli,Attivita prevalente,Lavori pubblici,3,66.7,3
+Vercelli,Attivita prevalente,Lavori complementari e affini,4,0.0,3
+Vercelli,Attivita prevalente,Calcestruzzo,5,33.3,3
+Vercelli,Attivita prevalente,Altri settori,6,33.3,3
+Vercelli,Classe dimensionale,1-5 addetti,1,0.0,3
+Vercelli,Classe dimensionale,6-10 addetti,2,66.7,3
+Vercelli,Classe dimensionale,11-20 addetti,3,33.3,3
+Vercelli,Classe dimensionale,21-50 addetti,4,0.0,3
+Vercelli,Classe dimensionale,51-100 addetti,5,0.0,3
+Vercelli,Classe dimensionale,oltre 100 addetti,6,0.0,3
+Vercelli,Classe di fatturato,"fino a 0,5 mln",1,0.0,3
+Vercelli,Classe di fatturato,"0,5-1,5 mln",2,66.7,3
+Vercelli,Classe di fatturato,"1,5-2,5 mln",3,33.3,3
+Vercelli,Classe di fatturato,"2,5-5 mln",4,0.0,3
+Vercelli,Classe di fatturato,5-15 mln,5,0.0,3
+Vercelli,Classe di fatturato,oltre 15 mln,6,0.0,3
+Cuneo,Attivita prevalente,Edilizia privata abitativa,1,36.8,19
+Cuneo,Attivita prevalente,Edilizia privata non abitativa,2,52.6,19
+Cuneo,Attivita prevalente,Lavori pubblici,3,78.9,19
+Cuneo,Attivita prevalente,Lavori complementari e affini,4,21.1,19
+Cuneo,Attivita prevalente,Calcestruzzo,5,15.8,19
+Cuneo,Attivita prevalente,Altri settori,6,10.5,19
+Cuneo,Classe dimensionale,1-5 addetti,1,0.0,19
+Cuneo,Classe dimensionale,6-10 addetti,2,31.6,19
+Cuneo,Classe dimensionale,11-20 addetti,3,10.5,19
+Cuneo,Classe dimensionale,21-50 addetti,4,31.6,19
+Cuneo,Classe dimensionale,51-100 addetti,5,5.3,19
+Cuneo,Classe dimensionale,oltre 100 addetti,6,21.1,19
+Cuneo,Classe di fatturato,"fino a 0,5 mln",1,0.0,19
+Cuneo,Classe di fatturato,"0,5-1,5 mln",2,21.1,19
+Cuneo,Classe di fatturato,"1,5-2,5 mln",3,10.5,19
+Cuneo,Classe di fatturato,"2,5-5 mln",4,21.1,19
+Cuneo,Classe di fatturato,5-15 mln,5,26.3,19
+Cuneo,Classe di fatturato,oltre 15 mln,6,21.1,19
+Novara,Attivita prevalente,Edilizia privata abitativa,1,60.0,5
+Novara,Attivita prevalente,Edilizia privata non abitativa,2,0.0,5
+Novara,Attivita prevalente,Lavori pubblici,3,100.0,5
+Novara,Attivita prevalente,Lavori complementari e affini,4,0.0,5
+Novara,Attivita prevalente,Calcestruzzo,5,0.0,5
+Novara,Attivita prevalente,Altri settori,6,40.0,5
+Novara,Classe dimensionale,1-5 addetti,1,20.0,5
+Novara,Classe dimensionale,6-10 addetti,2,20.0,5
+Novara,Classe dimensionale,11-20 addetti,3,0.0,5
+Novara,Classe dimensionale,21-50 addetti,4,20.0,5
+Novara,Classe dimensionale,51-100 addetti,5,40.0,5
+Novara,Classe dimensionale,oltre 100 addetti,6,0.0,5
+Novara,Classe di fatturato,"fino a 0,5 mln",1,20.0,5
+Novara,Classe di fatturato,"0,5-1,5 mln",2,0.0,5
+Novara,Classe di fatturato,"1,5-2,5 mln",3,20.0,5
+Novara,Classe di fatturato,"2,5-5 mln",4,0.0,5
+Novara,Classe di fatturato,5-15 mln,5,60.0,5
+Novara,Classe di fatturato,oltre 15 mln,6,0.0,5
+Torino,Attivita prevalente,Edilizia privata abitativa,1,44.7,38
+Torino,Attivita prevalente,Edilizia privata non abitativa,2,57.9,38
+Torino,Attivita prevalente,Lavori pubblici,3,52.6,38
+Torino,Attivita prevalente,Lavori complementari e affini,4,18.4,38
+Torino,Attivita prevalente,Calcestruzzo,5,0.0,38
+Torino,Attivita prevalente,Altri settori,6,10.5,38
+Torino,Classe dimensionale,1-5 addetti,1,26.3,38
+Torino,Classe dimensionale,6-10 addetti,2,10.5,38
+Torino,Classe dimensionale,11-20 addetti,3,23.7,38
+Torino,Classe dimensionale,21-50 addetti,4,21.1,38
+Torino,Classe dimensionale,51-100 addetti,5,15.8,38
+Torino,Classe dimensionale,oltre 100 addetti,6,2.6,38
+Torino,Classe di fatturato,"fino a 0,5 mln",1,13.2,38
+Torino,Classe di fatturato,"0,5-1,5 mln",2,15.8,38
+Torino,Classe di fatturato,"1,5-2,5 mln",3,10.5,38
+Torino,Classe di fatturato,"2,5-5 mln",4,21.1,38
+Torino,Classe di fatturato,5-15 mln,5,15.8,38
+Torino,Classe di fatturato,oltre 15 mln,6,23.7,38
+Verbania,Attivita prevalente,Edilizia privata abitativa,1,90.0,10
+Verbania,Attivita prevalente,Edilizia privata non abitativa,2,60.0,10
+Verbania,Attivita prevalente,Lavori pubblici,3,70.0,10
+Verbania,Attivita prevalente,Lavori complementari e affini,4,20.0,10
+Verbania,Attivita prevalente,Calcestruzzo,5,20.0,10
+Verbania,Attivita prevalente,Altri settori,6,0.0,10
+Verbania,Classe dimensionale,1-5 addetti,1,0.0,10
+Verbania,Classe dimensionale,6-10 addetti,2,20.0,10
+Verbania,Classe dimensionale,11-20 addetti,3,40.0,10
+Verbania,Classe dimensionale,21-50 addetti,4,20.0,10
+Verbania,Classe dimensionale,51-100 addetti,5,20.0,10
+Verbania,Classe dimensionale,oltre 100 addetti,6,0.0,10
+Verbania,Classe di fatturato,"fino a 0,5 mln",1,0.0,10
+Verbania,Classe di fatturato,"0,5-1,5 mln",2,30.0,10
+Verbania,Classe di fatturato,"1,5-2,5 mln",3,20.0,10
+Verbania,Classe di fatturato,"2,5-5 mln",4,10.0,10
+Verbania,Classe di fatturato,5-15 mln,5,20.0,10
+Verbania,Classe di fatturato,oltre 15 mln,6,20.0,10
+Valle d'Aosta,Attivita prevalente,Edilizia privata abitativa,1,50.0,2
+Valle d'Aosta,Attivita prevalente,Edilizia privata non abitativa,2,50.0,2
+Valle d'Aosta,Attivita prevalente,Lavori pubblici,3,100.0,2
+Valle d'Aosta,Attivita prevalente,Lavori complementari e affini,4,0.0,2
+Valle d'Aosta,Attivita prevalente,Calcestruzzo,5,0.0,2
+Valle d'Aosta,Attivita prevalente,Altri settori,6,0.0,2
+Valle d'Aosta,Classe dimensionale,1-5 addetti,1,0.0,2
+Valle d'Aosta,Classe dimensionale,6-10 addetti,2,0.0,2
+Valle d'Aosta,Classe dimensionale,11-20 addetti,3,0.0,2
+Valle d'Aosta,Classe dimensionale,21-50 addetti,4,100.0,2
+Valle d'Aosta,Classe dimensionale,51-100 addetti,5,0.0,2
+Valle d'Aosta,Classe dimensionale,oltre 100 addetti,6,0.0,2
+Valle d'Aosta,Classe di fatturato,"fino a 0,5 mln",1,0.0,2
+Valle d'Aosta,Classe di fatturato,"0,5-1,5 mln",2,0.0,2
+Valle d'Aosta,Classe di fatturato,"1,5-2,5 mln",3,0.0,2
+Valle d'Aosta,Classe di fatturato,"2,5-5 mln",4,0.0,2
+Valle d'Aosta,Classe di fatturato,5-15 mln,5,100.0,2
+Valle d'Aosta,Classe di fatturato,oltre 15 mln,6,0.0,2
