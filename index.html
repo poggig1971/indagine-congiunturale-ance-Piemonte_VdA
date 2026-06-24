@@ -103,7 +103,7 @@
 <script>
 // ====== CONFIG: URL dei CSV pubblicati (File > Pubblica sul web) ======
 const DB_CSV   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=1413930767&single=true&output=csv";
-const PROV_CSV = ""; // <-- incollare qui l'URL CSV degli aggregati provinciali (foglio "Aggregati"), quando pubblicato
+const PROV_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=249249362&single=true&output=csv";
 
 const COL = { navy:'#1E3A8A', a:['#1E3A8A','#c0392b','#1f9d55','#d68910','#7d3c98','#117a8b'] };
 const num = v => { if(v===null||v===undefined||v==='') return null; const n=parseFloat(String(v).replace(',','.')); return isNaN(n)?null:n; };
@@ -208,34 +208,32 @@ function buildKpis(){
   box.innerHTML='<div style="grid-column:1/-1;font-size:12px;color:var(--mut);margin-bottom:2px">Semestre: <b>'+last+'</b> · variazione rispetto a '+prev+'</div>'+cards;
 }
 
-// ====== Confronto tra territori (semestre corrente) ======
+// ====== Confronto tra territori (semestre corrente) — legge la MATRICE del foglio Aggregati ======
+let PROV={terr:[],regIdx:-1,inds:[]}; // inds: {ind,unit,vals[]}
+const norm = s => String(s||'').replace(/\s+/g,' ').trim();
+
 function buildProvSelect(){
-  const note=document.getElementById('provNote');
   if(!PROV_CSV){ document.getElementById('provBox').style.display='none';
-    note.innerHTML='Per attivare il confronto tra le 9 province occorre pubblicare come CSV anche il foglio degli aggregati provinciali e incollarne l\'URL nella variabile PROV_CSV in cima al file. La serie storica è disponibile solo a livello regionale.'; return; }
-  Papa.parse(PROV_CSV,{download:true,header:true,skipEmptyLines:true,
-    complete:r=>initProv(r.data), error:()=>{ note.innerHTML='CSV aggregati provinciali non leggibile.'; } });
+    document.getElementById('provNote').innerHTML='Aggregati provinciali non collegati.'; return; }
+  Papa.parse(PROV_CSV,{download:true,header:false,skipEmptyLines:true,
+    complete:r=>initProv(r.data), error:()=>{ document.getElementById('provNote').innerHTML='CSV aggregati provinciali non leggibile.'; } });
 }
-let PROV=[];
 function initProv(rows){
-  PROV = rows.filter(x=>x.Territorio && x.Indicatore).map(x=>({terr:x.Territorio.trim(),ind:x.Indicatore.trim(),unit:(x.Unita||'').trim(),val:num(x.Valore)}));
-  const inds=[...new Set(PROV.map(p=>p.ind))];
+  // trova la riga di intestazione (prima cella = "Indicatore")
+  let h=-1; for(let i=0;i<rows.length;i++){ if(norm(rows[i][0]).toLowerCase()==='indicatore'){ h=i; break; } }
+  const note=document.getElementById('provNote');
+  if(h<0){ document.getElementById('provBox').style.display='none'; note.innerHTML='Formato del foglio aggregati non riconosciuto.'; return; }
+  PROV.terr = rows[h].slice(2).map(norm).filter(x=>x);
+  PROV.regIdx = PROV.terr.findIndex(t=>/piemonte/i.test(t));
+  const skip = /^(numero imprese|tempi medi|valore pubblicato|totale \/ pubblici|• |note metodolog)/i;
+  for(let i=h+1;i<rows.length;i++){
+    const ind=norm(rows[i][0]), unit=norm(rows[i][1]);
+    if(!ind || !unit) continue;                 // salta righe-gruppo (unità vuota)
+    if(skip.test(ind)) continue;                // salta righe non-indicatore / manuali
+    const vals=PROV.terr.map((_,k)=>num(rows[i][2+k]));
+    if(vals.every(v=>v===null)) continue;
+    PROV.inds.push({ind,unit,vals});
+  }
+  if(!PROV.inds.length){ document.getElementById('provBox').style.display='none'; note.innerHTML='Nessun indicatore provinciale trovato.'; return; }
   const sel=document.getElementById('provInd');
-  sel.innerHTML=inds.map(i=>'<option>'+i+'</option>').join('');
-  sel.addEventListener('change',drawProv); drawProv();
-}
-function drawProv(){
-  const ind=document.getElementById('provInd').value;
-  const rows=PROV.filter(p=>p.ind===ind && !/Piemonte/i.test(p.terr));
-  const reg=PROV.find(p=>p.ind===ind && /Piemonte/i.test(p.terr));
-  const labels=rows.map(r=>r.terr), data=rows.map(r=>r.val);
-  if(provChart) provChart.destroy();
-  provChart=new Chart(document.getElementById('provChart'),{ type:'bar',
-    data:{labels,datasets:[{label:ind+(rows[0]?' ('+rows[0].unit+')':''),data,backgroundColor:COL.navy}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{ticks:{font:{size:10}}},y:{beginAtZero:true}} }});
-  document.getElementById('provNote').innerHTML = reg&&reg.val!=null ? 'Media regionale (Piemonte e Valle d\'Aosta): <b>'+reg.val+' '+reg.unit+'</b>. Attenzione ai campioni provinciali ridotti.' : 'Attenzione ai campioni provinciali ridotti.';
-}
-</script>
-</body>
-</html>
+  sel.innerHTML=PROV.inds.map((it,i)=>'<option value="'+i+'">'+it.ind
