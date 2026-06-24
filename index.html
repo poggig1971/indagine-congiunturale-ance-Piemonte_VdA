@@ -5,10 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Indagine Congiunturale ANCE Piemonte e Valle d'Aosta - Serie storiche</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
   :root{ --navy:#16306b; --navy2:#2c4fb0; --line:#e3e8f1; --bg:#eef2f8; --card:#fff; --ink:#1b2230; --mut:#697086; --up:#0a7d34; --down:#c0392b; }
   *{box-sizing:border-box}
@@ -47,9 +45,6 @@
   .cgrid{display:grid;grid-template-columns:1fr;gap:14px}
   .cbox h3{font-size:12px;color:var(--navy);margin:0 0 6px;font-weight:600;text-align:center}
   .cbox .cc{position:relative;height:150px}
-  #map{height:460px;border-radius:10px;border:1px solid var(--line)}
-  .legend{font-size:11px;color:var(--mut);margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .legbar{height:10px;width:120px;border-radius:5px;background:linear-gradient(90deg,#dce6f5,#16306b)}
   .note{font-size:11.5px;color:var(--mut);margin-top:10px;line-height:1.5}
   .loading{padding:30px;text-align:center;color:var(--mut)}
   .err{background:#fdecef;color:var(--down);padding:12px 14px;border-radius:8px;font-size:13px}
@@ -114,12 +109,6 @@
     <div id="provBox" class="chartbox sm"><canvas id="provChart"></canvas></div>
     <div id="provNote" class="note"></div>
   </div>
-  <div class="panel">
-    <h2>Mappa - Piemonte e Valle d'Aosta (semestre piu recente)</h2>
-    <div class="inline"><div><label>Indicatore</label><select id="mapInd"></select></div></div>
-    <div id="map"></div>
-    <div class="legend"><span>valore basso</span><span class="legbar"></span><span>valore alto</span><span id="mapNote" style="margin-left:auto"></span></div>
-  </div>
 </div>
 <footer>Fonte: ANCE Piemonte e Valle d'Aosta - Centro Studi. I saldi sono calcolati come percentuale aumento meno percentuale riduzione. Dati letti in tempo reale dai CSV pubblicati del foglio master.</footer>
 <script>
@@ -127,7 +116,6 @@ var DB_CSV   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiB
 var PROV_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=249249362&single=true&output=csv";
 var CARATT_CSV = "caratteristiche.csv";
 var PALETTE = ['#16306b','#c0392b','#1f9d55','#d68910','#7d3c98','#117a8b'];
-var CENTROIDS = {"Alessandria":[44.91,8.62],"Asti":[44.90,8.21],"Biella":[45.57,8.05],"Vercelli":[45.32,8.42],"Cuneo":[44.39,7.55],"Novara":[45.45,8.62],"Torino":[45.07,7.69],"Verbania":[45.92,8.55],"Valle d'Aosta":[45.74,7.32]};
 function num(v){ if(v===null||v===undefined||v==='') return null; var n=parseFloat(String(v).replace(',','.')); return isNaN(n)?null:n; }
 function norm(s){ return String(s===null||s===undefined?'':s).replace(/\s+/g,' ').trim(); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -261,7 +249,7 @@ function drawCaratt(){
   cFat=barChart('cFat',cFat,sF,'#e9892f');
   document.getElementById('carattNote').innerHTML='Territorio: <b>'+esc(terr)+'</b> - '+(sA.n!=null?sA.n+' imprese':'')+'. Attivita prevalente e multi-risposta (la somma supera 100%).';
 }
-var PROV={terr:[],regIdx:-1,inds:[]}, map=null, mapLayer=null;
+var PROV={terr:[],regIdx:-1,inds:[]};
 function buildProvSelect(){
   if(!PROV_CSV){ document.getElementById('provBox').style.display='none'; document.getElementById('provNote').innerHTML='Aggregati provinciali non collegati.'; return; }
   Papa.parse(PROV_CSV,{download:true,header:false,skipEmptyLines:true,
@@ -288,8 +276,7 @@ function initProv(rows){
   if(!PROV.inds.length){ document.getElementById('provBox').style.display='none'; note.innerHTML='Nessun indicatore provinciale trovato.'; return; }
   var opts=PROV.inds.map(function(it,i){ return '<option value="'+i+'">'+esc(it.ind)+' ('+esc(it.unit)+')</option>'; }).join('');
   var sel=document.getElementById('provInd'); sel.innerHTML=opts; sel.addEventListener('change',drawProv);
-  var msel=document.getElementById('mapInd'); msel.innerHTML=opts; msel.addEventListener('change',drawMap);
-  drawProv(); buildMap();
+  drawProv();
 }
 function drawProv(){
   var it=PROV.inds[Number(document.getElementById('provInd').value)];
@@ -302,32 +289,6 @@ function drawProv(){
       scales:{x:{ticks:{font:{size:10},maxRotation:60,minRotation:30}},y:{beginAtZero:true}} }});
   var reg = PROV.regIdx>=0 ? it.vals[PROV.regIdx] : null;
   document.getElementById('provNote').innerHTML = (reg!=null?'Media regionale (Piemonte e Valle d\'Aosta): <b>'+reg+' '+esc(it.unit)+'</b>. ':'')+'Attenzione ai campioni provinciali ridotti (Valle d Aosta n=2, Vercelli n=3, Novara n=5, Asti n=7).';
-}
-function mix(t){ var a=[220,230,245], b=[22,48,107], o=[]; for(var i=0;i<3;i++) o.push(Math.round(a[i]+(b[i]-a[i])*t)); return 'rgb('+o[0]+','+o[1]+','+o[2]+')'; }
-function buildMap(){
-  if(map) return;
-  map=L.map('map',{scrollWheelZoom:false}).setView([45.4,7.9],7);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
-  mapLayer=L.layerGroup().addTo(map);
-  drawMap();
-}
-function drawMap(){
-  if(!map) return;
-  mapLayer.clearLayers();
-  var it=PROV.inds[Number(document.getElementById('mapInd').value)];
-  var vals=[]; for(var k=0;k<PROV.terr.length;k++){ if(k===PROV.regIdx) continue; var v=it.vals[k]; if(v!=null) vals.push(v); }
-  var mn=Math.min.apply(null,vals), mx=Math.max.apply(null,vals);
-  for(var k=0;k<PROV.terr.length;k++){
-    if(k===PROV.regIdx) continue;
-    var name=PROV.terr[k], c=CENTROIDS[name], v=it.vals[k];
-    if(!c) continue;
-    var t = (mx>mn && v!=null) ? (v-mn)/(mx-mn) : 0.5;
-    var col = v!=null ? mix(t) : '#cccccc';
-    var mk=L.circleMarker(c,{radius:16,fillColor:col,color:'#16306b',weight:1.5,fillOpacity:.85});
-    mk.bindTooltip('<b>'+name+'</b><br>'+it.ind+': '+(v!=null?v+' '+it.unit:'n.d.'),{direction:'top'});
-    mk.addTo(mapLayer);
-  }
-  document.getElementById('mapNote').innerHTML=esc(it.ind)+' ('+esc(it.unit)+')';
 }
 </script>
 </body>
