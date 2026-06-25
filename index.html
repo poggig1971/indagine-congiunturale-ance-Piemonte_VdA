@@ -127,8 +127,8 @@
       <div id="carattNote" class="note"></div>
     </div>
     <div class="panel">
-      <h2>Confronto tra territori - I sem 2026</h2>
-      <p class="hint">Riferito a: <b>I sem 2026</b> (ultimo semestre con microdati). Non segue il confronto A/B.</p>
+      <h2 id="provTitle">Confronto tra territori</h2>
+      <p class="hint" id="provHint">Segue il Semestre B selezionato in alto. Dato storico provinciale dal 2003.</p>
       <div class="inline"><div><label>Indicatore</label><select id="provInd"></select></div></div>
       <div id="provBox" class="chartbox sm"><canvas id="provChart"></canvas></div>
       <div id="provNote" class="note"></div>
@@ -153,7 +153,7 @@
 </div>
 <script>
 var DB_CSV   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=1413930767&single=true&output=csv";
-var PROV_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=249249362&single=true&output=csv";
+var PROVH_CSV = "provinciali_storico.csv";
 var CARATT_CSV = "caratteristiche.csv";
 var PALETTE = ['#16306b','#c0392b','#1f9d55','#d68910','#7d3c98','#117a8b'];
 function num(v){ if(v===null||v===undefined||v==='') return null; var n=parseFloat(String(v).replace(',','.')); return isNaN(n)?null:n; }
@@ -184,14 +184,15 @@ function initDB(rows){
   var seen={}; indicators=[];
   DB.forEach(function(d){ var k=d.grp+'|'+d.ind; if(!seen[k]){ seen[k]=1; indicators.push({grp:d.grp,ind:d.ind,unit:d.unit,key:k}); } });
   selected[indicators[0].key]=true;
-  buildRange(); buildRepSelect(); buildKpis(); buildProvSelect(); buildCaratt(); draw();
+  buildRange(); buildRepSelect(); buildKpis(); loadProvH(); buildCaratt(); draw();
 }
 function buildRepSelect(){
   var a=document.getElementById('repA'), b=document.getElementById('repB');
   var opts=periods.map(function(p){ return '<option>'+esc(p)+'</option>'; }).join('');
   a.innerHTML=opts; b.innerHTML=opts;
   a.value=periods[Math.max(0,periods.length-2)]; b.value=periods[periods.length-1];
-  a.addEventListener('change',buildKpis); b.addEventListener('change',buildKpis);
+  a.addEventListener('change',function(){ buildKpis(); });
+  b.addEventListener('change',function(){ buildKpis(); drawProvH(); });
   document.getElementById('repBtn').addEventListener('click',genReport);
 }
 function itnum(v){ return (v===null||v===undefined)?'n.d.':String(v).replace('.',','); }
@@ -378,47 +379,72 @@ function drawCaratt(){
   cFat=barChart('cFat',cFat,sF,'#e9892f');
   document.getElementById('carattNote').innerHTML='Territorio: <b>'+esc(terr)+'</b>. Attivita prevalente e multi-risposta (la somma supera 100%).';
 }
-var PROV={terr:[],regIdx:-1,inds:[],counts:[]};
-function buildProvSelect(){
-  if(!PROV_CSV){ document.getElementById('provBox').style.display='none'; document.getElementById('provNote').innerHTML='Aggregati provinciali non collegati.'; return; }
-  Papa.parse(PROV_CSV,{download:true,header:false,skipEmptyLines:true,
-    complete:function(r){ try{ initProv(r.data); }catch(e){ document.getElementById('provNote').innerHTML='Errore aggregati provinciali: '+e.message; } },
-    error:function(){ document.getElementById('provNote').innerHTML='CSV aggregati provinciali non leggibile.'; } });
+var PROVH={byPeriod:{},inds:[],order:['Alessandria','Asti','Biella','Vercelli','Cuneo','Novara','Torino','Verbania','Aosta']};
+function npar(p){ return String(p).replace(/\./g,'').replace(/\s+/g,' ').trim().toLowerCase(); }
+function deacc(s){ return String(s).toLowerCase().replace(/[àáâ]/g,'a').replace(/[èé]/g,'e').replace(/[ìí]/g,'i').replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/[^a-z0-9]/g,''); }
+function provGroupShort(g){ g=String(g).toLowerCase();
+  if(g.indexOf('previsioni')>=0) return 'Saldo';
+  if(g.indexOf('investiment')>=0) return 'Investimenti';
+  if(g.indexOf('portafoglio')>=0) return 'Portafoglio';
+  if(g.indexOf('difficolt')>=0) return 'Difficolta manodopera';
+  if(g.indexOf('committenti')>=0) return 'Pagam. committenti';
+  if(g.indexOf('fornitori')>=0) return 'Pagam. fornitori';
+  if(g.indexOf('credito')>=0) return 'Credito';
+  return g; }
+function loadProvH(){
+  Papa.parse(PROVH_CSV,{download:true,header:true,skipEmptyLines:true,
+    complete:function(r){ try{ initProvH(r.data); }catch(e){ document.getElementById('provNote').innerHTML='Errore dati provinciali: '+e.message; } },
+    error:function(){ document.getElementById('provNote').innerHTML='File provinciali_storico.csv non trovato nel repository.'; } });
 }
-function initProv(rows){
-  var note=document.getElementById('provNote');
-  var h=-1;
-  for(var i=0;i<rows.length;i++){ if(norm(rows[i][0]).toLowerCase()==='indicatore'){ h=i; break; } }
-  if(h<0){ document.getElementById('provBox').style.display='none'; note.innerHTML='Formato del foglio aggregati non riconosciuto.'; return; }
-  PROV.terr = rows[h].slice(2).map(norm).filter(function(x){ return x; });
-  PROV.regIdx = -1;
-  for(var t=0;t<PROV.terr.length;t++){ if(/piemonte/i.test(PROV.terr[t])){ PROV.regIdx=t; break; } }
-  for(var r2=h+1;r2<rows.length;r2++){
-    var ind=norm(rows[r2][0]), unit=norm(rows[r2][1]);
-    if(/^numero imprese/i.test(ind)){ PROV.counts=PROV.terr.map(function(_,k){ return num(rows[r2][2+k]); }); continue; }
-    if(!ind || !unit) continue;
-    if(/^tempi medi|valore pubblicato|rettifica|note metodolog/i.test(ind)) continue;
-    var vals=PROV.terr.map(function(_,k){ return num(rows[r2][2+k]); });
-    var allnull=true; for(var z=0;z<vals.length;z++){ if(vals[z]!==null){ allnull=false; break; } }
-    if(allnull) continue;
-    PROV.inds.push({ind:ind,unit:unit,vals:vals});
+function initProvH(rows){
+  rows=rows.filter(function(x){ return x.Indicatore && x.Periodo && x.Territorio; });
+  PROVH.byPeriod={}; PROVH.inds=[]; var seen={};
+  rows.forEach(function(x){
+    var key=norm(x.Gruppo)+'|'+norm(x.Indicatore), per=npar(x.Periodo);
+    if(!PROVH.byPeriod[per]) PROVH.byPeriod[per]={};
+    if(!PROVH.byPeriod[per][key]) PROVH.byPeriod[per][key]={};
+    PROVH.byPeriod[per][key][norm(x.Territorio)]=num(x.Valore);
+    if(!seen[key]){ seen[key]=1; PROVH.inds.push({key:key,grp:norm(x.Gruppo),ind:norm(x.Indicatore),unit:norm(x.Unita),
+      label:provGroupShort(x.Gruppo)+' - '+norm(x.Indicatore)+' ('+norm(x.Unita)+')'}); }
+  });
+  if(!PROVH.inds.length){ document.getElementById('provNote').innerHTML='Nessun dato provinciale nel CSV.'; return; }
+  var sel=document.getElementById('provInd');
+  sel.innerHTML=PROVH.inds.map(function(it,i){ return '<option value="'+i+'">'+esc(it.label)+'</option>'; }).join('');
+  sel.addEventListener('change',drawProvH);
+  drawProvH();
+}
+function regFromDB(it,perLabel){
+  var target=deacc(it.grp)+deacc(it.ind);
+  for(var i=0;i<indicators.length;i++){ var d=indicators[i];
+    if(deacc(d.grp)+deacc(d.ind)===target){
+      var m=seriesFor(d.key);
+      if(perLabel in m) return {v:m[perLabel],u:d.unit};
+      for(var k in m){ if(npar(k)===npar(perLabel)) return {v:m[k],u:d.unit}; }
+    }
   }
-  if(!PROV.inds.length){ document.getElementById('provBox').style.display='none'; note.innerHTML='Nessun indicatore provinciale trovato.'; return; }
-  var opts=PROV.inds.map(function(it,i){ return '<option value="'+i+'">'+esc(it.ind)+' ('+esc(it.unit)+')</option>'; }).join('');
-  var sel=document.getElementById('provInd'); sel.innerHTML=opts; sel.addEventListener('change',drawProv);
-  drawProv();
+  return null;
 }
-function drawProv(){
-  var it=PROV.inds[Number(document.getElementById('provInd').value)];
-  var labels=[], data=[], colors=[];
-  for(var k=0;k<PROV.terr.length;k++){ if(k===PROV.regIdx) continue; labels.push(PROV.terr[k]); data.push(it.vals[k]); var n=PROV.counts?PROV.counts[k]:null; colors.push((n!=null && n<5)?'#9bc4e2':'#16306b'); }
+function drawProvH(){
+  if(!PROVH.inds.length) return;
+  var idx=Number(document.getElementById('provInd').value)||0, it=PROVH.inds[idx];
+  var perLabel=document.getElementById('repB').value || periods[periods.length-1], per=npar(perLabel);
+  document.getElementById('provTitle').innerHTML='Confronto tra territori - '+esc(perLabel);
+  var data=(PROVH.byPeriod[per]&&PROVH.byPeriod[per][it.key])?PROVH.byPeriod[per][it.key]:{};
+  var labels=[], vals=[];
+  PROVH.order.forEach(function(t){ if(t in data && data[t]!=null){ labels.push(t); vals.push(data[t]); } });
   if(provChart) provChart.destroy();
+  if(!labels.length){
+    document.getElementById('provHint').innerHTML='Nessun dato provinciale disponibile per <b>'+esc(perLabel)+'</b>.';
+    document.getElementById('provNote').innerHTML='';
+    return;
+  }
+  document.getElementById('provHint').innerHTML='Indicatori provinciali per il semestre <b>'+esc(perLabel)+'</b> (segue il Semestre B selezionato in alto).';
   provChart=new Chart(document.getElementById('provChart'),{ type:'bar',
-    data:{labels:labels,datasets:[{label:it.ind+' ('+it.unit+')',data:data,backgroundColor:colors}]},
+    data:{labels:labels,datasets:[{label:it.label,data:vals,backgroundColor:'#16306b'}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
       scales:{x:{ticks:{font:{size:10},maxRotation:60,minRotation:30}},y:{beginAtZero:true}} }});
-  var reg = PROV.regIdx>=0 ? it.vals[PROV.regIdx] : null;
-  document.getElementById('provNote').innerHTML = (reg!=null?'Media regionale (Piemonte e Valle d\'Aosta): <b>'+reg+' '+esc(it.unit)+'</b>.':'');
+  var reg=regFromDB(it,perLabel);
+  document.getElementById('provNote').innerHTML=(reg&&reg.v!=null?'Media regionale (Piemonte e Valle d\'Aosta): <b>'+reg.v+' '+esc(reg.u)+'</b>.':'');
 }
 </script>
 </body>
