@@ -179,3 +179,53 @@ Valle d'Aosta,Classe di fatturato,"1,5-2,5 mln",3,0.0,2
 Valle d'Aosta,Classe di fatturato,"2,5-5 mln",4,0.0,2
 Valle d'Aosta,Classe di fatturato,5-15 mln,5,100.0,2
 Valle d'Aosta,Classe di fatturato,oltre 15 mln,6,0.0,2
+Piemonte e Valle d'Aosta,Fatturato fuori provincia,Nulla,1,25.6,117
+Piemonte e Valle d'Aosta,Fatturato fuori provincia,Fino al 10%,2,25.6,117
+Piemonte e Valle d'Aosta,Fatturato fuori provincia,10-25%,3,13.7,117
+Piemonte e Valle d'Aosta,Fatturato fuori provincia,25-50%,4,17.1,117
+Piemonte e Valle d'Aosta,Fatturato fuori provincia,Oltre 50%,5,17.9,117
+Alessandria,Fatturato fuori provincia,Nulla,1,33.3,24
+Alessandria,Fatturato fuori provincia,Fino al 10%,2,20.8,24
+Alessandria,Fatturato fuori provincia,10-25%,3,16.7,24
+Alessandria,Fatturato fuori provincia,25-50%,4,12.5,24
+Alessandria,Fatturato fuori provincia,Oltre 50%,5,16.7,24
+Asti,Fatturato fuori provincia,Nulla,1,14.3,7
+Asti,Fatturato fuori provincia,Fino al 10%,2,0.0,7
+Asti,Fatturato fuori provincia,10-25%,3,0.0,7
+Asti,Fatturato fuori provincia,25-50%,4,42.9,7
+Asti,Fatturato fuori provincia,Oltre 50%,5,42.9,7
+Biella,Fatturato fuori provincia,Nulla,1,33.3,9
+Biella,Fatturato fuori provincia,Fino al 10%,2,22.2,9
+Biella,Fatturato fuori provincia,10-25%,3,22.2,9
+Biella,Fatturato fuori provincia,25-50%,4,22.2,9
+Biella,Fatturato fuori provincia,Oltre 50%,5,0.0,9
+Vercelli,Fatturato fuori provincia,Nulla,1,0.0,3
+Vercelli,Fatturato fuori provincia,Fino al 10%,2,33.3,3
+Vercelli,Fatturato fuori provincia,10-25%,3,66.7,3
+Vercelli,Fatturato fuori provincia,25-50%,4,0.0,3
+Vercelli,Fatturato fuori provincia,Oltre 50%,5,0.0,3
+Cuneo,Fatturato fuori provincia,Nulla,1,10.5,19
+Cuneo,Fatturato fuori provincia,Fino al 10%,2,31.6,19
+Cuneo,Fatturato fuori provincia,10-25%,3,5.3,19
+Cuneo,Fatturato fuori provincia,25-50%,4,21.1,19
+Cuneo,Fatturato fuori provincia,Oltre 50%,5,31.6,19
+Novara,Fatturato fuori provincia,Nulla,1,0.0,5
+Novara,Fatturato fuori provincia,Fino al 10%,2,40.0,5
+Novara,Fatturato fuori provincia,10-25%,3,0.0,5
+Novara,Fatturato fuori provincia,25-50%,4,20.0,5
+Novara,Fatturato fuori provincia,Oltre 50%,5,40.0,5
+Torino,Fatturato fuori provincia,Nulla,1,31.6,38
+Torino,Fatturato fuori provincia,Fino al 10%,2,23.7,38
+Torino,Fatturato fuori provincia,10-25%,3,13.2,38
+Torino,Fatturato fuori provincia,25-50%,4,18.4,38
+Torino,Fatturato fuori provincia,Oltre 50%,5,13.2,38
+Verbania,Fatturato fuori provincia,Nulla,1,30.0,10
+Verbania,Fatturato fuori provincia,Fino al 10%,2,40.0,10
+Verbania,Fatturato fuori provincia,10-25%,3,20.0,10
+Verbania,Fatturato fuori provincia,25-50%,4,0.0,10
+Verbania,Fatturato fuori provincia,Oltre 50%,5,10.0,10
+Valle d'Aosta,Fatturato fuori provincia,Nulla,1,50.0,2
+Valle d'Aosta,Fatturato fuori provincia,Fino al 10%,2,50.0,2
+Valle d'Aosta,Fatturato fuori provincia,10-25%,3,0.0,2
+Valle d'Aosta,Fatturato fuori provincia,25-50%,4,0.0,2
+Valle d'Aosta,Fatturato fuori provincia,Oltre 50%,5,0.0,2
