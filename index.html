@@ -79,7 +79,24 @@
   .modal code{background:#eef2f8;padding:1px 6px;border-radius:5px;font-family:var(--font-mono,monospace);font-size:12.5px}
   .modal .x{float:right;cursor:pointer;border:0;background:#eef2f8;border-radius:8px;padding:7px 11px;font:inherit;font-weight:600}
   footer{max-width:1320px;margin:0 auto;padding:6px 24px 34px;font-size:11px;color:#8a93a6}
+  .hstats{display:flex;gap:9px;flex-wrap:wrap}
+  .hstat{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:10px;padding:6px 13px;min-width:92px}
+  .hstat .l{font-size:9px;letter-spacing:.4px;text-transform:uppercase;opacity:.72}
+  .hstat .v{font-size:15px;font-weight:600;margin-top:2px}
+  .layout{display:flex;max-width:1320px;margin:0 auto;align-items:flex-start}
+  .sidebar{flex:0 0 212px;padding:18px 10px 18px 18px;position:sticky;top:8px}
+  .nav{display:flex;flex-direction:column;gap:3px}
+  .navitem{display:block;padding:10px 13px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--ink);cursor:pointer;text-decoration:none;border:1px solid transparent}
+  .navitem:hover{background:#e6ecf7}
+  .navitem.active{background:#fff;border-color:var(--line);color:var(--navy);font-weight:600;box-shadow:0 1px 2px rgba(20,40,90,.05)}
+  .content{flex:1;min-width:0;padding:18px}
+  .view{display:none}
+  .view.active{display:block}
+  .mtxt{font-size:13.5px;line-height:1.7;color:var(--ink)}
+  .mtxt h3{color:var(--navy);font-size:14px;margin:16px 0 4px}
+  .mtxt b{color:var(--navy)}
   @media(max-width:980px){.dash{grid-template-columns:1fr}}
+  @media(max-width:860px){.layout{flex-direction:column}.sidebar{flex:1 0 auto;position:static;width:100%;padding:12px 14px 0}.nav{flex-direction:row;flex-wrap:wrap}.navitem{flex:1 1 auto;text-align:center}}
 </style>
 </head>
 <body>
@@ -89,68 +106,105 @@
     <h1>Indagine Congiunturale - ANCE Piemonte e Valle d'Aosta</h1>
     <p>Serie storiche degli indicatori - dal II semestre 2002</p>
   </div>
+  <div class="hstats">
+    <div class="hstat"><div class="l">Ultimo semestre</div><div class="v" id="stSem">-</div></div>
+    <div class="hstat"><div class="l">Semestri archivio</div><div class="v" id="stN">-</div></div>
+    <div class="hstat"><div class="l">Imprese campione</div><div class="v" id="stImp">-</div></div>
+    <div class="hstat"><div class="l">Versione</div><div class="v">1.0</div></div>
+  </div>
   <a class="hbtn primary" href="questionario.html">COMPILA</a>
   <button class="hbtn ghost helpb" id="helpBtn" type="button" aria-label="Guida">?</button>
   <button class="hbtn ghost" id="fsBtn" type="button">Schermo intero</button>
 </header>
-<div class="wrap">
-  <div id="msg"></div>
-  <div class="panel">
-    <h2>Quadro di confronto tra due semestri</h2>
-    <p class="hint" id="kpiHint">Le card mostrano il valore del semestre B e la variazione rispetto al semestre A.</p>
-    <div class="kpiwrap">
-      <div class="kpictl">
-        <label>Semestre A (riferimento)</label>
-        <select id="repA"></select>
-        <label>Semestre B (mostrato nelle card)</label>
-        <select id="repB"></select>
-        <button id="repBtn" type="button">Genera rapporto</button>
-      </div>
-      <div id="kpis" class="kpis"><div class="loading">Caricamento dati...</div></div>
-    </div>
-  </div>
-  <div class="panel">
-    <h2>Andamento nel tempo</h2>
-    <div class="inline">
-      <div>
-        <label>Intervallo temporale</label>
-        <div class="seg" id="rangeSeg" style="margin:0">
-          <button data-r="all" class="on">Tutta la serie</button>
-          <button data-r="10">Ultimi 10</button>
-          <button data-r="20">Ultimi 20</button>
-          <button data-r="custom">Personalizzato</button>
+<div id="msg" style="max-width:1320px;margin:8px auto 0;padding:0 18px"></div>
+<div class="layout">
+  <aside class="sidebar">
+    <nav class="nav">
+      <a class="navitem active" data-view="sintesi">Quadro di sintesi</a>
+      <a class="navitem" data-view="andamento">Andamento nel tempo</a>
+      <a class="navitem" data-view="province">Confronto tra province</a>
+      <a class="navitem" data-view="caratteristiche">Caratteristiche campione</a>
+      <a class="navitem" data-view="metodo">Metodologia e fonti</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <section id="view-sintesi" class="view active">
+      <div class="panel">
+        <h2>Quadro di confronto tra due semestri</h2>
+        <p class="hint" id="kpiHint">Le card mostrano il valore del semestre B e la variazione rispetto al semestre A.</p>
+        <div class="kpiwrap">
+          <div class="kpictl">
+            <label>Semestre A (riferimento)</label>
+            <select id="repA"></select>
+            <label>Semestre B (mostrato nelle card)</label>
+            <select id="repB"></select>
+            <button id="repBtn" type="button">Genera rapporto</button>
+          </div>
+          <div id="kpis" class="kpis"><div class="loading">Caricamento dati...</div></div>
         </div>
       </div>
-      <div id="customWrap" style="display:none"><label>Da</label><select id="fromSel"></select></div>
-      <div id="customWrap2" style="display:none"><label>A</label><select id="toSel"></select></div>
-    </div>
-    <div class="chartbox"><canvas id="chart"></canvas></div>
-  </div>
-  <div class="dash">
-    <div class="panel">
-      <h2>Caratteristiche delle imprese del campione</h2>
-      <p class="hint">Riferito a: <b>I sem 2026</b> (ultimo semestre con microdati). Non segue il confronto A/B.</p>
-      <div class="inline"><div><label>Territorio</label><select id="carattTerr"></select></div></div>
-      <div class="cgrid">
-        <div class="cbox"><h3>1.1 Attivita prevalente (% imprese)</h3><div class="cc"><canvas id="cAttiv"></canvas></div></div>
-        <div class="cbox"><h3>1.2 Classe dimensionale</h3><div class="cc"><canvas id="cDim"></canvas></div></div>
-        <div class="cbox"><h3>1.3 Classe di fatturato</h3><div class="cc"><canvas id="cFat"></canvas></div></div>
-        <div class="cbox"><h3>1.4 Fatturato fuori provincia (% imprese)</h3><div class="cc"><canvas id="cFP"></canvas></div></div>
+    </section>
+    <section id="view-andamento" class="view">
+      <div class="panel">
+        <h2>Andamento nel tempo</h2>
+        <div class="inline">
+          <div>
+            <label>Intervallo temporale</label>
+            <div class="seg" id="rangeSeg" style="margin:0">
+              <button data-r="all" class="on">Tutta la serie</button>
+              <button data-r="10">Ultimi 10</button>
+              <button data-r="20">Ultimi 20</button>
+              <button data-r="custom">Personalizzato</button>
+            </div>
+          </div>
+          <div id="customWrap" style="display:none"><label>Da</label><select id="fromSel"></select></div>
+          <div id="customWrap2" style="display:none"><label>A</label><select id="toSel"></select></div>
+        </div>
+        <div class="chartbox"><canvas id="chart"></canvas></div>
       </div>
-      <div id="carattNote" class="note"></div>
-    </div>
-    <div class="panel">
-      <h2 id="provTitle">Confronto provinciale tra due semestri</h2>
-      <p class="hint" id="provHint">Scegli i due semestri e la provincia: per ogni indicatore vedi la variazione e i valori dei due periodi.</p>
-      <div class="inline">
-        <div><label>Semestre A</label><select id="provA"></select></div>
-        <div><label>Semestre B</label><select id="provB"></select></div>
-        <div><label>Provincia</label><select id="provTer"></select></div>
+    </section>
+    <section id="view-province" class="view">
+      <div class="panel">
+        <h2 id="provTitle">Confronto provinciale tra due semestri</h2>
+        <p class="hint" id="provHint">Scegli i due semestri e la provincia: per ogni indicatore vedi la variazione e i valori dei due periodi.</p>
+        <div class="inline">
+          <div><label>Semestre A</label><select id="provA"></select></div>
+          <div><label>Semestre B</label><select id="provB"></select></div>
+          <div><label>Provincia</label><select id="provTer"></select></div>
+        </div>
+        <div id="provList" class="plist"></div>
+        <div id="provNote" class="note"></div>
       </div>
-      <div id="provList" class="plist"></div>
-      <div id="provNote" class="note"></div>
-    </div>
-  </div>
+    </section>
+    <section id="view-caratteristiche" class="view">
+      <div class="panel">
+        <h2>Caratteristiche delle imprese del campione</h2>
+        <p class="hint">Riferito a: <b>I sem 2026</b> (ultimo semestre con microdati). Non segue il confronto A/B.</p>
+        <div class="inline"><div><label>Territorio</label><select id="carattTerr"></select></div></div>
+        <div class="cgrid">
+          <div class="cbox"><h3>1.1 Attivita prevalente (% imprese)</h3><div class="cc"><canvas id="cAttiv"></canvas></div></div>
+          <div class="cbox"><h3>1.2 Classe dimensionale</h3><div class="cc"><canvas id="cDim"></canvas></div></div>
+          <div class="cbox"><h3>1.3 Classe di fatturato</h3><div class="cc"><canvas id="cFat"></canvas></div></div>
+          <div class="cbox"><h3>1.4 Fatturato fuori provincia (% imprese)</h3><div class="cc"><canvas id="cFP"></canvas></div></div>
+        </div>
+        <div id="carattNote" class="note"></div>
+      </div>
+    </section>
+    <section id="view-metodo" class="view">
+      <div class="panel">
+        <h2>Metodologia e fonti</h2>
+        <div class="mtxt">
+          <p>L'Indagine Congiunturale dell'ANCE Piemonte e Valle d'Aosta, avviata a giugno del 2002 e svolta con cadenza semestrale, rileva le aspettative delle imprese edili associate sull'andamento delle principali variabili dell'attivita' per i sei mesi successivi.</p>
+          <h3>Indicatori</h3>
+          <p>I <b>saldi</b> (fatturato, occupazione, ricorso a manodopera esterna) sono calcolati come differenza fra la percentuale di imprese che prevede un aumento e quella che prevede una riduzione. Gli altri indicatori riguardano intenzioni di investimento, portafoglio ordini, difficolta' di reperimento manodopera, tempi di pagamento di committenti e fornitori e costo del credito.</p>
+          <h3>Fonti dei dati</h3>
+          <p>Gli indicatori <b>regionali</b> sono letti dalla serie storica ufficiale (dal II semestre 2002). Il dettaglio <b>provinciale</b> proviene dall'archivio aggregati per semestre (dal 2003). Le <b>caratteristiche del campione</b> sono calcolate sui microdati del semestre piu' recente.</p>
+          <h3>Avvertenze</h3>
+          <p>Per le province con pochi rispondenti i valori possono essere molto variabili. Alcuni semestri o province possono non essere disponibili nell'archivio provinciale. I tempi di pagamento dei committenti a livello regionale includono rettifiche editoriali rispetto al calcolo automatico.</p>
+        </div>
+      </div>
+    </section>
+  </main>
 </div>
 <footer>Fonte: ANCE Piemonte e Valle d'Aosta - Centro Studi. I saldi sono calcolati come percentuale aumento meno percentuale riduzione. Dati letti in tempo reale dai CSV pubblicati del foglio master.</footer>
 <div class="modal" id="helpModal">
@@ -188,6 +242,20 @@ var hm=document.getElementById('helpModal');
 document.getElementById('helpBtn').addEventListener('click',function(){ hm.classList.add('open'); });
 document.getElementById('helpClose').addEventListener('click',function(){ hm.classList.remove('open'); });
 hm.addEventListener('click',function(e){ if(e.target===hm) hm.classList.remove('open'); });
+var navitems=document.querySelectorAll('.navitem');
+for(var ni=0;ni<navitems.length;ni++){ navitems[ni].addEventListener('click',function(){ showView(this.getAttribute('data-view')); }); }
+function showView(v){
+  var its=document.querySelectorAll('.navitem');
+  for(var i=0;i<its.length;i++) its[i].classList.toggle('active', its[i].getAttribute('data-view')===v);
+  var vs=document.querySelectorAll('.view');
+  for(var j=0;j<vs.length;j++) vs[j].classList.toggle('active', vs[j].id==='view-'+v);
+  if(v==='andamento') draw();
+  else if(v==='caratteristiche'){ if(CAR.length) drawCaratt(); }
+  else if(v==='province') drawProvComp();
+}
+function updateStatus(){
+  if(periods.length){ document.getElementById('stSem').textContent=periods[periods.length-1]; document.getElementById('stN').textContent=periods.length; }
+}
 Papa.parse(DB_CSV, { download:true, header:true, skipEmptyLines:true,
   complete: function(r){ try{ initDB(r.data); }catch(e){ msgErr('Errore nel caricamento dati: '+e.message); } },
   error: function(e){ msgErr('Impossibile leggere il CSV della serie storica. Verificare che il foglio sia pubblicato sul web.'); }
@@ -201,7 +269,7 @@ function initDB(rows){
   var seen={}; indicators=[];
   DB.forEach(function(d){ var k=d.grp+'|'+d.ind; if(!seen[k]){ seen[k]=1; indicators.push({grp:d.grp,ind:d.ind,unit:d.unit,key:k}); } });
   selected[indicators[0].key]=true;
-  buildRange(); buildRepSelect(); buildKpis(); loadProvH(); buildCaratt(); draw();
+  updateStatus(); buildRange(); buildRepSelect(); buildKpis(); loadProvH(); buildCaratt(); draw();
 }
 function buildRepSelect(){
   var a=document.getElementById('repA'), b=document.getElementById('repB');
@@ -395,6 +463,8 @@ function buildCaratt(){
 }
 function initCaratt(rows){
   CAR = rows.filter(function(x){ return x.Territorio && x.Categoria; }).map(function(x){ return {terr:norm(x.Territorio),car:norm(x.Caratteristica),cat:norm(x.Categoria),ord:num(x.Ordine),pct:num(x.Percentuale),n:num(x.N_imprese)}; });
+  var rg=CAR.filter(function(d){ return /piemonte/i.test(d.terr); });
+  if(rg.length && rg[0].n!=null){ var si=document.getElementById('stImp'); if(si) si.textContent=rg[0].n; }
   var terr=[]; CAR.forEach(function(d){ if(terr.indexOf(d.terr)<0) terr.push(d.terr); });
   var sel=document.getElementById('carattTerr');
   sel.innerHTML=terr.map(function(t){ return '<option>'+esc(t)+'</option>'; }).join('');
