@@ -49,6 +49,18 @@
   select{padding:8px 9px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff;color:var(--ink);min-width:150px}
   .chartbox{position:relative;height:480px}
   .chartbox.sm{height:320px}
+  .plist{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+  .prow{display:grid;grid-template-columns:150px 64px 1fr;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:7px 0}
+  .prow .pname{font-size:12px;line-height:1.25}
+  .prow .pvar{font-size:13px;font-weight:600;text-align:right}
+  .prow .pvar.up{color:var(--up)} .prow .pvar.down{color:var(--down)} .prow .pvar.flat{color:#2c4fb0}
+  .pbars{display:flex;flex-direction:column;gap:4px}
+  .pbar{display:flex;align-items:center;gap:6px;font-size:11px}
+  .pbar .lab{flex:0 0 34px;color:var(--mut)}
+  .pbar .track{flex:1;background:#eef2f8;border-radius:4px;height:13px;position:relative}
+  .pbar .fill{position:absolute;top:0;height:100%;border-radius:4px;min-width:1px}
+  .pbar .val{flex:0 0 46px;text-align:right;color:var(--ink);font-weight:500}
+  @media(max-width:520px){.prow{grid-template-columns:116px 50px 1fr}}
   .cgrid{display:grid;grid-template-columns:1fr;gap:14px}
   .cbox h3{font-size:12px;color:var(--navy);margin:0 0 6px;font-weight:600;text-align:center}
   .cbox .cc{position:relative;height:150px}
@@ -128,13 +140,14 @@
       <div id="carattNote" class="note"></div>
     </div>
     <div class="panel">
-      <h2 id="provTitle">Confronto tra territori</h2>
-      <p class="hint" id="provHint">Scegli semestre e indicatore per confrontare le province. Dato storico dal 2003.</p>
+      <h2 id="provTitle">Confronto provinciale tra due semestri</h2>
+      <p class="hint" id="provHint">Scegli i due semestri e la provincia: per ogni indicatore vedi la variazione e i valori dei due periodi.</p>
       <div class="inline">
-        <div><label>Semestre</label><select id="provPer"></select></div>
-        <div><label>Indicatore</label><select id="provInd"></select></div>
+        <div><label>Semestre A</label><select id="provA"></select></div>
+        <div><label>Semestre B</label><select id="provB"></select></div>
+        <div><label>Provincia</label><select id="provTer"></select></div>
       </div>
-      <div id="provBox" class="chartbox sm"><canvas id="provChart"></canvas></div>
+      <div id="provList" class="plist"></div>
       <div id="provNote" class="note"></div>
     </div>
   </div>
@@ -245,23 +258,20 @@ function genReport(){
   var provHTML='';
   if(PROVH.inds && PROVH.inds.length){
     var pa=PROVH.byPeriod[npar(a)]||{}, pb=PROVH.byPeriod[npar(b)]||{}, blocks='', anyProv=false;
-    PROVH.inds.forEach(function(it){
-      var da=pa[it.key]||{}, db=pb[it.key]||{}, trs='', hasrow=false;
-      PROVH.order.forEach(function(t){
-        var va=(t in da)?da[t]:null, vb=(t in db)?db[t]:null;
+    PROVH.order.forEach(function(t){
+      var tn=(t==='Aosta')?'Valle d\'Aosta':t, trs='', hasrow=false;
+      PROVH.inds.forEach(function(it){
+        var va=(pa[it.key]&&t in pa[it.key])?pa[it.key][t]:null;
+        var vb=(pb[it.key]&&t in pb[it.key])?pb[it.key][t]:null;
         if(va==null && vb==null) return;
         hasrow=true;
-        var tn=(t==='Aosta')?'Valle d\'Aosta':t;
-        trs+='<tr><td class="ind">'+esc(tn)+'</td><td>'+itnum(va)+'</td><td>'+itnum(vb)+'</td><td>'+varCell(va,vb,it.grp,it.ind)+'</td></tr>';
+        trs+='<tr><td class="ind">'+esc(it.label)+'</td><td>'+itnum(va)+'</td><td>'+itnum(vb)+'</td><td>'+varCell(va,vb,it.grp,it.ind)+'</td></tr>';
       });
-      var ra=regFromDB(it,a), rb=regFromDB(it,b);
-      if(ra||rb){ var rva=ra?ra.v:null, rvb=rb?rb.v:null;
-        trs+='<tr class="reg"><td class="ind">Piemonte e Valle d\'Aosta</td><td>'+itnum(rva)+'</td><td>'+itnum(rvb)+'</td><td>'+varCell(rva,rvb,it.grp,it.ind)+'</td></tr>'; }
       if(hasrow){ anyProv=true;
-        blocks+='<h3>'+esc(it.label)+'</h3><table><thead><tr><th>Territorio</th><th>'+esc(a)+'</th><th>'+esc(b)+'</th><th>Variazione</th></tr></thead><tbody>'+trs+'</tbody></table>'; }
+        blocks+='<h3>'+esc(tn)+'</h3><table><thead><tr><th>Indicatore</th><th>'+esc(a)+'</th><th>'+esc(b)+'</th><th>Variazione</th></tr></thead><tbody>'+trs+'</tbody></table>'; }
     });
-    if(anyProv) provHTML='<h2>Confronto provinciale per indicatore</h2>'+
-      '<p class="syn">Per ciascun indicatore, il dettaglio delle province nei due semestri ('+esc(a)+' e '+esc(b)+'). Dato provinciale storico dal 2003; alcuni semestri o province possono non essere disponibili.</p>'+blocks;
+    if(anyProv) provHTML='<h2>Confronto per provincia (tutti gli indicatori)</h2>'+
+      '<p class="syn">Per ciascuna provincia, tutti gli indicatori nei due semestri ('+esc(a)+' e '+esc(b)+'). Dato provinciale storico dal 2003; alcuni semestri o province possono non essere disponibili.</p>'+blocks;
   }
   var content =
     '<div id="report">'+
@@ -447,15 +457,15 @@ function initProvH(rows){
   if(!PROVH.inds.length){ document.getElementById('provNote').innerHTML='Nessun dato provinciale nel CSV.'; return; }
   var pmap={};
   rows.forEach(function(x){ var o=num(x.Ordine); if(o!=null) pmap[norm(x.Periodo)]=o; });
-  PROVH.periods=Object.keys(pmap).sort(function(a,b){ return pmap[b]-pmap[a]; });
-  var psel=document.getElementById('provPer');
-  psel.innerHTML=PROVH.periods.map(function(p){ return '<option>'+esc(p)+'</option>'; }).join('');
-  psel.value=PROVH.periods[0];
-  psel.addEventListener('change',drawProvH);
-  var sel=document.getElementById('provInd');
-  sel.innerHTML=PROVH.inds.map(function(it,i){ return '<option value="'+i+'">'+esc(it.label)+'</option>'; }).join('');
-  sel.addEventListener('change',drawProvH);
-  drawProvH();
+  PROVH.periods=Object.keys(pmap).sort(function(a,b){ return pmap[b]-pmap[a]; }); // recente -> vecchio
+  var opts=PROVH.periods.map(function(p){ return '<option>'+esc(p)+'</option>'; }).join('');
+  var sA=document.getElementById('provA'), sB=document.getElementById('provB');
+  sA.innerHTML=opts; sB.innerHTML=opts;
+  sB.value=PROVH.periods[0]; sA.value=PROVH.periods[1]||PROVH.periods[0];
+  var st=document.getElementById('provTer');
+  st.innerHTML=PROVH.order.map(function(t){ return '<option value="'+esc(t)+'">'+esc(t==='Aosta'?'Valle d\'Aosta':t)+'</option>'; }).join('');
+  sA.addEventListener('change',drawProvComp); sB.addEventListener('change',drawProvComp); st.addEventListener('change',drawProvComp);
+  drawProvComp();
 }
 function regFromDB(it,perLabel){
   var target=deacc(it.grp)+deacc(it.ind);
@@ -468,27 +478,42 @@ function regFromDB(it,perLabel){
   }
   return null;
 }
-function drawProvH(){
+function shortSem(p){ var m=String(p).match(/(I{1,2})\s*sem\.?\s*(\d{4})/i); return m?(m[1]+" '"+m[2].slice(2)):String(p); }
+function provBar(v, lo, hi, color){
+  if(v==null) return '<div class="track"></div><span class="val">n.d.</span>';
+  var span=(hi-lo)||1, z=(0-lo)/span*100, p=(v-lo)/span*100;
+  var left=Math.min(z,p), w=Math.max(Math.abs(p-z),0.6);
+  return '<div class="track"><span class="fill" style="left:'+left+'%;width:'+w+'%;background:'+color+'"></span></div>'+
+         '<span class="val">'+itnum(Math.round(v*10)/10)+'</span>';
+}
+function drawProvComp(){
   if(!PROVH.inds.length) return;
-  var idx=Number(document.getElementById('provInd').value)||0, it=PROVH.inds[idx];
-  var perLabel=document.getElementById('provPer').value || (PROVH.periods&&PROVH.periods[0]) || '', per=npar(perLabel);
-  document.getElementById('provTitle').innerHTML='Confronto tra territori - '+esc(perLabel);
-  var data=(PROVH.byPeriod[per]&&PROVH.byPeriod[per][it.key])?PROVH.byPeriod[per][it.key]:{};
-  var labels=[], vals=[];
-  PROVH.order.forEach(function(t){ if(t in data && data[t]!=null){ labels.push(t); vals.push(data[t]); } });
-  if(provChart) provChart.destroy();
-  if(!labels.length){
-    document.getElementById('provHint').innerHTML='Nessun dato provinciale disponibile per <b>'+esc(perLabel)+'</b>.';
-    document.getElementById('provNote').innerHTML='';
-    return;
-  }
-  document.getElementById('provHint').innerHTML='Indicatori provinciali per il semestre <b>'+esc(perLabel)+'</b>. Cambia semestre o indicatore qui sopra.';
-  provChart=new Chart(document.getElementById('provChart'),{ type:'bar',
-    data:{labels:labels,datasets:[{label:it.label,data:vals,backgroundColor:'#16306b'}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{ticks:{font:{size:10},maxRotation:60,minRotation:30}},y:{beginAtZero:true}} }});
-  var reg=regFromDB(it,perLabel);
-  document.getElementById('provNote').innerHTML=(reg&&reg.v!=null?'Media regionale (Piemonte e Valle d\'Aosta): <b>'+reg.v+' '+esc(reg.u)+'</b>.':'');
+  var a=document.getElementById('provA').value, b=document.getElementById('provB').value, terr=document.getElementById('provTer').value;
+  var tdisp=(terr==='Aosta')?'Valle d\'Aosta':terr;
+  document.getElementById('provTitle').innerHTML='Confronto provinciale: '+esc(tdisp);
+  document.getElementById('provHint').innerHTML='Provincia di <b>'+esc(tdisp)+'</b>: variazione tra <b>'+esc(a)+'</b> e <b>'+esc(b)+'</b> per ogni indicatore.';
+  var pa=PROVH.byPeriod[npar(a)]||{}, pb=PROVH.byPeriod[npar(b)]||{}, html='', any=false;
+  PROVH.inds.forEach(function(it){
+    var va=(pa[it.key]&&terr in pa[it.key])?pa[it.key][terr]:null;
+    var vb=(pb[it.key]&&terr in pb[it.key])?pb[it.key][terr]:null;
+    if(va==null && vb==null) return;
+    any=true;
+    var dvar='-', cls='flat';
+    if(va!=null && vb!=null){
+      var diff=Math.round((vb-va)*10)/10, hb=hbFor(it.grp,it.ind);
+      var ar=diff>0?(String.fromCharCode(9650)+' +'):(diff<0?(String.fromCharCode(9660)+' '):'= ');
+      cls=diff===0?'flat':((hb===null)?'flat':(((diff>0)===hb)?'up':'down'));
+      dvar=ar+itnum(diff);
+    }
+    var lo=Math.min(0,(va==null?0:va),(vb==null?0:vb)), hi=Math.max(0,(va==null?0:va),(vb==null?0:vb));
+    html+='<div class="prow"><div class="pname">'+esc(it.label)+'</div>'+
+      '<div class="pvar '+cls+'">'+dvar+'</div><div class="pbars">'+
+      '<div class="pbar"><span class="lab">'+esc(shortSem(a))+'</span>'+provBar(va,lo,hi,'#9bc4e2')+'</div>'+
+      '<div class="pbar"><span class="lab">'+esc(shortSem(b))+'</span>'+provBar(vb,lo,hi,'#16306b')+'</div>'+
+      '</div></div>';
+  });
+  document.getElementById('provList').innerHTML = any ? html : '<div class="note">Nessun dato per questa provincia nei semestri scelti.</div>';
+  document.getElementById('provNote').innerHTML='Verde = miglioramento, rosso = peggioramento (per pagamenti, difficolta e credito un aumento e\' peggioramento). Le barre sono in scala per ciascun indicatore.';
 }
 </script>
 </body>
