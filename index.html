@@ -234,6 +234,35 @@ function genReport(){
   });
   var synTxt = syn.length ? ('Nel confronto tra '+esc(a)+' e '+esc(b)+', '+syn.join('; ')+'.') :
                ('Confronto tra '+esc(a)+' e '+esc(b)+'.');
+  // --- dettaglio provinciale per indicatore (stessi due semestri) ---
+  function varCell(va,vb,grp,ind){
+    if(va==null||vb==null) return '-';
+    var diff=Math.round((vb-va)*10)/10, hb=hbFor(grp,ind);
+    var ar=diff>0?(String.fromCharCode(9650)+' +'):(diff<0?(String.fromCharCode(9660)+' '):'= ');
+    var cl=diff===0?'flat':((hb===null)?'flat':(((diff>0)===hb)?'up':'down'));
+    return '<span class="'+cl+'">'+ar+itnum(diff)+'</span>';
+  }
+  var provHTML='';
+  if(PROVH.inds && PROVH.inds.length){
+    var pa=PROVH.byPeriod[npar(a)]||{}, pb=PROVH.byPeriod[npar(b)]||{}, blocks='', anyProv=false;
+    PROVH.inds.forEach(function(it){
+      var da=pa[it.key]||{}, db=pb[it.key]||{}, trs='', hasrow=false;
+      PROVH.order.forEach(function(t){
+        var va=(t in da)?da[t]:null, vb=(t in db)?db[t]:null;
+        if(va==null && vb==null) return;
+        hasrow=true;
+        var tn=(t==='Aosta')?'Valle d\'Aosta':t;
+        trs+='<tr><td class="ind">'+esc(tn)+'</td><td>'+itnum(va)+'</td><td>'+itnum(vb)+'</td><td>'+varCell(va,vb,it.grp,it.ind)+'</td></tr>';
+      });
+      var ra=regFromDB(it,a), rb=regFromDB(it,b);
+      if(ra||rb){ var rva=ra?ra.v:null, rvb=rb?rb.v:null;
+        trs+='<tr class="reg"><td class="ind">Piemonte e Valle d\'Aosta</td><td>'+itnum(rva)+'</td><td>'+itnum(rvb)+'</td><td>'+varCell(rva,rvb,it.grp,it.ind)+'</td></tr>'; }
+      if(hasrow){ anyProv=true;
+        blocks+='<h3>'+esc(it.label)+'</h3><table><thead><tr><th>Territorio</th><th>'+esc(a)+'</th><th>'+esc(b)+'</th><th>Variazione</th></tr></thead><tbody>'+trs+'</tbody></table>'; }
+    });
+    if(anyProv) provHTML='<h2>Confronto provinciale per indicatore</h2>'+
+      '<p class="syn">Per ciascun indicatore, il dettaglio delle province nei due semestri ('+esc(a)+' e '+esc(b)+'). Dato provinciale storico dal 2003; alcuni semestri o province possono non essere disponibili.</p>'+blocks;
+  }
   var content =
     '<div id="report">'+
     '<h1>Indagine Congiunturale ANCE Piemonte e Valle d\'Aosta</h1>'+
@@ -242,7 +271,8 @@ function genReport(){
     '<p class="syn">'+synTxt+'</p>'+
     '<table><thead><tr><th>Indicatore regionale</th><th>'+esc(a)+'</th><th>'+esc(b)+'</th><th>Variazione</th></tr></thead>'+
     '<tbody>'+rows+'</tbody></table>'+
-    '<p class="fnt">Fonte: ANCE Piemonte e Valle d\'Aosta - Centro Studi. Serie storica ufficiale degli indicatori regionali. '+
+    provHTML+
+    '<p class="fnt">Fonte: ANCE Piemonte e Valle d\'Aosta - Centro Studi. Serie storica ufficiale (regionale) e archivio aggregati provinciali. '+
     'I saldi sono calcolati come differenza fra la percentuale di imprese che prevede un aumento e quella che prevede una riduzione. '+
     'Il verde indica miglioramento, il rosso peggioramento.</p>'+
     '</div>';
@@ -253,6 +283,7 @@ function genReport(){
     'th,td{border:1px solid #cfd6e4;padding:6px 8px;text-align:right;}th{background:#16306b;color:#fff;text-align:right;}'+
     'th:first-child,td.ind{text-align:left;}td.ind{width:48%;}'+
     'tr.grp td{background:#eef2f8;color:#16306b;font-weight:600;text-align:left;}'+
+    'h3{color:#16306b;font-size:13px;margin:16px 0 4px;}tr.reg td{background:#f0f4fb;font-weight:600;}'+
     '.up{color:#0a7d34;font-weight:600;}.down{color:#c0392b;font-weight:600;}.flat{color:#2c4fb0;font-weight:600;}'+
     '.fnt{font-size:10px;color:#697086;margin-top:14px;text-align:justify;}.firma{font-size:12px;margin-top:18px;}'+
     '.toolbar{margin-bottom:16px;}.toolbar button{font:inherit;font-size:13px;font-weight:600;cursor:pointer;'+
@@ -260,7 +291,7 @@ function genReport(){
     '@media print{.toolbar{display:none;}body{margin:0;}}';
   var dl="function dl(){var pre='<html xmlns:w=\\'urn:schemas-microsoft-com:office:word\\'><head><meta charset=\\'utf-8\\'><style>"+
     "table{border-collapse:collapse;width:100%;font-size:12px;}th,td{border:1px solid #cfd6e4;padding:6px 8px;}"+
-    "th{background:#16306b;color:#fff;}tr.grp td{background:#eef2f8;font-weight:600;}h1,h2{color:#16306b;}"+
+    "th{background:#16306b;color:#fff;}tr.grp td{background:#eef2f8;font-weight:600;}tr.reg td{background:#f0f4fb;font-weight:600;}h1,h2,h3{color:#16306b;}"+
     ".up{color:#0a7d34;}.down{color:#c0392b;}.flat{color:#2c4fb0;}</style></head><body>';"+
     "var html=pre+document.getElementById('report').innerHTML+'</body></html>';"+
     "var blob=new Blob(['\\ufeff'+html],{type:'application/msword'});var u=URL.createObjectURL(blob);"+
