@@ -89,6 +89,11 @@
   .navitem{display:block;padding:10px 13px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--ink);cursor:pointer;text-decoration:none;border:1px solid transparent}
   .navitem:hover{background:#e6ecf7}
   .navitem.active{background:#fff;border-color:var(--line);color:var(--navy);font-weight:600;box-shadow:0 1px 2px rgba(20,40,90,.05)}
+  .navfilter{display:flex;flex-direction:column;gap:7px;padding:11px 12px 13px;border:1px solid var(--line);border-radius:9px;background:#fff;margin:1px 0 5px}
+  .navfilter label{margin-bottom:0}
+  .navfilter select{width:100%;min-width:0}
+  .navfilter button{margin-top:4px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:10px 12px}
+  .navfilter.collapsed{display:none}
   .content{flex:1;min-width:0;padding:18px}
   .view{display:none}
   .view.active{display:block}
@@ -121,7 +126,13 @@
   <aside class="sidebar">
     <nav class="nav">
       <a class="navitem active" data-view="sintesi">Quadro di sintesi</a>
-      <a class="navitem" data-view="andamento">Andamento nel tempo</a>
+      <div class="navfilter" id="navfilter">
+        <label>Semestre A (riferimento)</label>
+        <select id="repA"></select>
+        <label>Semestre B (mostrato nelle card)</label>
+        <select id="repB"></select>
+        <button id="repBtn" type="button">Genera rapporto</button>
+      </div>
       <a class="navitem" data-view="province">Confronto tra province</a>
       <a class="navitem" data-view="caratteristiche">Caratteristiche campione</a>
       <a class="navitem" data-view="metodo">Metodologia e fonti</a>
@@ -132,19 +143,8 @@
       <div class="panel">
         <h2>Quadro di confronto tra due semestri</h2>
         <p class="hint" id="kpiHint">Le card mostrano il valore del semestre B e la variazione rispetto al semestre A.</p>
-        <div class="kpiwrap">
-          <div class="kpictl">
-            <label>Semestre A (riferimento)</label>
-            <select id="repA"></select>
-            <label>Semestre B (mostrato nelle card)</label>
-            <select id="repB"></select>
-            <button id="repBtn" type="button">Genera rapporto</button>
-          </div>
-          <div id="kpis" class="kpis"><div class="loading">Caricamento dati...</div></div>
-        </div>
+        <div id="kpis" class="kpis"><div class="loading">Caricamento dati...</div></div>
       </div>
-    </section>
-    <section id="view-andamento" class="view">
       <div class="panel">
         <h2>Andamento nel tempo</h2>
         <div class="inline">
@@ -249,7 +249,8 @@ function showView(v){
   for(var i=0;i<its.length;i++) its[i].classList.toggle('active', its[i].getAttribute('data-view')===v);
   var vs=document.querySelectorAll('.view');
   for(var j=0;j<vs.length;j++) vs[j].classList.toggle('active', vs[j].id==='view-'+v);
-  if(v==='andamento') draw();
+  var nf=document.getElementById('navfilter'); if(nf) nf.classList.toggle('collapsed', v!=='sintesi');
+  if(v==='sintesi') draw();
   else if(v==='caratteristiche'){ if(CAR.length) drawCaratt(); }
   else if(v==='province') drawProvComp();
 }
