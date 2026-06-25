@@ -128,8 +128,11 @@
     </div>
     <div class="panel">
       <h2 id="provTitle">Confronto tra territori</h2>
-      <p class="hint" id="provHint">Segue il Semestre B selezionato in alto. Dato storico provinciale dal 2003.</p>
-      <div class="inline"><div><label>Indicatore</label><select id="provInd"></select></div></div>
+      <p class="hint" id="provHint">Scegli semestre e indicatore per confrontare le province. Dato storico dal 2003.</p>
+      <div class="inline">
+        <div><label>Semestre</label><select id="provPer"></select></div>
+        <div><label>Indicatore</label><select id="provInd"></select></div>
+      </div>
       <div id="provBox" class="chartbox sm"><canvas id="provChart"></canvas></div>
       <div id="provNote" class="note"></div>
     </div>
@@ -192,7 +195,7 @@ function buildRepSelect(){
   a.innerHTML=opts; b.innerHTML=opts;
   a.value=periods[Math.max(0,periods.length-2)]; b.value=periods[periods.length-1];
   a.addEventListener('change',function(){ buildKpis(); });
-  b.addEventListener('change',function(){ buildKpis(); drawProvH(); });
+  b.addEventListener('change',function(){ buildKpis(); });
   document.getElementById('repBtn').addEventListener('click',genReport);
 }
 function itnum(v){ return (v===null||v===undefined)?'n.d.':String(v).replace('.',','); }
@@ -408,6 +411,13 @@ function initProvH(rows){
       label:provGroupShort(x.Gruppo)+' - '+norm(x.Indicatore)+' ('+norm(x.Unita)+')'}); }
   });
   if(!PROVH.inds.length){ document.getElementById('provNote').innerHTML='Nessun dato provinciale nel CSV.'; return; }
+  var pmap={};
+  rows.forEach(function(x){ var o=num(x.Ordine); if(o!=null) pmap[norm(x.Periodo)]=o; });
+  PROVH.periods=Object.keys(pmap).sort(function(a,b){ return pmap[b]-pmap[a]; });
+  var psel=document.getElementById('provPer');
+  psel.innerHTML=PROVH.periods.map(function(p){ return '<option>'+esc(p)+'</option>'; }).join('');
+  psel.value=PROVH.periods[0];
+  psel.addEventListener('change',drawProvH);
   var sel=document.getElementById('provInd');
   sel.innerHTML=PROVH.inds.map(function(it,i){ return '<option value="'+i+'">'+esc(it.label)+'</option>'; }).join('');
   sel.addEventListener('change',drawProvH);
@@ -427,7 +437,7 @@ function regFromDB(it,perLabel){
 function drawProvH(){
   if(!PROVH.inds.length) return;
   var idx=Number(document.getElementById('provInd').value)||0, it=PROVH.inds[idx];
-  var perLabel=document.getElementById('repB').value || periods[periods.length-1], per=npar(perLabel);
+  var perLabel=document.getElementById('provPer').value || (PROVH.periods&&PROVH.periods[0]) || '', per=npar(perLabel);
   document.getElementById('provTitle').innerHTML='Confronto tra territori - '+esc(perLabel);
   var data=(PROVH.byPeriod[per]&&PROVH.byPeriod[per][it.key])?PROVH.byPeriod[per][it.key]:{};
   var labels=[], vals=[];
@@ -438,7 +448,7 @@ function drawProvH(){
     document.getElementById('provNote').innerHTML='';
     return;
   }
-  document.getElementById('provHint').innerHTML='Indicatori provinciali per il semestre <b>'+esc(perLabel)+'</b> (segue il Semestre B selezionato in alto).';
+  document.getElementById('provHint').innerHTML='Indicatori provinciali per il semestre <b>'+esc(perLabel)+'</b>. Cambia semestre o indicatore qui sopra.';
   provChart=new Chart(document.getElementById('provChart'),{ type:'bar',
     data:{labels:labels,datasets:[{label:it.label,data:vals,backgroundColor:'#16306b'}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
