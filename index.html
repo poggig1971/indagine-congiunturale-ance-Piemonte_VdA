@@ -123,6 +123,7 @@
         <div class="cbox"><h3>1.1 Attivita prevalente (% imprese)</h3><div class="cc"><canvas id="cAttiv"></canvas></div></div>
         <div class="cbox"><h3>1.2 Classe dimensionale</h3><div class="cc"><canvas id="cDim"></canvas></div></div>
         <div class="cbox"><h3>1.3 Classe di fatturato</h3><div class="cc"><canvas id="cFat"></canvas></div></div>
+        <div class="cbox"><h3>1.4 Fatturato fuori provincia (% imprese)</h3><div class="cc"><canvas id="cFP"></canvas></div></div>
       </div>
       <div id="carattNote" class="note"></div>
     </div>
@@ -345,7 +346,7 @@ function draw(){
     options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
       plugins:{ legend:{position:'bottom',labels:{font:{size:11},boxWidth:14}} }, scales:scales } });
 }
-var CAR=[], cAttiv=null, cDim=null, cFat=null;
+var CAR=[], cAttiv=null, cDim=null, cFat=null, cFP=null;
 function buildCaratt(){
   Papa.parse(CARATT_CSV,{download:true,header:true,skipEmptyLines:true,
     complete:function(r){ try{ initCaratt(r.data); }catch(e){ document.getElementById('carattNote').innerHTML='Errore caratteristiche: '+e.message; } },
@@ -380,7 +381,9 @@ function drawCaratt(){
     data:{labels:sD.labels,datasets:[{data:sD.data,backgroundColor:['#16306b','#2c4fb0','#1f9d55','#d68910','#c0392b','#7d3c98']}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:12}},tooltip:{callbacks:{label:function(c){return c.label+': '+c.parsed+'%';}}}}} });
   cFat=barChart('cFat',cFat,sF,'#e9892f');
-  document.getElementById('carattNote').innerHTML='Territorio: <b>'+esc(terr)+'</b>. Attivita prevalente e multi-risposta (la somma supera 100%).';
+  var sFP=carSeries(terr,'Fatturato fuori provincia');
+  cFP=barChart('cFP',cFP,sFP,'#1f9d55');
+  document.getElementById('carattNote').innerHTML='Territorio: <b>'+esc(terr)+'</b>. Riferito a I sem 2026. Attivita prevalente e multi-risposta (la somma supera 100%).';
 }
 var PROVH={byPeriod:{},inds:[],order:['Alessandria','Asti','Biella','Vercelli','Cuneo','Novara','Torino','Verbania','Aosta']};
 function npar(p){ return String(p).replace(/\./g,'').replace(/\s+/g,' ').trim().toLowerCase(); }
