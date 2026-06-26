@@ -613,7 +613,7 @@ function drawProvComp(){
 function loadMercato(){
   Papa.parse(MERCATO_CSV,{download:true,header:true,skipEmptyLines:true,
     complete:function(r){ try{ initMercato(r.data); }catch(e){ document.getElementById('mercList').innerHTML='<div class="note">Errore dati mercato: '+e.message+'</div>'; } },
-    error:function(){ document.getElementById('mercList').innerHTML='<div class="note">File mercato.csv non trovato nel repository.</div>'; } });
+    error:function(){ document.getElementById('mercList').innerHTML='<div class="note">Dati di mercato non disponibili: verifica che il foglio "Mercato" sia pubblicato sul web in formato CSV.</div>'; } });
 }
 function initMercato(rows){
   rows=rows.filter(function(x){ return x.Categoria && x.Indicatore; });
