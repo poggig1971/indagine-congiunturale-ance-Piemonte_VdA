@@ -109,6 +109,11 @@
   .merctbl th:first-child,.merctbl td:first-child,.merctbl td:nth-child(2){text-align:left}
   .merctbl .up{color:var(--up);font-weight:600}.merctbl .down{color:var(--down);font-weight:600}.merctbl .flat{color:#2c4fb0;font-weight:600}
   .mfonte{font-size:10.5px;color:var(--mut);margin:5px 0 4px}
+  .mkpi{display:flex;gap:12px;flex-wrap:wrap;margin:4px 0 14px}
+  .mk{border:1px solid var(--line);border-radius:10px;padding:9px 14px;min-width:140px;background:#fbfcfe}
+  .mk .t{font-size:11px;color:var(--mut)}
+  .mk .v{font-size:19px;font-weight:600;margin-top:2px}
+  .mk .v.up{color:var(--up)}.mk .v.down{color:var(--down)}.mk .v.flat{color:#2c4fb0}
   @media(max-width:980px){.dash{grid-template-columns:1fr}}
   @media(max-width:860px){.layout{flex-direction:column}.sidebar{flex:1 0 auto;position:static;width:100%;padding:12px 14px 0}.nav{flex-direction:row;flex-wrap:wrap}.navitem{flex:1 1 auto;text-align:center}}
 </style>
@@ -206,8 +211,15 @@
     <section id="view-mercato" class="view">
       <div class="panel">
         <h2>Mercato - indicatori di contesto</h2>
-        <p class="hint">Dati di mercato consuntivi (credito, compravendite, prezzi), a complemento delle aspettative dell'Indagine. Verde = aumento, rosso = diminuzione. I periodi possono differire tra le fonti.</p>
-        <div id="mercList"><div class="loading">Caricamento dati...</div></div>
+        <p class="hint">Dati di mercato consuntivi a complemento delle aspettative dell'Indagine. Scegli categoria, territorio e indicatore: vedi il valore piu' recente, la variazione e l'andamento storico.</p>
+        <div class="inline">
+          <div><label>Categoria</label><select id="mCat"></select></div>
+          <div><label>Territorio</label><select id="mTer"></select></div>
+          <div><label>Indicatore</label><select id="mInd"></select></div>
+        </div>
+        <div id="mKpi" class="mkpi"><div class="loading">Caricamento dati...</div></div>
+        <div class="chartbox sm"><canvas id="mChart"></canvas></div>
+        <div id="mNote" class="note"></div>
       </div>
     </section>
     <section id="view-metodo" class="view">
@@ -246,7 +258,7 @@
 var DB_CSV   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=1413930767&single=true&output=csv";
 var PROVH_CSV = "provinciali_storico.csv";
 var CARATT_CSV = "caratteristiche.csv";
-var MERCATO_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=1811166973&single=true&output=csv";
+var MERCATO_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=2103970429&single=true&output=csv";
 var PALETTE = ['#16306b','#c0392b','#1f9d55','#d68910','#7d3c98','#117a8b'];
 function num(v){ if(v===null||v===undefined||v==='') return null; var n=parseFloat(String(v).replace(',','.')); return isNaN(n)?null:n; }
 function numEU(v){ if(v===null||v===undefined||v==='') return null; var s=String(v).trim(); if(s.indexOf(',')>=0){ s=s.replace(/\./g,'').replace(/,/g,'.'); } var n=parseFloat(s); return isNaN(n)?null:n; }
@@ -279,6 +291,7 @@ function showView(v){
   if(v==='sintesi') draw();
   else if(v==='caratteristiche'){ if(CAR.length) drawCaratt(); }
   else if(v==='province') drawProvComp();
+  else if(v==='mercato'){ if(MERC.rows.length) drawMercato(); }
 }
 function updateStatus(){
   if(periods.length){ document.getElementById('stSem').textContent=periods[periods.length-1]; document.getElementById('stN').textContent=periods.length; }
@@ -612,31 +625,55 @@ function drawProvComp(){
   document.getElementById('provList').innerHTML = any ? html : '<div class="note">Nessun dato per questa provincia nei semestri scelti.</div>';
   document.getElementById('provNote').innerHTML='Verde = miglioramento, rosso = peggioramento (per pagamenti, difficolta e credito un aumento e\' peggioramento). Le barre sono in scala per ciascun indicatore.';
 }
+var MERC={rows:[]}, mChart=null;
+function mord(p){ var m=String(p).match(/(\d{4})-Q(\d)/); return m?(parseInt(m[1],10)*4+parseInt(m[2],10)):0; }
 function loadMercato(){
   Papa.parse(MERCATO_CSV,{download:true,header:true,skipEmptyLines:true,
-    complete:function(r){ try{ initMercato(r.data); }catch(e){ document.getElementById('mercList').innerHTML='<div class="note">Errore dati mercato: '+e.message+'</div>'; } },
-    error:function(){ document.getElementById('mercList').innerHTML='<div class="note">Dati di mercato non disponibili: verifica che il foglio "Mercato" sia pubblicato sul web in formato CSV.</div>'; } });
+    complete:function(r){ try{ initMercato(r.data); }catch(e){ document.getElementById('mNote').innerHTML='Errore dati mercato: '+e.message; } },
+    error:function(){ document.getElementById('mNote').innerHTML='Foglio Mercato_serie non raggiungibile (verifica la pubblicazione CSV).'; } });
 }
 function initMercato(rows){
-  rows=rows.filter(function(x){ return x.Categoria && x.Indicatore; });
-  if(!rows.length){ document.getElementById('mercList').innerHTML='<div class="note">Nessun dato di mercato disponibile.</div>'; return; }
-  var cats=[], byCat={};
-  rows.forEach(function(x){ var c=norm(x.Categoria); if(!byCat[c]){ byCat[c]=[]; cats.push(c); } byCat[c].push(x); });
-  var html='';
-  cats.forEach(function(c){
-    var rs=byCat[c], pa=norm(rs[0].PeriodoA), pb=norm(rs[0].PeriodoB);
-    html+='<h3 class="merch">'+esc(c)+'</h3>';
-    html+='<table class="merctbl"><thead><tr><th>Indicatore</th><th>Territorio</th><th>'+esc(pa)+'</th><th>'+esc(pb)+'</th><th>Var. %</th></tr></thead><tbody>';
-    rs.forEach(function(x){
-      var va=numEU(x.ValoreA), vb=numEU(x.ValoreB);
-      var vp=(va!=null && vb!=null && va!=0)?((vb-va)/va*100):null;
-      var vptxt='-';
-      if(vp!=null){ var cls=vp>0?'up':(vp<0?'down':'flat'); var ar=vp>0?(String.fromCharCode(9650)+' +'):(vp<0?(String.fromCharCode(9660)+' '):'= '); vptxt='<span class="'+cls+'">'+ar+itnum(Math.round(vp*100)/100)+'%</span>'; }
-      html+='<tr><td>'+esc(norm(x.Indicatore))+'</td><td>'+esc(norm(x.Territorio))+'</td><td>'+fmtNum(va)+'</td><td>'+fmtNum(vb)+'</td><td>'+vptxt+'</td></tr>';
-    });
-    html+='</tbody></table><div class="mfonte">Fonte: '+esc(norm(rs[0].Fonte))+' &middot; unita di misura: '+esc(norm(rs[0].Unita))+'</div>';
-  });
-  document.getElementById('mercList').innerHTML=html;
+  MERC.rows=rows.filter(function(x){ return x.Categoria && x.Indicatore && x.Territorio && x.Periodo; })
+    .map(function(x){ return {cat:norm(x.Categoria),ind:norm(x.Indicatore),ter:norm(x.Territorio),per:norm(x.Periodo),val:num(x.Valore),unita:norm(x.Unita),fonte:norm(x.Fonte),ord:mord(x.Periodo)}; });
+  if(!MERC.rows.length){ document.getElementById('mKpi').innerHTML='<div class="note">Nessun dato di mercato disponibile.</div>'; return; }
+  var cats=[]; MERC.rows.forEach(function(r){ if(cats.indexOf(r.cat)<0) cats.push(r.cat); });
+  var cs=document.getElementById('mCat'); cs.innerHTML=cats.map(function(c){ return '<option>'+esc(c)+'</option>'; }).join('');
+  cs.addEventListener('change',mCatChange);
+  document.getElementById('mTer').addEventListener('change',drawMercato);
+  document.getElementById('mInd').addEventListener('change',drawMercato);
+  mCatChange();
+}
+function mCatChange(){
+  var cat=document.getElementById('mCat').value, ters=[], inds=[];
+  MERC.rows.forEach(function(r){ if(r.cat===cat){ if(ters.indexOf(r.ter)<0) ters.push(r.ter); if(inds.indexOf(r.ind)<0) inds.push(r.ind); } });
+  document.getElementById('mTer').innerHTML=ters.map(function(t){ return '<option>'+esc(t)+'</option>'; }).join('');
+  document.getElementById('mInd').innerHTML=inds.map(function(i){ return '<option>'+esc(i)+'</option>'; }).join('');
+  drawMercato();
+}
+function mVar(curr, base){ return (base==null||curr==null||base===0)?null:(Math.round((curr-base)/base*1000)/10); }
+function mBadge(label, v){
+  if(v==null) return '<div class="mk"><div class="t">'+label+'</div><div class="v flat">n.d.</div></div>';
+  var cls=v>0?'up':(v<0?'down':'flat'), ar=v>0?(String.fromCharCode(9650)+' +'):(v<0?(String.fromCharCode(9660)+' '):'= ');
+  return '<div class="mk"><div class="t">'+label+'</div><div class="v '+cls+'">'+ar+itnum(v)+'%</div></div>';
+}
+function drawMercato(){
+  if(!MERC.rows.length) return;
+  var cat=document.getElementById('mCat').value, ter=document.getElementById('mTer').value, ind=document.getElementById('mInd').value;
+  var s=MERC.rows.filter(function(r){ return r.cat===cat && r.ter===ter && r.ind===ind && r.val!=null; }).sort(function(a,b){ return a.ord-b.ord; });
+  if(mChart){ mChart.destroy(); mChart=null; }
+  if(!s.length){ document.getElementById('mKpi').innerHTML='<div class="note">Nessun dato per la combinazione scelta.</div>'; document.getElementById('mNote').innerHTML=''; return; }
+  var last=s[s.length-1], prevQ=s.length>=2?s[s.length-2].val:null, yoy=null;
+  for(var i=0;i<s.length;i++){ if(s[i].ord===last.ord-4) yoy=s[i].val; }
+  document.getElementById('mKpi').innerHTML=
+    '<div class="mk"><div class="t">Ultimo ('+esc(last.per)+')</div><div class="v">'+fmtNum(last.val)+'</div></div>'+
+    mBadge('Var. trimestrale', mVar(last.val, prevQ))+
+    mBadge('Var. annua', mVar(last.val, yoy));
+  mChart=new Chart(document.getElementById('mChart'),{ type:'line',
+    data:{labels:s.map(function(r){return r.per;}),datasets:[{label:ind+' - '+ter,data:s.map(function(r){return r.val;}),
+      borderColor:'#16306b',backgroundColor:'#16306b',tension:.2,pointRadius:s.length>30?0:2,borderWidth:2,spanGaps:true}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{maxRotation:60,minRotation:45,font:{size:9},autoSkip:true,maxTicksLimit:16}},y:{beginAtZero:false}}} });
+  document.getElementById('mNote').innerHTML='Fonte: '+esc(last.fonte)+' &middot; unita: '+esc(last.unita)+'. Verde = aumento, rosso = diminuzione.';
 }
 </script>
 </body>
