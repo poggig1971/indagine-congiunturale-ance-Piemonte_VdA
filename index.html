@@ -249,6 +249,8 @@ var CARATT_CSV = "caratteristiche.csv";
 var MERCATO_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=1811166973&single=true&output=csv";
 var PALETTE = ['#16306b','#c0392b','#1f9d55','#d68910','#7d3c98','#117a8b'];
 function num(v){ if(v===null||v===undefined||v==='') return null; var n=parseFloat(String(v).replace(',','.')); return isNaN(n)?null:n; }
+function numEU(v){ if(v===null||v===undefined||v==='') return null; var s=String(v).trim(); if(s.indexOf(',')>=0){ s=s.replace(/\./g,'').replace(/,/g,'.'); } var n=parseFloat(s); return isNaN(n)?null:n; }
+function fmtNum(v){ if(v==null) return '-'; var p=(Math.round(v*100)/100).toString().split('.'); p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.'); return p.length>1?p.join(','):p[0]; }
 function norm(s){ return String(s===null||s===undefined?'':s).replace(/\s+/g,' ').trim(); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function clearLabel(grp,ind){ var g=String(grp).toLowerCase(); if(g.indexOf('investiment')>=0){ return ind==='No'?'Investimenti: No':'Investimenti: '+ind.replace('S\u00ec, ',''); } if(g.indexOf('portafoglio')>=0) return 'Portafoglio: '+ind; if(g.indexOf('reperimento')>=0) return 'Difficolta manodopera: '+ind; if(g.indexOf('committenti')>=0) return 'Pagam. committenti: '+ind; if(g.indexOf('fornitori')>=0) return ind==='Fornitori'?'Pagam. fornitori':'Pagam. fornitori: '+ind; return ind; }
@@ -626,11 +628,11 @@ function initMercato(rows){
     html+='<h3 class="merch">'+esc(c)+'</h3>';
     html+='<table class="merctbl"><thead><tr><th>Indicatore</th><th>Territorio</th><th>'+esc(pa)+'</th><th>'+esc(pb)+'</th><th>Var. %</th></tr></thead><tbody>';
     rs.forEach(function(x){
-      var va=num(x.ValoreA), vb=num(x.ValoreB);
+      var va=numEU(x.ValoreA), vb=numEU(x.ValoreB);
       var vp=(va!=null && vb!=null && va!=0)?((vb-va)/va*100):null;
       var vptxt='-';
       if(vp!=null){ var cls=vp>0?'up':(vp<0?'down':'flat'); var ar=vp>0?(String.fromCharCode(9650)+' +'):(vp<0?(String.fromCharCode(9660)+' '):'= '); vptxt='<span class="'+cls+'">'+ar+itnum(Math.round(vp*100)/100)+'%</span>'; }
-      html+='<tr><td>'+esc(norm(x.Indicatore))+'</td><td>'+esc(norm(x.Territorio))+'</td><td>'+(va==null?'-':itnum(va))+'</td><td>'+(vb==null?'-':itnum(vb))+'</td><td>'+vptxt+'</td></tr>';
+      html+='<tr><td>'+esc(norm(x.Indicatore))+'</td><td>'+esc(norm(x.Territorio))+'</td><td>'+fmtNum(va)+'</td><td>'+fmtNum(vb)+'</td><td>'+vptxt+'</td></tr>';
     });
     html+='</tbody></table><div class="mfonte">Fonte: '+esc(norm(rs[0].Fonte))+' &middot; unita di misura: '+esc(norm(rs[0].Unita))+'</div>';
   });
