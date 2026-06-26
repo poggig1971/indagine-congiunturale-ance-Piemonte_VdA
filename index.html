@@ -246,7 +246,7 @@
 var DB_CSV   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=1413930767&single=true&output=csv";
 var PROVH_CSV = "provinciali_storico.csv";
 var CARATT_CSV = "caratteristiche.csv";
-var MERCATO_CSV = "mercato.csv";
+var MERCATO_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=1811166973&single=true&output=csv";
 var PALETTE = ['#16306b','#c0392b','#1f9d55','#d68910','#7d3c98','#117a8b'];
 function num(v){ if(v===null||v===undefined||v==='') return null; var n=parseFloat(String(v).replace(',','.')); return isNaN(n)?null:n; }
 function norm(s){ return String(s===null||s===undefined?'':s).replace(/\s+/g,' ').trim(); }
@@ -626,7 +626,8 @@ function initMercato(rows){
     html+='<h3 class="merch">'+esc(c)+'</h3>';
     html+='<table class="merctbl"><thead><tr><th>Indicatore</th><th>Territorio</th><th>'+esc(pa)+'</th><th>'+esc(pb)+'</th><th>Var. %</th></tr></thead><tbody>';
     rs.forEach(function(x){
-      var va=num(x.ValoreA), vb=num(x.ValoreB), vp=num(x.VarPct);
+      var va=num(x.ValoreA), vb=num(x.ValoreB);
+      var vp=(va!=null && vb!=null && va!=0)?((vb-va)/va*100):null;
       var vptxt='-';
       if(vp!=null){ var cls=vp>0?'up':(vp<0?'down':'flat'); var ar=vp>0?(String.fromCharCode(9650)+' +'):(vp<0?(String.fromCharCode(9660)+' '):'= '); vptxt='<span class="'+cls+'">'+ar+itnum(Math.round(vp*100)/100)+'%</span>'; }
       html+='<tr><td>'+esc(norm(x.Indicatore))+'</td><td>'+esc(norm(x.Territorio))+'</td><td>'+(va==null?'-':itnum(va))+'</td><td>'+(vb==null?'-':itnum(vb))+'</td><td>'+vptxt+'</td></tr>';
