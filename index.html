@@ -114,6 +114,12 @@
   .mk .t{font-size:11px;color:var(--mut)}
   .mk .v{font-size:19px;font-weight:600;margin-top:2px}
   .mk .v.up{color:var(--up)}.mk .v.down{color:var(--down)}.mk .v.flat{color:#2c4fb0}
+  .navgroup{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mut);margin:14px 6px 5px}
+  .nav .navgroup:first-child{margin-top:0}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+  .chip{padding:6px 11px;border:1px solid var(--line);background:#fff;border-radius:16px;font-size:12px;cursor:pointer;color:var(--ink)}
+  .chip:hover{border-color:var(--navy2)}
+  .chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
   @media(max-width:980px){.dash{grid-template-columns:1fr}}
   @media(max-width:860px){.layout{flex-direction:column}.sidebar{flex:1 0 auto;position:static;width:100%;padding:12px 14px 0}.nav{flex-direction:row;flex-wrap:wrap}.navitem{flex:1 1 auto;text-align:center}}
 </style>
@@ -139,6 +145,7 @@
 <div class="layout">
   <aside class="sidebar">
     <nav class="nav">
+      <div class="navgroup">Indagine congiunturale</div>
       <a class="navitem active" data-view="sintesi">Quadro di sintesi</a>
       <div class="navfilter" id="navfilter">
         <label>Semestre A (riferimento)</label>
@@ -157,7 +164,9 @@
         <select id="provTer"></select>
       </div>
       <a class="navitem" data-view="caratteristiche">Caratteristiche campione</a>
+      <div class="navgroup">Dati di mercato</div>
       <a class="navitem" data-view="mercato">Mercato</a>
+      <div class="navgroup">Informazioni</div>
       <a class="navitem" data-view="metodo">Metodologia e fonti</a>
     </nav>
   </aside>
@@ -211,12 +220,12 @@
     <section id="view-mercato" class="view">
       <div class="panel">
         <h2>Mercato - indicatori di contesto</h2>
-        <p class="hint">Dati di mercato consuntivi a complemento delle aspettative dell'Indagine. Scegli categoria, territorio e indicatore: vedi il valore piu' recente, la variazione e l'andamento storico.</p>
-        <div class="inline">
-          <div><label>Categoria</label><select id="mCat"></select></div>
-          <div><label>Territorio</label><select id="mTer"></select></div>
-          <div><label>Indicatore</label><select id="mInd"></select></div>
-        </div>
+        <p class="hint">Scegli la categoria, poi attiva uno o piu' indicatori e territori: le serie compaiono insieme nel grafico. Verde = aumento, rosso = diminuzione.</p>
+        <div class="inline"><div><label>Categoria</label><select id="mCat"></select></div></div>
+        <label>Indicatori</label>
+        <div id="mIndChips" class="chips"></div>
+        <label>Territori</label>
+        <div id="mTerChips" class="chips"></div>
         <div id="mKpi" class="mkpi"><div class="loading">Caricamento dati...</div></div>
         <div class="chartbox sm"><canvas id="mChart"></canvas></div>
         <div id="mNote" class="note"></div>
@@ -625,7 +634,7 @@ function drawProvComp(){
   document.getElementById('provList').innerHTML = any ? html : '<div class="note">Nessun dato per questa provincia nei semestri scelti.</div>';
   document.getElementById('provNote').innerHTML='Verde = miglioramento, rosso = peggioramento (per pagamenti, difficolta e credito un aumento e\' peggioramento). Le barre sono in scala per ciascun indicatore.';
 }
-var MERC={rows:[]}, mChart=null;
+var MERC={rows:[]}, mChart=null, mSel={ind:{},ter:{}};
 function mord(p){ var m=String(p).match(/(\d{4})-Q(\d)/); return m?(parseInt(m[1],10)*4+parseInt(m[2],10)):0; }
 function loadMercato(){
   Papa.parse(MERCATO_CSV,{download:true,header:true,skipEmptyLines:true,
@@ -635,19 +644,32 @@ function loadMercato(){
 function initMercato(rows){
   MERC.rows=rows.filter(function(x){ return x.Categoria && x.Indicatore && x.Territorio && x.Periodo; })
     .map(function(x){ return {cat:norm(x.Categoria),ind:norm(x.Indicatore),ter:norm(x.Territorio),per:norm(x.Periodo),val:num(x.Valore),unita:norm(x.Unita),fonte:norm(x.Fonte),ord:mord(x.Periodo)}; });
+  // aggregato regionale (somma delle province) per Compravendite
+  var agg={};
+  MERC.rows.forEach(function(r){ if(r.cat==='Compravendite' && r.val!=null){ var k=r.ind+''+r.per;
+    if(!agg[k]) agg[k]={cat:'Compravendite',ind:r.ind,ter:'Piemonte e Valle d\'Aosta',per:r.per,val:0,unita:r.unita,fonte:r.fonte,ord:r.ord};
+    agg[k].val+=r.val; } });
+  Object.keys(agg).forEach(function(k){ MERC.rows.push(agg[k]); });
   if(!MERC.rows.length){ document.getElementById('mKpi').innerHTML='<div class="note">Nessun dato di mercato disponibile.</div>'; return; }
   var cats=[]; MERC.rows.forEach(function(r){ if(cats.indexOf(r.cat)<0) cats.push(r.cat); });
   var cs=document.getElementById('mCat'); cs.innerHTML=cats.map(function(c){ return '<option>'+esc(c)+'</option>'; }).join('');
   cs.addEventListener('change',mCatChange);
-  document.getElementById('mTer').addEventListener('change',drawMercato);
-  document.getElementById('mInd').addEventListener('change',drawMercato);
   mCatChange();
 }
+function mList(cat,key){ var a=[]; MERC.rows.forEach(function(r){ if(r.cat===cat && a.indexOf(r[key])<0) a.push(r[key]); }); return a; }
+function mChips(boxId,items,selObj){
+  var box=document.getElementById(boxId);
+  box.innerHTML=items.map(function(it){ return '<span class="chip'+(selObj[it]?' on':'')+'" data-v="'+esc(it)+'">'+esc(it)+'</span>'; }).join('');
+  var ch=box.querySelectorAll('.chip');
+  for(var i=0;i<ch.length;i++){ ch[i].addEventListener('click',function(){ var v=this.getAttribute('data-v'); selObj[v]=!selObj[v]; this.classList.toggle('on',!!selObj[v]); drawMercato(); }); }
+}
 function mCatChange(){
-  var cat=document.getElementById('mCat').value, ters=[], inds=[];
-  MERC.rows.forEach(function(r){ if(r.cat===cat){ if(ters.indexOf(r.ter)<0) ters.push(r.ter); if(inds.indexOf(r.ind)<0) inds.push(r.ind); } });
-  document.getElementById('mTer').innerHTML=ters.map(function(t){ return '<option>'+esc(t)+'</option>'; }).join('');
-  document.getElementById('mInd').innerHTML=inds.map(function(i){ return '<option>'+esc(i)+'</option>'; }).join('');
+  var cat=document.getElementById('mCat').value, inds=mList(cat,'ind'), ters=mList(cat,'ter');
+  mSel.ind={}; mSel.ter={};
+  if(inds.length) mSel.ind[inds[0]]=true;
+  if(ters.length) mSel.ter[ters[0]]=true;
+  mChips('mIndChips',inds,mSel.ind);
+  mChips('mTerChips',ters,mSel.ter);
   drawMercato();
 }
 function mVar(curr, base){ return (base==null||curr==null||base===0)?null:(Math.round((curr-base)/base*1000)/10); }
@@ -656,24 +678,38 @@ function mBadge(label, v){
   var cls=v>0?'up':(v<0?'down':'flat'), ar=v>0?(String.fromCharCode(9650)+' +'):(v<0?(String.fromCharCode(9660)+' '):'= ');
   return '<div class="mk"><div class="t">'+label+'</div><div class="v '+cls+'">'+ar+itnum(v)+'%</div></div>';
 }
+function mSeriesFor(cat,ter,ind){ return MERC.rows.filter(function(r){ return r.cat===cat&&r.ter===ter&&r.ind===ind&&r.val!=null; }).sort(function(a,b){ return a.ord-b.ord; }); }
+function mShort(ind){ return String(ind).replace('Compravendite residenziale - ','').replace('Prezzi abitazioni - ','').replace(' (NTN)','').replace(/\s*\(H\d+\)/,''); }
 function drawMercato(){
   if(!MERC.rows.length) return;
-  var cat=document.getElementById('mCat').value, ter=document.getElementById('mTer').value, ind=document.getElementById('mInd').value;
-  var s=MERC.rows.filter(function(r){ return r.cat===cat && r.ter===ter && r.ind===ind && r.val!=null; }).sort(function(a,b){ return a.ord-b.ord; });
+  var cat=document.getElementById('mCat').value;
+  var selT=Object.keys(mSel.ter).filter(function(k){return mSel.ter[k];});
+  var selI=Object.keys(mSel.ind).filter(function(k){return mSel.ind[k];});
   if(mChart){ mChart.destroy(); mChart=null; }
-  if(!s.length){ document.getElementById('mKpi').innerHTML='<div class="note">Nessun dato per la combinazione scelta.</div>'; document.getElementById('mNote').innerHTML=''; return; }
-  var last=s[s.length-1], prevQ=s.length>=2?s[s.length-2].val:null, yoy=null;
-  for(var i=0;i<s.length;i++){ if(s[i].ord===last.ord-4) yoy=s[i].val; }
-  document.getElementById('mKpi').innerHTML=
-    '<div class="mk"><div class="t">Ultimo ('+esc(last.per)+')</div><div class="v">'+fmtNum(last.val)+'</div></div>'+
-    mBadge('Var. trimestrale', mVar(last.val, prevQ))+
-    mBadge('Var. annua', mVar(last.val, yoy));
-  mChart=new Chart(document.getElementById('mChart'),{ type:'line',
-    data:{labels:s.map(function(r){return r.per;}),datasets:[{label:ind+' - '+ter,data:s.map(function(r){return r.val;}),
-      borderColor:'#16306b',backgroundColor:'#16306b',tension:.2,pointRadius:s.length>30?0:2,borderWidth:2,spanGaps:true}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+  var allPer={}, ds=[], ci=0, unit='', fonte='';
+  selT.forEach(function(t){ selI.forEach(function(ind){
+    var s=mSeriesFor(cat,t,ind); if(!s.length) return;
+    unit=s[0].unita; fonte=s[0].fonte;
+    var map={}; s.forEach(function(r){ allPer[r.per]=r.ord; map[r.per]=r.val; });
+    ds.push({_t:t,_i:ind,label:t+' - '+mShort(ind),color:PALETTE[ci%PALETTE.length],map:map}); ci++;
+  });});
+  var box=document.getElementById('mKpi');
+  if(!ds.length){ box.innerHTML='<div class="note">Seleziona almeno un indicatore e un territorio.</div>'; document.getElementById('mNote').innerHTML=''; return; }
+  var pers=Object.keys(allPer).sort(function(a,b){return allPer[a]-allPer[b];});
+  var datasets=ds.map(function(d){ return {label:d.label,data:pers.map(function(p){return (p in d.map)?d.map[p]:null;}),borderColor:d.color,backgroundColor:d.color,tension:.2,pointRadius:pers.length>30?0:2,borderWidth:2,spanGaps:true}; });
+  mChart=new Chart(document.getElementById('mChart'),{ type:'line', data:{labels:pers,datasets:datasets},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:ds.length>1,position:'bottom',labels:{font:{size:10},boxWidth:12}}},
       scales:{x:{ticks:{maxRotation:60,minRotation:45,font:{size:9},autoSkip:true,maxTicksLimit:16}},y:{beginAtZero:false}}} });
-  document.getElementById('mNote').innerHTML='Fonte: '+esc(last.fonte)+' &middot; unita: '+esc(last.unita)+'. Verde = aumento, rosso = diminuzione.';
+  if(ds.length===1){
+    var s=mSeriesFor(cat,ds[0]._t,ds[0]._i), last=s[s.length-1], prevQ=s.length>=2?s[s.length-2].val:null, yoy=null;
+    for(var i=0;i<s.length;i++){ if(s[i].ord===last.ord-4) yoy=s[i].val; }
+    box.innerHTML='<div class="mk"><div class="t">Ultimo ('+esc(last.per)+')</div><div class="v">'+fmtNum(last.val)+'</div></div>'+
+      mBadge('Var. trimestrale',mVar(last.val,prevQ))+mBadge('Var. annua',mVar(last.val,yoy));
+  } else {
+    box.innerHTML='<div class="note">'+ds.length+' serie a confronto. Attiva una sola combinazione (un indicatore + un territorio) per vedere valore e variazioni.</div>';
+  }
+  document.getElementById('mNote').innerHTML='Fonte: '+esc(fonte)+' &middot; unita: '+esc(unit)+'. Verde = aumento, rosso = diminuzione.';
 }
 </script>
 </body>
