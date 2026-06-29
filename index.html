@@ -637,7 +637,7 @@ function drawProvComp(){
   document.getElementById('provNote').innerHTML='Verde = miglioramento, rosso = peggioramento (per pagamenti, difficolta e credito un aumento e\' peggioramento). Le barre sono in scala per ciascun indicatore.';
 }
 var MERC={rows:[]}, mChart=null, mSel={ind:{},ter:{}};
-function mord(p){ var m=String(p).match(/(\d{4})-Q(\d)/); return m?(parseInt(m[1],10)*4+parseInt(m[2],10)):0; }
+function mord(p){ var s=String(p); var q=s.match(/(\d{4})-Q(\d)/); if(q) return parseInt(q[1],10)*12+parseInt(q[2],10)*3; var m=s.match(/(\d{4})-(\d{2})/); if(m) return parseInt(m[1],10)*12+parseInt(m[2],10); return 0; }
 function loadMercato(){
   Papa.parse(MERCATO_CSV,{download:true,header:true,skipEmptyLines:true,
     complete:function(r){ try{ initMercato(r.data); }catch(e){ document.getElementById('mNote').innerHTML='Errore dati mercato: '+e.message; } },
@@ -683,7 +683,7 @@ function mBadge(label, v){
   return '<div class="mk"><div class="t">'+label+'</div><div class="v '+cls+'">'+ar+itnum(v)+'%</div></div>';
 }
 function mSeriesFor(cat,ter,ind){ return MERC.rows.filter(function(r){ return r.cat===cat&&r.ter===ter&&r.ind===ind&&r.val!=null; }).sort(function(a,b){ return a.ord-b.ord; }); }
-function mShort(ind){ return String(ind).replace('Compravendite residenziale - ','').replace('Prezzi abitazioni - ','').replace(' (NTN)','').replace(/\s*\(H\d+\)/,''); }
+function mShort(ind){ return String(ind).replace('Compravendite residenziale - ','').replace('Prezzi abitazioni - ','').replace('Appalti ','').replace(' (NTN)','').replace(/\s*\(H\d+\)/,''); }
 function drawMercato(){
   if(!MERC.rows.length) return;
   var cat=document.getElementById('mCat').value;
@@ -695,21 +695,26 @@ function drawMercato(){
     var s=mSeriesFor(cat,t,ind); if(!s.length) return;
     unit=s[0].unita; fonte=s[0].fonte;
     var map={}; s.forEach(function(r){ allPer[r.per]=r.ord; map[r.per]=r.val; });
-    ds.push({_t:t,_i:ind,label:t+' - '+mShort(ind),color:PALETTE[ci%PALETTE.length],map:map,tot:/TOTALE/i.test(ind)}); ci++;
+    ds.push({_t:t,_i:ind,label:t+' - '+mShort(ind),color:PALETTE[ci%PALETTE.length],map:map,tot:/TOTALE/i.test(ind),unit:s[0].unita}); ci++;
   });});
   var box=document.getElementById('mKpi');
   if(!ds.length){ box.innerHTML='<div class="note">Seleziona almeno un indicatore e un territorio.</div>'; document.getElementById('mNote').innerHTML=''; return; }
   var pers=Object.keys(allPer).sort(function(a,b){return allPer[a]-allPer[b];});
-  var datasets=ds.map(function(d){ return {label:d.label,data:pers.map(function(p){return (p in d.map)?d.map[p]:null;}),borderColor:d.color,backgroundColor:d.color,borderDash:d.tot?[6,4]:[],tension:.2,pointRadius:pers.length>30?0:2,borderWidth:2,spanGaps:true}; });
+  var units=[]; ds.forEach(function(d){ if(units.indexOf(d.unit)<0) units.push(d.unit); });
+  var axisOf={}; units.forEach(function(u,i){ axisOf[u]=(i===0?'y':'y1'); }); // 1a unita a sinistra, 2a a destra
+  var datasets=ds.map(function(d){ return {label:d.label,data:pers.map(function(p){return (p in d.map)?d.map[p]:null;}),borderColor:d.color,backgroundColor:d.color,borderDash:d.tot?[6,4]:[],tension:.2,pointRadius:pers.length>30?0:2,borderWidth:2,spanGaps:true,yAxisID:(axisOf[d.unit]==='y1'?'y1':'y')}; });
+  var scales={x:{ticks:{maxRotation:60,minRotation:45,font:{size:9},autoSkip:true,maxTicksLimit:16}},
+    y:{position:'left',beginAtZero:false,title:{display:!!units[0],text:units[0]||'',font:{size:10}}}};
+  if(units.length>1){ scales.y1={position:'right',beginAtZero:false,title:{display:true,text:units[1],font:{size:10}},grid:{drawOnChartArea:false}}; }
   mChart=new Chart(document.getElementById('mChart'),{ type:'line', data:{labels:pers,datasets:datasets},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:ds.length>1,position:'bottom',labels:{font:{size:10},boxWidth:12}}},
-      scales:{x:{ticks:{maxRotation:60,minRotation:45,font:{size:9},autoSkip:true,maxTicksLimit:16}},y:{beginAtZero:false}}} });
+      scales:scales} });
   if(ds.length===1){
     var s=mSeriesFor(cat,ds[0]._t,ds[0]._i), last=s[s.length-1], prevQ=s.length>=2?s[s.length-2].val:null, yoy=null;
-    for(var i=0;i<s.length;i++){ if(s[i].ord===last.ord-4) yoy=s[i].val; }
+    for(var i=0;i<s.length;i++){ if(s[i].ord===last.ord-12) yoy=s[i].val; }
     box.innerHTML='<div class="mk"><div class="t">Ultimo ('+esc(last.per)+')</div><div class="v">'+fmtNum(last.val)+'</div></div>'+
-      mBadge('Var. trimestrale',mVar(last.val,prevQ))+mBadge('Var. annua',mVar(last.val,yoy));
+      mBadge('Var. periodo prec.',mVar(last.val,prevQ))+mBadge('Var. annua',mVar(last.val,yoy));
   } else {
     box.innerHTML='<div class="note">'+ds.length+' serie a confronto. Attiva una sola combinazione (un indicatore + un territorio) per vedere valore e variazioni.</div>';
   }
