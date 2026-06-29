@@ -652,6 +652,11 @@ function initMercato(rows){
     if(!agg[k]) agg[k]={cat:'Compravendite',ind:r.ind,ter:'Piemonte e Valle d\'Aosta',per:r.per,val:0,unita:r.unita,fonte:r.fonte,ord:r.ord};
     agg[k].val+=r.val; } });
   Object.keys(agg).forEach(function(k){ MERC.rows.push(agg[k]); });
+  var aggP={};
+  MERC.rows.forEach(function(r){ if(r.cat==='Compravendite' && r.ter!=='Aosta' && r.ter!=='Piemonte' && r.ter.indexOf('Valle')<0 && r.val!=null){ var k=r.ind+'|'+r.per;
+    if(!aggP[k]) aggP[k]={cat:'Compravendite',ind:r.ind,ter:'Piemonte',per:r.per,val:0,unita:r.unita,fonte:r.fonte,ord:r.ord};
+    aggP[k].val+=r.val; } });
+  Object.keys(aggP).forEach(function(k){ MERC.rows.push(aggP[k]); });
   if(!MERC.rows.length){ document.getElementById('mKpi').innerHTML='<div class="note">Nessun dato di mercato disponibile.</div>'; return; }
   var cats=[]; MERC.rows.forEach(function(r){ if(cats.indexOf(r.cat)<0) cats.push(r.cat); });
   var cs=document.getElementById('mCat'); cs.innerHTML=cats.map(function(c){ return '<option>'+esc(c)+'</option>'; }).join('');
@@ -670,8 +675,16 @@ function mCatChange(){
   var TORD=['Alessandria','Asti','Biella','Cuneo','Novara','Torino','Verbania','Vercelli','Piemonte','Piemonte e Valle d\'Aosta','Italia','Aosta'];
   ters.sort(function(a,b){ var ia=TORD.indexOf(a),ib=TORD.indexOf(b); if(ia<0)ia=50; if(ib<0)ib=50; return ia-ib || (a<b?-1:1); });
   mSel.ind={}; mSel.ter={};
-  if(inds.length) mSel.ind[inds[0]]=true;
-  if(ters.length) mSel.ter[ters[0]]=true;
+  var MDEF={
+    'Prezzi':{ter:'Torino',ind:['Prezzi abitazioni - totale (H1)']},
+    'Compravendite':{ter:'Piemonte',ind:['Compravendite residenziale - totale (NTN)','Compravendite residenziale - capoluogo (NTN)']},
+    'Credito':{ter:'Piemonte',ind:['Investimenti costruzioni - TOTALE non finanziari','Acquisto immobili - TOTALE famiglie']},
+    'Appalti':{ter:'Piemonte',ind:['Appalti lavori (importo)','Appalti lavori (numero)']}
+  };
+  var dft=MDEF[cat];
+  if(dft){ dft.ind.forEach(function(i){ if(inds.indexOf(i)>=0) mSel.ind[i]=true; }); if(ters.indexOf(dft.ter)>=0) mSel.ter[dft.ter]=true; }
+  if(!Object.keys(mSel.ind).length && inds.length) mSel.ind[inds[0]]=true;
+  if(!Object.keys(mSel.ter).length && ters.length) mSel.ter[ters[0]]=true;
   mChips('mIndChips',inds,mSel.ind);
   mChips('mTerChips',ters,mSel.ter);
   drawMercato();
