@@ -223,9 +223,10 @@
       <div class="panel">
         <h2>Mercato - indicatori di contesto</h2>
         <p class="hint">Scegli la categoria, poi attiva uno o piu' indicatori e territori: le serie compaiono insieme nel grafico. Verde = aumento, rosso = diminuzione.</p>
-        <div class="inline"><div><label>Categoria</label><select id="mCat"></select></div></div>
-        <label>Indicatori</label>
-        <div id="mIndChips" class="chips"></div>
+        <div class="inline" style="align-items:flex-start">
+          <div><label>Categoria</label><select id="mCat"></select></div>
+          <div style="flex:1;min-width:220px"><label>Indicatori</label><div id="mIndChips" class="chips" style="margin:4px 0 0"></div></div>
+        </div>
         <label>Territori</label>
         <div id="mTerChips" class="chips"></div>
         <div id="mKpi" class="mkpi"><div class="loading">Caricamento dati...</div></div>
