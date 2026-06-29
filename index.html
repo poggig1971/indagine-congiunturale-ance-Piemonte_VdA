@@ -120,6 +120,8 @@
   .chip{padding:6px 11px;border:1px solid var(--line);background:#fff;border-radius:16px;font-size:12px;cursor:pointer;color:var(--ink)}
   .chip:hover{border-color:var(--navy2)}
   .chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .chip.tot{border-color:#e9892f;color:#b3600f}
+  .chip.tot.on{background:#e9892f;border-color:#e9892f;color:#fff}
   @media(max-width:980px){.dash{grid-template-columns:1fr}}
   @media(max-width:860px){.layout{flex-direction:column}.sidebar{flex:1 0 auto;position:static;width:100%;padding:12px 14px 0}.nav{flex-direction:row;flex-wrap:wrap}.navitem{flex:1 1 auto;text-align:center}}
 </style>
@@ -659,12 +661,14 @@ function initMercato(rows){
 function mList(cat,key){ var a=[]; MERC.rows.forEach(function(r){ if(r.cat===cat && a.indexOf(r[key])<0) a.push(r[key]); }); return a; }
 function mChips(boxId,items,selObj){
   var box=document.getElementById(boxId);
-  box.innerHTML=items.map(function(it){ return '<span class="chip'+(selObj[it]?' on':'')+'" data-v="'+esc(it)+'">'+esc(it)+'</span>'; }).join('');
+  box.innerHTML=items.map(function(it){ var tot=/TOTALE/i.test(it)?' tot':''; return '<span class="chip'+tot+(selObj[it]?' on':'')+'" data-v="'+esc(it)+'">'+esc(it)+'</span>'; }).join('');
   var ch=box.querySelectorAll('.chip');
   for(var i=0;i<ch.length;i++){ ch[i].addEventListener('click',function(){ var v=this.getAttribute('data-v'); selObj[v]=!selObj[v]; this.classList.toggle('on',!!selObj[v]); drawMercato(); }); }
 }
 function mCatChange(){
   var cat=document.getElementById('mCat').value, inds=mList(cat,'ind'), ters=mList(cat,'ter');
+  var TORD=['Alessandria','Asti','Biella','Cuneo','Novara','Torino','Verbania','Vercelli','Piemonte','Piemonte e Valle d\'Aosta','Italia','Aosta'];
+  ters.sort(function(a,b){ var ia=TORD.indexOf(a),ib=TORD.indexOf(b); if(ia<0)ia=50; if(ib<0)ib=50; return ia-ib || (a<b?-1:1); });
   mSel.ind={}; mSel.ter={};
   if(inds.length) mSel.ind[inds[0]]=true;
   if(ters.length) mSel.ter[ters[0]]=true;
@@ -691,12 +695,12 @@ function drawMercato(){
     var s=mSeriesFor(cat,t,ind); if(!s.length) return;
     unit=s[0].unita; fonte=s[0].fonte;
     var map={}; s.forEach(function(r){ allPer[r.per]=r.ord; map[r.per]=r.val; });
-    ds.push({_t:t,_i:ind,label:t+' - '+mShort(ind),color:PALETTE[ci%PALETTE.length],map:map}); ci++;
+    ds.push({_t:t,_i:ind,label:t+' - '+mShort(ind),color:PALETTE[ci%PALETTE.length],map:map,tot:/TOTALE/i.test(ind)}); ci++;
   });});
   var box=document.getElementById('mKpi');
   if(!ds.length){ box.innerHTML='<div class="note">Seleziona almeno un indicatore e un territorio.</div>'; document.getElementById('mNote').innerHTML=''; return; }
   var pers=Object.keys(allPer).sort(function(a,b){return allPer[a]-allPer[b];});
-  var datasets=ds.map(function(d){ return {label:d.label,data:pers.map(function(p){return (p in d.map)?d.map[p]:null;}),borderColor:d.color,backgroundColor:d.color,tension:.2,pointRadius:pers.length>30?0:2,borderWidth:2,spanGaps:true}; });
+  var datasets=ds.map(function(d){ return {label:d.label,data:pers.map(function(p){return (p in d.map)?d.map[p]:null;}),borderColor:d.color,backgroundColor:d.color,borderDash:d.tot?[6,4]:[],tension:.2,pointRadius:pers.length>30?0:2,borderWidth:2,spanGaps:true}; });
   mChart=new Chart(document.getElementById('mChart'),{ type:'line', data:{labels:pers,datasets:datasets},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:ds.length>1,position:'bottom',labels:{font:{size:10},boxWidth:12}}},
