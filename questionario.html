@@ -1513,16 +1513,25 @@ $('q').addEventListener('submit', async ev => {
     credBreve: Number($('credBreve').value||0)
   };
   const btn = $('btn'); btn.disabled = true; btn.textContent = 'Invio in corso…';
+  /* l'invio ha un limite di tempo: senza, in caso di mancata risposta del
+     server il pulsante resterebbe in attesa senza alcuna indicazione. */
+  const ATTESA_MAX = 30000;
+  const stop = new AbortController();
+  const scaduto = setTimeout(() => stop.abort(), ATTESA_MAX);
   try{
-    const r = await fetch(ENDPOINT, {method:'POST', body: JSON.stringify(payload)});
+    const r = await fetch(ENDPOINT, {method:'POST', body: JSON.stringify(payload), signal: stop.signal});
     const res = await r.json();
     if(res.ok){ schermataGrazie(res); return; }
-    mostraErrore('Invio non riuscito: ' + (res.error || 'errore sconosciuto') + '.');
+    mostraErrore('Invio non riuscito: ' + String(res.error || 'errore sconosciuto').replace(/\.$/,'') + '.');
     $('msg').scrollIntoView({block:'center', behavior:'smooth'});
   }catch(err){
-    mostraErrore('Errore di rete: ' + err + '. Si prega di verificare la connessione e riprovare.');
+    mostraErrore(err && err.name === 'AbortError'
+      ? 'Il server non ha risposto entro 30 secondi. Premere nuovamente "Invia il questionario": '
+        + 'se la registrazione fosse comunque avvenuta, il sistema segnalerà un doppio invio e non creerà duplicati.'
+      : 'Errore di rete: ' + err + '. Si prega di verificare la connessione e riprovare.');
     $('msg').scrollIntoView({block:'center', behavior:'smooth'});
   }finally{
+    clearTimeout(scaduto);
     btn.disabled = false;
     btn.innerHTML = 'Invia il questionario <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
   }
