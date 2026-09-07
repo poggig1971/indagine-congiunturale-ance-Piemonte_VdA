@@ -1,0 +1,17 @@
+{
+ "periodo": "II semestre 2026",
+ "periodo_cod": 226,
+ "aggiornato": "07/09/2026",
+ "totale": 2,
+ "province": [
+  {
+   "nome": "Cuneo",
+   "n": 1
+  },
+  {
+   "nome": "Torino",
+   "n": 1
+  }
+ ],
+ "fonte": "Microdati Indagine Congiunturale ANCE Piemonte e Valle d'Aosta"
+}

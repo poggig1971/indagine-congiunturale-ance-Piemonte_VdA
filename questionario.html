@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Questionario — 49ª Indagine Congiunturale ANCE Piemonte e Valle d'Aosta</title>
 <meta name="description" content="Questionario online della 49ª Indagine Congiunturale tra le imprese edili del Piemonte e della Valle d'Aosta — secondo semestre 2026.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23003B73'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='15' font-weight='bold' fill='white' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23003B73'/%3E%3Ctext x='16' y='23' font-family='Arial' font-size='16' font-weight='bold' fill='white' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,20 +13,29 @@
 /* ==========================================================================
    CENTRO STUDI ANCE PIEMONTE E VALLE D'AOSTA
    49ª Indagine Congiunturale — questionario online
-   Foglio di stile per blocchi:
-     1. Token      5. Progresso     9. Benchmark
-     2. Basi       6. Sezioni      10. Invio
-     3. Testata    7. Domande      11. Note e piede
-     4. Apertura   8. Campi        12. Responsive · 13. Accessibilità
+   Impianto a due riquadri: pannello informativo fisso a sinistra,
+   riquadro di compilazione scorrevole a destra.
+   Blocchi: 1 token · 2 basi · 3 testata · 4 pannello · 5 contatore
+            6 progresso · 7 sezioni · 8 domande · 9 campi · 10 benchmark
+            11 chiusura · 12 responsive · 13 accessibilità
    ========================================================================== */
 
 /* --- 1. TOKEN ------------------------------------------------------------ */
 :root{
+  /* struttura */
   --blu:#003B73;
   --blu-scuro:#002B54;
-  --blu-medio:#005B9A;
-  --blu-chiaro:#EAF2F8;
-  --fondo:#F4F6F8;
+  --blu-notte:#0A3041;
+  /* scala azzurra (palette Centro Studi) */
+  --s5:#0F4861;
+  --s4:#156082;
+  --s3:#45B0E1;
+  --s2:#83CAEB;
+  --s1:#C1E4F5;
+  --velo:#EAF2F8;
+  --velo-2:#DCEAF7;
+  /* neutri */
+  --fondo:#EEF2F6;
   --bianco:#FFFFFF;
   --testo:#25313C;
   --testo-2:#65727E;
@@ -35,7 +44,10 @@
   --campo-attivo:#F7FBFE;
   --ok:#0F6B3F;
   --err:#A32219;
-  --max:1140px;
+  /* misure */
+  --h-testata:92px;
+  --w-pannello:400px;
+  --max:1700px;
   --t:160ms ease;
 }
 
@@ -45,110 +57,160 @@ html{-webkit-text-size-adjust:100%}
 body{
   margin:0;background:var(--fondo);color:var(--testo);
   font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
-  font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
 }
-h1,h2,h3,p{margin:0}
+h1,h2,h3,p,ul{margin:0}
+ul{list-style:none;padding:0}
 abbr{text-decoration:none}
-.contenitore{max-width:var(--max);margin:0 auto;padding:0 32px}
+[hidden]{display:none!important}
 
 /* --- 3. TESTATA ---------------------------------------------------------- */
-.testata{background:var(--blu);color:var(--bianco)}
-.testata .contenitore{
-  min-height:98px;display:flex;align-items:center;justify-content:space-between;gap:28px;
-  padding-top:16px;padding-bottom:16px;
+.testata{
+  position:sticky;top:0;z-index:50;background:var(--blu);color:var(--bianco);
+  height:var(--h-testata);display:flex;align-items:center;
 }
-.marchio{display:flex;align-items:center;gap:20px;min-width:0}
-.marchio .logo{height:38px;width:auto;display:block;flex:none;background:var(--bianco);padding:5px 9px}
-.marchio .ente{border-left:1px solid rgba(255,255,255,.28);padding-left:20px;line-height:1.35}
-.marchio .ente .n1{font-size:13.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--bianco)}
-.marchio .ente .n2{font-size:12.5px;color:rgba(255,255,255,.72);letter-spacing:.03em}
-.indagine{text-align:right;line-height:1.4;flex:none}
-.indagine .i1{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
-.indagine .i2{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.testata .interno{
+  width:100%;max-width:var(--max);margin:0 auto;padding:0 30px;
+  display:flex;align-items:center;gap:34px;
+}
+.sigla{display:flex;align-items:center;gap:22px;flex:none}
+.sigla .ance{
+  font-size:38px;font-weight:700;letter-spacing:.055em;line-height:1;color:var(--bianco);
+}
+.sigla .filetto{width:2px;height:56px;background:rgba(255,255,255,.85);flex:none}
+.sigla .ente .e1{
+  font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;line-height:1.25;
+}
+.sigla .ente .e2{font-size:13.5px;color:rgba(255,255,255,.7);letter-spacing:.02em}
 
-/* --- 4. APERTURA --------------------------------------------------------- */
-.apertura{background:var(--bianco);border-bottom:1px solid var(--bordo)}
-.apertura .contenitore{padding-top:56px;padding-bottom:0}
-.apertura h1{
-  font-size:38px;line-height:1.24;font-weight:600;letter-spacing:-.018em;
-  color:var(--blu-scuro);max-width:860px;
+.chiavi{
+  display:flex;background:var(--bianco);flex:0 1 auto;margin:0 auto;
 }
-.apertura .periodo{
-  margin-top:12px;font-size:14px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--blu-medio);
-}
-.apertura .sommario{margin-top:22px;font-size:16.5px;color:var(--testo-2);max-width:72ch;line-height:1.7}
-.apertura .obbligo{margin-top:26px;font-size:13.5px;color:var(--testo-2)}
-.apertura .obbligo .ast{color:var(--err);font-weight:700}
-.chiavi{display:flex;margin-top:38px;border-top:1px solid var(--bordo)}
-.chiavi > div{flex:1;padding:22px 30px 24px;border-left:1px solid var(--bordo)}
-.chiavi > div:first-child{border-left:0;padding-left:0}
-.chiavi .val{font-size:19px;font-weight:600;letter-spacing:.02em;color:var(--testo);line-height:1.3}
-.chiavi .val.rilievo{color:var(--blu)}
-.chiavi .eti{margin-top:4px;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--testo-2)}
+.chiavi > div{padding:11px 26px;border-left:1px solid var(--bordo);white-space:nowrap}
+.chiavi > div:first-child{border-left:0}
+.chiavi .v{font-size:15px;font-weight:600;color:var(--testo);line-height:1.35}
+.chiavi .v.rilievo{color:var(--blu)}
+.chiavi .e{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2);margin-top:1px}
 
-/* --- 5. PROGRESSO -------------------------------------------------------- */
-.progresso{position:sticky;top:0;z-index:30;background:var(--bianco);border-bottom:1px solid var(--bordo)}
-.progresso .contenitore{display:flex;align-items:center;gap:22px;padding-top:13px;padding-bottom:13px}
-.progresso .eti{
-  font-size:11.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;
+.rilevazione{text-align:right;line-height:1.4;flex:none;margin-left:auto}
+.rilevazione .r1{font-size:14.5px;font-weight:700;letter-spacing:.075em;text-transform:uppercase}
+.rilevazione .r2{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+
+/* --- 4. SCENA E PANNELLO SINISTRO ---------------------------------------- */
+.scena{
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:var(--w-pannello) minmax(0,1fr);
+  align-items:start;gap:0;background:var(--fondo);
+}
+.pannello{
+  position:sticky;top:var(--h-testata);
+  height:calc(100vh - var(--h-testata));overflow-y:auto;overscroll-behavior:contain;
+  background:var(--bianco);border-right:1px solid var(--bordo);
+  border-left:5px solid var(--blu);
+  padding:38px 34px 34px;
+}
+.pannello h1{
+  font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.015em;color:var(--blu);
+}
+.pannello .periodo{
+  margin-top:12px;font-size:13px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--s3);
+}
+.pannello .sommario{margin-top:20px;font-size:14.5px;color:var(--testo-2);line-height:1.7}
+.pannello .obbligo{
+  margin-top:22px;padding-top:18px;border-top:1px solid var(--bordo);
+  font-size:13px;color:var(--testo-2);line-height:1.6;
+}
+.pannello .obbligo .ast{color:var(--err);font-weight:700}
+
+/* --- 5. CONTATORE QUESTIONARI -------------------------------------------- */
+.contatore{margin-top:28px}
+.contatore h2{
+  background:var(--velo-2);padding:10px 14px;
+  font-size:11.5px;font-weight:700;letter-spacing:.07em;color:var(--blu);line-height:1.4;
+}
+.contatore ul{margin-top:16px}
+.contatore li{display:grid;grid-template-columns:1fr auto;gap:6px 10px;margin-bottom:11px}
+.contatore .p{font-size:13.5px;color:var(--testo)}
+.contatore .n{font-size:13.5px;font-weight:600;color:var(--testo);font-variant-numeric:tabular-nums}
+.contatore .b{grid-column:1/3;height:7px;background:var(--velo)}
+.contatore .b > i{display:block;height:100%;background:var(--s3);transition:width 300ms ease}
+.contatore li:nth-child(1) .b > i{background:var(--s5)}
+.contatore li:nth-child(2) .b > i{background:var(--s4)}
+.contatore li:nth-child(3) .b > i{background:var(--s3)}
+.contatore li:nth-child(4) .b > i{background:var(--s2)}
+.contatore li:nth-child(n+5) .b > i{background:var(--s1)}
+.contatore .totale{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-top:16px;padding-top:14px;border-top:2px solid var(--blu);
+}
+.contatore .totale .l{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blu)}
+.contatore .totale .v{font-size:26px;font-weight:600;color:var(--blu);line-height:1;font-variant-numeric:tabular-nums}
+.contatore .agg{margin-top:10px;font-size:11.5px;color:var(--testo-2)}
+.contatore .vuoto{margin-top:14px;font-size:13px;color:var(--testo-2);line-height:1.6}
+
+/* --- 6. PROGRESSO -------------------------------------------------------- */
+.lavoro{min-width:0;padding:0 0 46px}
+.progresso{
+  position:sticky;top:var(--h-testata);z-index:20;
+  background:var(--bianco);border-bottom:1px solid var(--bordo);
+  display:flex;align-items:center;gap:22px;padding:14px 34px;
+}
+.progresso .e{
+  font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
   color:var(--testo-2);white-space:nowrap;
 }
-.pista{flex:1;height:4px;background:var(--bordo);min-width:60px}
-.pista > i{display:block;height:100%;width:0;background:var(--blu);transition:width 200ms ease,background-color var(--t)}
-.progresso .cifre{
-  font-size:12.5px;font-weight:600;letter-spacing:.06em;color:var(--blu);
+.pista{flex:1;height:5px;background:var(--velo);min-width:60px}
+.pista > i{display:block;height:100%;width:0;background:var(--blu);transition:width 220ms ease,background-color var(--t)}
+.progresso .c{
+  font-size:13px;font-weight:700;letter-spacing:.05em;color:var(--blu);
   font-variant-numeric:tabular-nums;white-space:nowrap;text-transform:uppercase;
 }
 .progresso.completo .pista > i{background:var(--ok)}
-.progresso.completo .cifre{color:var(--ok)}
+.progresso.completo .c{color:var(--ok)}
 
-/* --- 6. SEZIONI ---------------------------------------------------------- */
-main{padding-bottom:10px}
-.sezione{margin-top:56px}
-.sezione > header{display:flex;align-items:flex-start;gap:26px;padding-bottom:16px}
+/* --- 7. SEZIONI ---------------------------------------------------------- */
+.interno-lavoro{padding:0 34px}
+.sezione{margin-top:34px}
+.sezione > header{
+  display:flex;align-items:center;gap:20px;background:var(--bianco);
+  border:1px solid var(--bordo);border-bottom:0;border-left:4px solid var(--blu);
+  padding:16px 24px;
+}
 .sezione .ord{
-  font-size:46px;font-weight:600;line-height:.9;color:var(--blu);
+  font-size:34px;font-weight:600;line-height:1;color:var(--blu);
   letter-spacing:-.03em;font-variant-numeric:tabular-nums;flex:none;
 }
 .sezione h2{
-  font-size:22px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  font-size:17px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
   color:var(--blu-scuro);line-height:1.3;
 }
-.sezione .occhiello{margin-top:6px;font-size:15px;color:var(--testo-2)}
-.sezione .riga{height:2px;background:var(--blu)}
-.corpo-sezione{background:var(--bianco);border:1px solid var(--bordo);border-top:0;padding:0 36px}
-.fascia-info{
-  background:var(--blu-chiaro);border-bottom:1px solid var(--bordo);
-  margin:0 -36px;padding:13px 36px;
-  font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blu);
+.sezione .occhiello{margin-top:3px;font-size:13.5px;color:var(--testo-2)}
+.corpo{background:var(--bianco);border:1px solid var(--bordo);border-top:0;padding:0 26px}
+.fascia{
+  background:var(--velo);border-bottom:1px solid var(--bordo);margin:0 -26px;padding:11px 26px;
+  font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--blu);
 }
 
-/* --- 7. DOMANDE ---------------------------------------------------------- */
-.d{
-  display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:34px;align-items:start;
-  padding:28px 0;border-bottom:1px solid var(--bordo);
-}
+/* --- 8. DOMANDE ---------------------------------------------------------- */
+.d{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:28px;
+   align-items:start;padding:24px 0;border-bottom:1px solid var(--bordo)}
 .d:last-child{border-bottom:0}
-.d-testo{min-width:0;display:grid;grid-template-columns:46px minmax(0,1fr);gap:0}
-.d-ord{
-  grid-row:1/span 5;font-size:15px;font-weight:600;color:var(--blu);
-  font-variant-numeric:tabular-nums;letter-spacing:.02em;padding-top:2px;
-}
-.d-tit{grid-column:2;font-size:18px;line-height:1.45;font-weight:600;color:var(--testo);display:block;cursor:pointer}
+.d-testo{min-width:0;display:grid;grid-template-columns:44px minmax(0,1fr);gap:0}
+.d-ord{grid-row:1/span 5;font-size:14.5px;font-weight:700;color:var(--blu);
+       font-variant-numeric:tabular-nums;padding-top:3px}
+.d-tit{grid-column:2;font-size:17px;line-height:1.45;font-weight:600;color:var(--testo);display:block;cursor:pointer}
 .d-tit abbr.req{color:var(--err);font-weight:700;margin-left:3px}
-.facolt{
-  display:inline-block;vertical-align:2px;margin-left:9px;
-  font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--blu-medio);border:1px solid #C3D7E7;background:var(--blu-chiaro);padding:2px 7px;border-radius:2px;
-}
-.d-sup{grid-column:2;margin-top:5px;font-size:13.5px;color:var(--testo-2)}
-.d-campo{grid-column:2;margin-top:15px}
-.d-nota{grid-column:2;margin-top:9px;font-size:13px;color:var(--testo-2);line-height:1.55}
-.d-err{grid-column:2;margin-top:9px;font-size:13px;font-weight:500;color:var(--err);display:none}
+.facolt{display:inline-block;vertical-align:2px;margin-left:9px;
+        font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--s4);border:1px solid #BBDCEE;background:var(--velo);padding:2px 7px}
+.d-sup{grid-column:2;margin-top:4px;font-size:13px;color:var(--testo-2)}
+.d-campo{grid-column:2;margin-top:13px}
+.d-nota{grid-column:2;margin-top:8px;font-size:12.5px;color:var(--testo-2);line-height:1.55}
+.d-err{grid-column:2;margin-top:8px;font-size:12.5px;font-weight:500;color:var(--err);display:none}
 .d.errata .d-err{display:block}
 .d.errata .d-ord{color:var(--err)}
 
-/* --- 8. CAMPI ------------------------------------------------------------ */
+/* --- 9. CAMPI ------------------------------------------------------------ */
 .campo{position:relative}
 select,input[type=text],input[type=number]{
   width:100%;height:52px;padding:0 16px;
@@ -168,150 +230,145 @@ select:hover,input:hover{border-color:#AFC0CF}
 select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);box-shadow:0 0 0 3px rgba(0,59,115,.13)}
 .campo.compilato select,.campo.compilato input{border-color:var(--blu);background:var(--campo-attivo)}
 .d.errata select,.d.errata input{border-color:var(--err);box-shadow:0 0 0 3px rgba(163,34,25,.10)}
-.coppia{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.sub{margin-top:14px}
-.sub .eti{display:block;font-size:12.5px;font-weight:600;letter-spacing:.03em;color:var(--testo-2);margin-bottom:7px}
+.coppia{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.sub{margin-top:13px}
+.sub .eti{display:block;font-size:12.5px;font-weight:600;color:var(--testo-2);margin-bottom:7px}
 .campo.unita input{padding-right:76px}
-.campo.unita .um{
-  position:absolute;right:16px;top:50%;transform:translateY(-50%);
-  font-size:13.5px;color:var(--testo-2);pointer-events:none;
-}
+.campo.unita .um{position:absolute;right:16px;top:50%;transform:translateY(-50%);
+                 font-size:13.5px;color:var(--testo-2);pointer-events:none}
 .campo.unita.compilato .um{color:var(--blu)}
 
-/* --- 9. BENCHMARK -------------------------------------------------------- */
+/* --- 10. BENCHMARK ------------------------------------------------------- */
 .lato{min-width:0}
-.bm{background:var(--blu-chiaro);border:1px solid #D3E2EE;border-left:4px solid var(--blu);
-    border-radius:2px;padding:17px 19px 16px}
-.bm-t{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--blu)}
-.bm-s{font-size:12.5px;color:var(--testo-2);margin-top:2px}
-.bm-f{font-size:11.5px;color:var(--testo-2);margin-top:8px;padding-bottom:13px;border-bottom:1px solid #CFDFEC}
-.bm-g{margin-top:13px}
-.bm-g .k{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2)}
-.bm-g .v{font-size:14px;font-weight:600;color:var(--testo);line-height:1.4;margin-top:3px}
-.bm-g .q{font-size:11.5px;color:var(--testo-2);margin-top:4px}
-.bm-d{margin-top:15px;padding-top:13px;border-top:1px solid #CFDFEC}
-.bm-d > .k{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2)}
-.riga-b{margin-top:10px}
+.bm{background:var(--velo);border:1px solid #D3E2EE;border-left:4px solid var(--blu);padding:16px 18px 15px}
+.bm-t{font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--blu)}
+.bm-s{font-size:12px;color:var(--testo-2);margin-top:2px}
+.bm-f{font-size:11px;color:var(--testo-2);margin-top:7px;padding-bottom:12px;border-bottom:1px solid #CFDFEC}
+.bm-g{margin-top:12px}
+.bm-g .k{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2)}
+.bm-g .v{font-size:13.5px;font-weight:600;color:var(--testo);line-height:1.4;margin-top:3px}
+.bm-g .q{font-size:11px;color:var(--testo-2);margin-top:3px}
+.bm-d{margin-top:14px;padding-top:12px;border-top:1px solid #CFDFEC}
+.bm-d > .k{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2)}
+.riga-b{margin-top:9px}
 .riga-b .l{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
-           font-size:12.5px;color:var(--testo);margin-bottom:5px}
+           font-size:12px;color:var(--testo);margin-bottom:4px}
 .riga-b .l .n{font-weight:600;font-variant-numeric:tabular-nums}
 .riga-b .t{height:5px;background:#D3E2EE}
-.riga-b .f{height:100%;background:var(--blu-medio);transition:width 200ms ease}
-.riga-b.g2 .f{background:#7FA3BF}
-.riga-b.g3 .f{background:#AEC4D6}
+.riga-b .f{height:100%;background:var(--s3);transition:width 200ms ease}
+.riga-b.g1 .f{background:var(--s5)}
+.riga-b.g2 .f{background:var(--s3)}
+.riga-b.g3 .f{background:var(--s2)}
 .riga-b.mia .l{font-weight:600;color:var(--blu)}
 .riga-b.mia .f{background:var(--blu)}
-.mia-r{display:block;margin-top:13px;padding:8px 11px;background:var(--bianco);
-       border:1px solid #CFDFEC;font-size:11.5px;line-height:1.45;color:var(--testo)}
+.mia-r{display:block;margin-top:12px;padding:8px 11px;background:var(--bianco);
+       border:1px solid #CFDFEC;font-size:11px;line-height:1.45;color:var(--testo)}
 .mia-r b{color:var(--blu);font-weight:600}
-.bm-n{display:flex;align-items:baseline;gap:8px;margin-top:9px}
-.bm-n .c{font-size:32px;font-weight:600;color:var(--blu);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.bm-n .u{font-size:13px;color:var(--testo-2)}
-.asse{position:relative;height:5px;background:#D3E2EE;margin:15px 0 6px}
+.bm-n{display:flex;align-items:baseline;gap:8px;margin-top:8px}
+.bm-n .c{font-size:30px;font-weight:600;color:var(--blu);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.bm-n .u{font-size:12.5px;color:var(--testo-2)}
+.asse{position:relative;height:5px;background:#D3E2EE;margin:14px 0 6px}
 .asse .m{position:absolute;top:-4px;width:2px;height:13px;background:var(--blu)}
-.asse .p{position:absolute;top:-4px;width:11px;height:11px;border-radius:50%;
-         background:var(--bianco);border:2.5px solid var(--blu-medio);transform:translateX(-50%);transition:left 200ms ease}
-.asse-l{display:flex;justify-content:space-between;font-size:10.5px;color:var(--testo-2);font-variant-numeric:tabular-nums}
-.bm-p{margin-top:13px;padding-top:11px;border-top:1px solid #CFDFEC;font-size:11.5px;line-height:1.5;color:var(--testo-2)}
+.asse .p{position:absolute;top:-4px;width:11px;height:11px;border-radius:50%;background:var(--bianco);
+         border:2.5px solid var(--s3);transform:translateX(-50%);transition:left 200ms ease}
+.asse-l{display:flex;justify-content:space-between;font-size:10px;color:var(--testo-2);font-variant-numeric:tabular-nums}
+.bm-p{margin-top:12px;padding-top:10px;border-top:1px solid #CFDFEC;font-size:11px;line-height:1.5;color:var(--testo-2)}
 .bm-p b{color:var(--testo);font-weight:600}
-.bm-attesa{
-  border:1px solid var(--bordo);border-left:4px solid var(--bordo-campo);border-radius:2px;
-  background:var(--bianco);padding:17px 19px;font-size:12.5px;line-height:1.55;color:var(--testo-2);
-}
-.bm-attesa .t{display:block;font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
-              color:var(--testo-2);margin-bottom:7px}
+.bm-attesa{border:1px solid var(--bordo);border-left:4px solid var(--bordo-campo);
+           background:var(--bianco);padding:16px 18px;font-size:12px;line-height:1.55;color:var(--testo-2)}
+.bm-attesa .t{display:block;font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+              color:var(--testo-2);margin-bottom:6px}
 
-/* --- 10. INVIO ----------------------------------------------------------- */
-.chiusura{
-  background:var(--bianco);border:1px solid var(--bordo);border-top:2px solid var(--blu);
-  margin-top:56px;padding:40px 36px 36px;text-align:center;
-}
-.chiusura .avviso{font-size:14.5px;color:var(--testo-2);margin-bottom:24px}
+/* --- 11. CHIUSURA: NOTE + INVIO ------------------------------------------ */
+.fondo{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;
+       align-items:start;margin-top:34px;padding:0 34px}
+.metodo{background:var(--bianco);border:1px solid var(--bordo)}
+.metodo summary{list-style:none;cursor:pointer;padding:16px 22px;display:flex;align-items:center;gap:12px;
+                font-size:11.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--blu)}
+.metodo summary::-webkit-details-marker{display:none}
+.metodo summary:focus-visible{outline:2px solid var(--blu);outline-offset:-2px}
+.metodo summary .frec{width:12px;height:12px;stroke:var(--s3);fill:none;stroke-width:2;
+                      transition:transform var(--t);flex:none}
+.metodo[open] summary .frec{transform:rotate(180deg)}
+.metodo .testo{padding:18px 22px 22px;border-top:1px solid var(--bordo);
+               font-size:13px;line-height:1.7;color:var(--testo-2)}
+.metodo .testo p{margin-bottom:12px}
+.metodo .testo p:last-child{margin-bottom:0}
+.metodo .testo b{color:var(--testo);font-weight:600}
+
+.invio{background:var(--bianco);border:1px solid var(--bordo);border-top:3px solid var(--blu);padding:26px 24px 24px}
+.invio .avviso{font-size:13.5px;color:var(--testo-2);margin-bottom:18px;text-align:center}
 .invia{
-  display:inline-flex;align-items:center;justify-content:center;gap:14px;
-  min-width:330px;height:54px;padding:0 46px;border:0;border-radius:7px;
-  background:var(--blu);color:var(--bianco);cursor:pointer;
-  font:inherit;font-size:15.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;gap:13px;width:100%;height:54px;
+  border:0;border-radius:6px;background:var(--blu);color:var(--bianco);cursor:pointer;
+  font:inherit;font-size:14.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   transition:background-color var(--t);
 }
 .invia:hover{background:var(--blu-scuro)}
 .invia:focus-visible{outline:3px solid rgba(0,59,115,.32);outline-offset:3px}
 .invia:disabled{background:#7E93A6;cursor:default}
-.invia svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2}
-.chiusura .privacy{margin-top:22px;font-size:13px;color:var(--testo-2);max-width:64ch;
-                   margin-left:auto;margin-right:auto;line-height:1.6}
-.esito{display:none;margin:0 0 28px;padding:15px 18px;font-size:14.5px;font-weight:500;
-       border:1px solid transparent;border-left-width:4px;text-align:left}
+.invia svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.invio .privacy{margin-top:16px;font-size:12px;color:var(--testo-2);line-height:1.6;text-align:center}
+.esito{display:none;margin-bottom:18px;padding:13px 15px;font-size:13.5px;font-weight:500;
+       border:1px solid transparent;border-left-width:4px}
 .esito.ok{display:block;background:#EFF6F1;border-color:#C4DDCD;border-left-color:var(--ok);color:var(--ok)}
 .esito.err{display:block;background:#FBF0EF;border-color:#EBCFCC;border-left-color:var(--err);color:var(--err)}
 
-/* --- 11. NOTE E PIEDE ---------------------------------------------------- */
-.metodo{background:var(--bianco);border:1px solid var(--bordo);margin:24px 0 60px}
-.metodo summary{
-  list-style:none;cursor:pointer;padding:17px 22px;display:flex;align-items:center;gap:12px;
-  font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blu);
-}
-.metodo summary::-webkit-details-marker{display:none}
-.metodo summary:focus-visible{outline:2px solid var(--blu);outline-offset:-2px}
-.metodo summary .frec{width:12px;height:12px;stroke:var(--blu-medio);fill:none;stroke-width:2;
-                      transition:transform var(--t);flex:none}
-.metodo[open] summary .frec{transform:rotate(180deg)}
-.metodo .testo{padding:18px 22px 22px;font-size:13.5px;line-height:1.7;color:var(--testo-2);
-               border-top:1px solid var(--bordo)}
-.metodo .testo p{margin-bottom:13px}
-.metodo .testo p:last-child{margin-bottom:0}
-.metodo .testo b{color:var(--testo);font-weight:600}
-
-.piede{background:var(--blu-scuro);color:rgba(255,255,255,.78);padding:40px 0 44px}
-.piede .contenitore{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap}
-.piede .n1{font-size:15px;font-weight:600;color:var(--bianco);letter-spacing:.02em}
-.piede .n2{font-size:13.5px;color:rgba(255,255,255,.66);margin-top:2px}
-.piede address{font-style:normal;font-size:13.5px;margin-top:14px;line-height:1.65}
-.piede .dx{text-align:right;font-size:13.5px;max-width:44ch}
-.piede .dx .r{color:var(--bianco);font-weight:600}
-.piede .dx p{margin-top:9px;font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.65}
+.piede{background:var(--blu-notte);color:rgba(255,255,255,.75);padding:26px 34px;margin-top:34px;
+       display:flex;justify-content:space-between;gap:26px;flex-wrap:wrap;font-size:12.5px;line-height:1.6}
+.piede b{color:var(--bianco);font-weight:600}
 
 /* --- 12. RESPONSIVE ------------------------------------------------------ */
-@media(max-width:1080px){
+@media(max-width:1480px){
   .d{grid-template-columns:1fr;gap:0}
-  .lato{margin:18px 0 0 46px}
+  .lato{margin:16px 0 0 44px;max-width:560px}
+  :root{--w-pannello:350px}
+  .fondo{grid-template-columns:minmax(0,1fr) 330px}
 }
-@media(max-width:860px){
-  .contenitore{padding:0 20px}
-  .testata .contenitore{min-height:74px}
-  .marchio .logo{height:30px}
-  .marchio .ente .n1{font-size:12px}
-  .indagine .i1{font-size:11.5px}
-  .apertura .contenitore{padding-top:36px}
-  .apertura h1{font-size:28px}
-  .apertura .sommario{font-size:15.5px}
-  .chiavi{flex-direction:column;margin-top:30px}
-  .chiavi > div{border-left:0;border-top:1px solid var(--bordo);padding:16px 0 17px}
-  .chiavi > div:first-child{border-top:0}
-  .sezione{margin-top:40px}
-  .sezione > header{gap:18px}
-  .sezione .ord{font-size:34px}
-  .sezione h2{font-size:18px}
-  .corpo-sezione{padding:0 22px}
-  .fascia-info{margin:0 -22px;padding:12px 22px}
-  .chiusura{padding:30px 22px 28px;margin-top:40px}
-  .invia{width:100%;min-width:0;padding:0 20px}
-  .piede .contenitore{flex-direction:column;gap:26px}
-  .piede .dx{text-align:left;max-width:none}
+@media(max-width:1180px){
+  :root{--h-testata:auto}
+  .testata{position:static;height:auto;padding:14px 0}
+  .testata .interno{flex-wrap:wrap;gap:16px 24px}
+  .chiavi{margin:0;width:100%;order:3}
+  .chiavi > div{flex:1;padding:10px 16px}
+  .rilevazione{margin-left:auto}
+  .scena{grid-template-columns:1fr}
+  .pannello{position:static;height:auto;overflow:visible;border-right:0;
+            border-bottom:1px solid var(--bordo);padding:30px 24px}
+  .pannello h1{font-size:26px;max-width:760px}
+  .pannello .sommario{max-width:760px}
+  .contatore{max-width:520px}
+  .progresso{position:sticky;top:0;padding:12px 24px}
+  .interno-lavoro,.fondo{padding-left:24px;padding-right:24px}
+  .fondo{grid-template-columns:1fr;gap:18px}
+  .piede{padding:24px}
 }
-@media(max-width:640px){
-  .testata .contenitore{flex-direction:column;align-items:flex-start;gap:14px;padding-top:14px;padding-bottom:14px}
-  .marchio .ente{border-left:0;padding-left:0}
-  .indagine{text-align:left}
-  .progresso .eti{display:none}
-  .progresso .contenitore{gap:14px}
-  .apertura h1{font-size:24px}
-  .d-testo{grid-template-columns:38px minmax(0,1fr)}
-  .d-ord{font-size:13.5px}
-  .d-tit{font-size:16.5px}
-  .lato{margin-left:38px}
-  .coppia{grid-template-columns:1fr;gap:14px}
+@media(max-width:720px){
+  .testata .interno{padding:0 18px;gap:14px}
+  .sigla{gap:16px}
+  .sigla .ance{font-size:30px}
+  .sigla .filetto{height:44px}
+  .sigla .ente .e1{font-size:12.5px}
+  .rilevazione .r1{font-size:12px}
+  .rilevazione .r2{font-size:10.5px}
+  .chiavi > div{flex:1;padding:8px 8px;text-align:center;min-width:0;white-space:normal}
+  .chiavi .v{font-size:12.5px;line-height:1.3;white-space:normal}
+  .chiavi .e{font-size:8.5px;letter-spacing:.06em}
+  .pannello{padding:24px 18px}
+  .pannello h1{font-size:22px}
+  .progresso .e{display:none}
+  .progresso{padding:11px 18px;gap:14px}
+  .interno-lavoro,.fondo{padding-left:18px;padding-right:18px}
+  .sezione > header{padding:14px 18px;gap:14px}
+  .sezione .ord{font-size:28px}
+  .sezione h2{font-size:15px}
+  .corpo{padding:0 18px}
+  .fascia{margin:0 -18px;padding:10px 18px}
+  .d-testo{grid-template-columns:36px minmax(0,1fr)}
+  .lato{margin-left:36px}
+  .coppia{grid-template-columns:1fr;gap:13px}
   select,input[type=text],input[type=number]{height:50px;font-size:16px}
+  .piede{padding:22px 18px}
 }
 
 /* --- 13. ACCESSIBILITÀ E STAMPA ------------------------------------------ */
@@ -322,9 +379,10 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
        padding:11px 18px;z-index:99;font-size:14px;font-weight:600}
 .salta:focus{left:0}
 @media print{
-  .progresso,.lato,.chiusura,.salta{display:none}
+  .progresso,.lato,.invio,.salta,.contatore{display:none}
   body{background:#fff}
-  .corpo-sezione{border:0}
+  .scena{display:block}
+  .pannello{position:static;height:auto;overflow:visible;border:0}
 }
 </style>
 </head>
@@ -334,117 +392,113 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
 
 <!-- ===================== TESTATA ===================== -->
 <header class="testata">
-  <div class="contenitore">
-    <div class="marchio">
-      <img class="logo" src="logo-ance.jpg" alt="ANCE Piemonte Valle d'Aosta">
-      <div class="ente">
-        <div class="n1">ANCE Piemonte Valle d'Aosta</div>
-        <div class="n2">Centro Studi</div>
-      </div>
+  <div class="interno">
+    <div class="sigla">
+      <span class="ance">ANCE</span>
+      <span class="filetto" aria-hidden="true"></span>
+      <span class="ente">
+        <span class="e1">Piemonte Valle d'Aosta</span><br>
+        <span class="e2">Centro Studi</span>
+      </span>
     </div>
-    <div class="indagine">
-      <div class="i1">49ª Indagine Congiunturale</div>
-      <div class="i2">Secondo semestre 2026</div>
+    <div class="chiavi">
+      <div><div class="v">5 minuti</div><div class="e">Tempo stimato</div></div>
+      <div><div class="v">Anonima</div><div class="e">Compilazione anonima</div></div>
+      <div><div class="v rilievo">5 ottobre 2026</div><div class="e">Termine per la compilazione</div></div>
+    </div>
+    <div class="rilevazione">
+      <div class="r1">49ª Indagine Congiunturale</div>
+      <div class="r2">Secondo semestre 2026</div>
     </div>
   </div>
 </header>
 
-<!-- ===================== APERTURA ===================== -->
-<div class="apertura">
-  <div class="contenitore">
+<div class="scena">
+
+  <!-- ===================== PANNELLO SINISTRO ===================== -->
+  <aside class="pannello">
     <h1>Questionario sulla congiuntura nel settore edile piemontese e valdostano</h1>
     <p class="periodo">Secondo semestre 2026</p>
     <p class="sommario">La rilevazione monitora l'andamento e le prospettive del comparto attraverso le aspettative delle imprese su fatturato, occupazione, portafoglio ordini, investimenti, reperimento della manodopera e situazione finanziaria.</p>
     <p class="obbligo"><span class="ast">*</span> Campo obbligatorio. I restanti quesiti possono essere lasciati in bianco qualora il dato non sia disponibile.</p>
-    <div class="chiavi">
-      <div><div class="val">5 minuti</div><div class="eti">Tempo stimato</div></div>
-      <div><div class="val">Anonima</div><div class="eti">Compilazione anonima</div></div>
-      <div><div class="val rilievo">5 ottobre 2026</div><div class="eti">Termine per la compilazione</div></div>
+
+    <section class="contatore" id="contatore" hidden>
+      <h2>Numero progressivo di nuovi Questionari acquisiti</h2>
+      <ul id="cont-lista"></ul>
+      <p class="vuoto" id="cont-vuoto" hidden></p>
+      <div class="totale"><span class="l">Totale</span><span class="v" id="cont-tot">0</span></div>
+      <p class="agg" id="cont-agg"></p>
+    </section>
+  </aside>
+
+  <!-- ===================== RIQUADRO DI COMPILAZIONE ===================== -->
+  <div class="lavoro">
+
+    <div class="progresso" id="progresso">
+      <span class="e">Progresso della compilazione</span>
+      <div class="pista" role="progressbar" aria-labelledby="cifre" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0" id="pista"><i id="fill"></i></div>
+      <span class="c" id="cifre" aria-live="polite">0 / 12</span>
     </div>
-  </div>
-</div>
 
-<!-- ===================== PROGRESSO ===================== -->
-<div class="progresso" id="progresso">
-  <div class="contenitore">
-    <span class="eti">Progresso della compilazione</span>
-    <div class="pista" role="progressbar" aria-labelledby="cifre" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0" id="pista"><i id="fill"></i></div>
-    <span class="cifre" id="cifre" aria-live="polite">0 / 12</span>
-  </div>
-</div>
+    <div class="interno-lavoro" id="modulo">
+      <form id="q" novalidate>
 
-<main class="contenitore" id="modulo">
-  <form id="q" novalidate>
-
-    <!-- ============ 01 · PROFILO DELL'IMPRESA ============ -->
-    <section class="sezione">
-      <header>
-        <span class="ord" aria-hidden="true">01</span>
-        <div>
-          <h2>Profilo dell'impresa</h2>
-          <p class="occhiello">Identificazione del profilo aziendale</p>
-        </div>
-      </header>
-      <div class="riga"></div>
-      <div class="corpo-sezione">
-        <div class="fascia-info">Provincia e classe dimensionale attivano il confronto con la precedente indagine</div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true"></span>
-            <label class="d-tit" for="nome">Nominativo dell'impresa <span class="facolt">Facoltativo</span></label>
-            <p class="d-sup">Utilizzato unicamente per il controllo dei doppioni</p>
-            <div class="d-campo campo">
-              <input type="text" id="nome" maxlength="120" autocomplete="organization" placeholder="Ragione sociale">
+        <!-- ============ 01 · PROFILO DELL'IMPRESA ============ -->
+        <section class="sezione">
+          <header>
+            <span class="ord" aria-hidden="true">01</span>
+            <div>
+              <h2>Profilo dell'impresa</h2>
+              <p class="occhiello">Identificazione del profilo aziendale</p>
             </div>
-            <p class="d-nota">Il questionario è anonimo: il nominativo non compare in alcuna elaborazione.</p>
-          </div>
-          <div class="lato"></div>
-        </div>
+          </header>
+          <div class="corpo">
+            <div class="fascia">Provincia e classe dimensionale attivano il confronto con la precedente indagine</div>
 
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true"></span>
-            <label class="d-tit" for="prov">Provincia di appartenenza <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <div class="d-campo campo">
-              <select id="prov" required data-req aria-describedby="err-prov">
-                <option value="">— seleziona —</option>
-                <option value="1">Alessandria</option>
-                <option value="2">Asti</option>
-                <option value="3">Biella</option>
-                <option value="4">Vercelli</option>
-                <option value="6">Cuneo</option>
-                <option value="7">Novara</option>
-                <option value="8">Torino</option>
-                <option value="9">Verbano-Cusio-Ossola</option>
-                <option value="11">Aosta (Valle d'Aosta)</option>
-              </select>
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true"></span>
+                <label class="d-tit" for="nome">Nominativo dell'impresa <span class="facolt">Facoltativo</span></label>
+                <p class="d-sup">Utilizzato unicamente per il controllo dei doppioni</p>
+                <div class="d-campo campo">
+                  <input type="text" id="nome" maxlength="120" autocomplete="organization" placeholder="Ragione sociale">
+                </div>
+                <p class="d-nota">Il questionario è anonimo: il nominativo non compare in alcuna elaborazione.</p>
+              </div>
+              <div class="lato"></div>
             </div>
-            <p class="d-err" id="err-prov">Campo obbligatorio: selezionare la provincia.</p>
-          </div>
-          <div class="lato"><div id="bm-gruppo"></div></div>
-        </div>
 
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">1.1</span>
-            <label class="d-tit" for="a1">Area di attività — principale <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <p class="d-sup">È possibile indicare fino a tre aree di attività</p>
-            <div class="d-campo campo">
-              <select id="a1" required data-req aria-describedby="err-a1">
-                <option value="">— seleziona —</option>
-                <option value="1">Edilizia privata abitativa</option>
-                <option value="2">Edilizia privata non abitativa</option>
-                <option value="3">Lavori pubblici</option>
-                <option value="4">Lavori complementari e affini</option>
-                <option value="5">Calcestruzzo</option>
-                <option value="6">Altri settori</option>
-              </select>
-              <div class="coppia sub">
-                <div class="campo">
-                  <label class="eti" for="a2">1.2 Seconda area (facoltativa)</label>
-                  <select id="a2">
-                    <option value="">—</option>
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true"></span>
+                <label class="d-tit" for="prov">Provincia di appartenenza <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <div class="d-campo campo">
+                  <select id="prov" required data-req aria-describedby="err-prov">
+                    <option value="">— seleziona —</option>
+                    <option value="1">Alessandria</option>
+                    <option value="2">Asti</option>
+                    <option value="3">Biella</option>
+                    <option value="4">Vercelli</option>
+                    <option value="6">Cuneo</option>
+                    <option value="7">Novara</option>
+                    <option value="8">Torino</option>
+                    <option value="9">Verbano-Cusio-Ossola</option>
+                    <option value="11">Aosta (Valle d'Aosta)</option>
+                  </select>
+                </div>
+                <p class="d-err" id="err-prov">Campo obbligatorio: selezionare la provincia.</p>
+              </div>
+              <div class="lato"><div id="bm-gruppo"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">1.1</span>
+                <label class="d-tit" for="a1">Area di attività — principale <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <p class="d-sup">È possibile indicare fino a tre aree di attività</p>
+                <div class="d-campo campo">
+                  <select id="a1" required data-req aria-describedby="err-a1">
+                    <option value="">— seleziona —</option>
                     <option value="1">Edilizia privata abitativa</option>
                     <option value="2">Edilizia privata non abitativa</option>
                     <option value="3">Lavori pubblici</option>
@@ -452,428 +506,432 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
                     <option value="5">Calcestruzzo</option>
                     <option value="6">Altri settori</option>
                   </select>
+                  <div class="coppia sub">
+                    <div class="campo">
+                      <label class="eti" for="a2">1.2 Seconda area (facoltativa)</label>
+                      <select id="a2">
+                        <option value="">—</option>
+                        <option value="1">Edilizia privata abitativa</option>
+                        <option value="2">Edilizia privata non abitativa</option>
+                        <option value="3">Lavori pubblici</option>
+                        <option value="4">Lavori complementari e affini</option>
+                        <option value="5">Calcestruzzo</option>
+                        <option value="6">Altri settori</option>
+                      </select>
+                    </div>
+                    <div class="campo">
+                      <label class="eti" for="a3">1.3 Terza area (facoltativa)</label>
+                      <select id="a3">
+                        <option value="">—</option>
+                        <option value="1">Edilizia privata abitativa</option>
+                        <option value="2">Edilizia privata non abitativa</option>
+                        <option value="3">Lavori pubblici</option>
+                        <option value="4">Lavori complementari e affini</option>
+                        <option value="5">Calcestruzzo</option>
+                        <option value="6">Altri settori</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
-                <div class="campo">
-                  <label class="eti" for="a3">1.3 Terza area (facoltativa)</label>
-                  <select id="a3">
-                    <option value="">—</option>
-                    <option value="1">Edilizia privata abitativa</option>
-                    <option value="2">Edilizia privata non abitativa</option>
-                    <option value="3">Lavori pubblici</option>
-                    <option value="4">Lavori complementari e affini</option>
-                    <option value="5">Calcestruzzo</option>
-                    <option value="6">Altri settori</option>
+                <p class="d-err" id="err-a1">Campo obbligatorio: selezionare l'area di attività principale.</p>
+              </div>
+              <div class="lato"></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">2</span>
+                <label class="d-tit" for="cls">Classe dimensionale <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <p class="d-sup">Dipendenti e soci operativi</p>
+                <div class="d-campo campo">
+                  <select id="cls" required data-req aria-describedby="err-cls">
+                    <option value="">— seleziona —</option>
+                    <option value="1">1-5 addetti</option>
+                    <option value="2">6-10 addetti</option>
+                    <option value="3">11-20 addetti</option>
+                    <option value="4">21-50 addetti</option>
+                    <option value="5">51-100 addetti</option>
+                    <option value="6">oltre 100 addetti</option>
+                  </select>
+                </div>
+                <p class="d-err" id="err-cls">Campo obbligatorio: selezionare la classe dimensionale.</p>
+              </div>
+              <div class="lato"><div id="bm-cls"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">2.1</span>
+                <label class="d-tit" for="ext">Percentuale di extracomunitari sul totale degli addetti <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <div class="d-campo campo">
+                  <select id="ext" required data-req aria-describedby="err-ext">
+                    <option value="">— seleziona —</option>
+                    <option value="0">0%</option><option value="5">5%</option><option value="10">10%</option>
+                    <option value="20">20%</option><option value="30">30%</option><option value="40">40%</option>
+                    <option value="50">50%</option><option value="60">60%</option><option value="70">70%</option>
+                    <option value="80">80%</option><option value="90">90%</option><option value="100">100%</option>
+                  </select>
+                </div>
+                <p class="d-err" id="err-ext">Campo obbligatorio: selezionare la percentuale.</p>
+              </div>
+              <div class="lato"><div id="bm-ext"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">3</span>
+                <label class="d-tit" for="clf">Classe di fatturato (euro) <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <div class="d-campo campo">
+                  <select id="clf" required data-req aria-describedby="err-clf">
+                    <option value="">— seleziona —</option>
+                    <option value="1">fino a 0,5 mln</option>
+                    <option value="2">0,5 - 1,5 mln</option>
+                    <option value="3">1,5 - 2,5 mln</option>
+                    <option value="4">2,5 - 5 mln</option>
+                    <option value="5">5 - 15 mln</option>
+                    <option value="6">oltre 15 mln</option>
+                  </select>
+                </div>
+                <p class="d-nota">Riferita all'ultimo esercizio chiuso.</p>
+                <p class="d-err" id="err-clf">Campo obbligatorio: selezionare la classe di fatturato.</p>
+              </div>
+              <div class="lato"></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">4</span>
+                <label class="d-tit" for="ffp">Quota di fatturato realizzata fuori provincia <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <div class="d-campo campo">
+                  <select id="ffp" required data-req aria-describedby="err-ffp">
+                    <option value="">— seleziona —</option>
+                    <option value="1">nulla</option>
+                    <option value="2">fino al 10%</option>
+                    <option value="3">10 - 25%</option>
+                    <option value="4">25 - 50%</option>
+                    <option value="5">oltre il 50%</option>
+                  </select>
+                </div>
+                <p class="d-nota">Quota di fatturato prodotta al di fuori della provincia di appartenenza.</p>
+                <p class="d-err" id="err-ffp">Campo obbligatorio: selezionare la quota.</p>
+              </div>
+              <div class="lato"></div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ============ 02 · PREVISIONI ============ -->
+        <section class="sezione">
+          <header>
+            <span class="ord" aria-hidden="true">02</span>
+            <div>
+              <h2>Previsioni</h2>
+              <p class="occhiello">Semestre luglio–dicembre 2026</p>
+            </div>
+          </header>
+          <div class="corpo">
+            <div class="fascia">Risposte riferite all'andamento atteso rispetto al semestre precedente</div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">5</span>
+                <label class="d-tit" for="andf">Andamento del fatturato <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <p class="d-sup">Rispetto al semestre precedente</p>
+                <div class="d-campo campo">
+                  <select id="andf" required data-req aria-describedby="err-andf">
+                    <option value="">— seleziona —</option>
+                    <option value="1">in aumento</option>
+                    <option value="2">nessuna variazione</option>
+                    <option value="3">in riduzione</option>
+                  </select>
+                </div>
+                <p class="d-err" id="err-andf">Campo obbligatorio: indicare l'andamento atteso.</p>
+              </div>
+              <div class="lato"><div id="bm-andf"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">6.1</span>
+                <label class="d-tit" for="pp">Portafoglio lavori privati <span class="facolt">Facoltativo</span></label>
+                <p class="d-sup">Mesi di attività garantiti</p>
+                <div class="d-campo campo">
+                  <select id="pp">
+                    <option value="0">— nessuno / non indicato —</option>
+                    <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+                    <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
+                    <option value="oltre">oltre 12 mesi…</option>
+                  </select>
+                  <div class="sub campo unita" id="w-ppM" style="display:none">
+                    <label class="eti" for="ppM">6.1.1 Indicare i mesi (solo se oltre 12)</label>
+                    <input type="number" id="ppM" min="13" max="120" placeholder="13">
+                    <span class="um" aria-hidden="true">mesi</span>
+                  </div>
+                </div>
+              </div>
+              <div class="lato"><div id="bm-pp"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">6.2</span>
+                <label class="d-tit" for="pb">Portafoglio lavori pubblici <span class="facolt">Facoltativo</span></label>
+                <p class="d-sup">Mesi di attività garantiti</p>
+                <div class="d-campo campo">
+                  <select id="pb">
+                    <option value="0">— nessuno / non indicato —</option>
+                    <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+                    <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
+                    <option value="oltre">oltre 12 mesi…</option>
+                  </select>
+                  <div class="sub campo unita" id="w-pbM" style="display:none">
+                    <label class="eti" for="pbM">6.2.1 Indicare i mesi (solo se oltre 12)</label>
+                    <input type="number" id="pbM" min="13" max="120" placeholder="13">
+                    <span class="um" aria-hidden="true">mesi</span>
+                  </div>
+                </div>
+              </div>
+              <div class="lato"><div id="bm-pb"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">7</span>
+                <label class="d-tit" for="inv">Investimenti programmati per i prossimi 6 mesi <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <div class="d-campo campo">
+                  <select id="inv" required data-req aria-describedby="err-inv">
+                    <option value="">— seleziona —</option>
+                    <option value="1">No, nessun investimento</option>
+                    <option value="2">Sì, solo immobiliari</option>
+                    <option value="3">Sì, solo non immobiliari</option>
+                    <option value="4">Sì, immobiliari e non immobiliari</option>
+                  </select>
+                </div>
+                <p class="d-err" id="err-inv">Campo obbligatorio: indicare gli investimenti programmati.</p>
+              </div>
+              <div class="lato"><div id="bm-inv"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">8</span>
+                <label class="d-tit" for="occ">Andamento dell'occupazione dipendente <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <div class="d-campo campo">
+                  <select id="occ" required data-req aria-describedby="err-occ">
+                    <option value="">— seleziona —</option>
+                    <option value="1">in aumento</option>
+                    <option value="2">nessuna variazione</option>
+                    <option value="3">in riduzione</option>
+                  </select>
+                </div>
+                <p class="d-err" id="err-occ">Campo obbligatorio: indicare l'andamento atteso.</p>
+              </div>
+              <div class="lato"><div id="bm-occ"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">9</span>
+                <label class="d-tit" for="man">Ricorso alla manodopera esterna <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <div class="d-campo campo">
+                  <select id="man" required data-req aria-describedby="err-man">
+                    <option value="">— seleziona —</option>
+                    <option value="1">in aumento</option>
+                    <option value="2">nessuna variazione</option>
+                    <option value="3">in riduzione</option>
+                  </select>
+                </div>
+                <p class="d-err" id="err-man">Campo obbligatorio: indicare l'andamento atteso.</p>
+              </div>
+              <div class="lato"><div id="bm-man"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">10</span>
+                <label class="d-tit" for="dq">Difficoltà a reperire manodopera specializzata o qualificata <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <div class="d-campo campo">
+                  <select id="dq" required data-req aria-describedby="err-dq">
+                    <option value="">— seleziona —</option>
+                    <option value="1">Sì</option>
+                    <option value="2">No, non ho difficoltà</option>
+                    <option value="3">No, la reperisco facilmente</option>
+                  </select>
+                </div>
+                <p class="d-err" id="err-dq">Campo obbligatorio: indicare la risposta.</p>
+              </div>
+              <div class="lato"><div id="bm-dq"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">11</span>
+                <label class="d-tit" for="dg">Difficoltà a reperire manodopera generica <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <div class="d-campo campo">
+                  <select id="dg" required data-req aria-describedby="err-dg">
+                    <option value="">— seleziona —</option>
+                    <option value="1">Sì</option>
+                    <option value="2">No, non ho difficoltà</option>
+                    <option value="3">No, la reperisco facilmente</option>
+                  </select>
+                </div>
+                <p class="d-err" id="err-dg">Campo obbligatorio: indicare la risposta.</p>
+              </div>
+              <div class="lato"><div id="bm-dg"></div></div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ============ 03 · SITUAZIONE FINANZIARIA ============ -->
+        <section class="sezione">
+          <header>
+            <span class="ord" aria-hidden="true">03</span>
+            <div>
+              <h2>Situazione finanziaria</h2>
+              <p class="occhiello">Semestre gennaio–giugno 2026</p>
+            </div>
+          </header>
+          <div class="corpo">
+            <div class="fascia">Dati riferiti al semestre gennaio–giugno 2026 · lasciare vuoto se il dato non è applicabile o non è disponibile</div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">12.1</span>
+                <label class="d-tit" for="pagTot">Tempi di pagamento dei committenti — pubblici e privati <span class="facolt">Facoltativo</span></label>
+                <p class="d-sup">Giorni medi</p>
+                <div class="d-campo campo unita">
+                  <input type="number" id="pagTot" min="0" max="400" placeholder="0">
+                  <span class="um" aria-hidden="true">giorni</span>
+                </div>
+              </div>
+              <div class="lato"><div id="bm-pagTot"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">12.2</span>
+                <label class="d-tit" for="pagPubb">Tempi di pagamento dei committenti pubblici <span class="facolt">Facoltativo</span></label>
+                <p class="d-sup">Giorni medi</p>
+                <div class="d-campo campo unita">
+                  <input type="number" id="pagPubb" min="0" max="400" placeholder="0">
+                  <span class="um" aria-hidden="true">giorni</span>
+                </div>
+              </div>
+              <div class="lato"><div id="bm-pagPubb"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">13.1</span>
+                <label class="d-tit" for="dil1">Dilazione pattuita con i fornitori <span class="facolt">Facoltativo</span></label>
+                <p class="d-sup">Giorni</p>
+                <div class="d-campo campo unita">
+                  <input type="number" id="dil1" min="0" max="400" placeholder="0">
+                  <span class="um" aria-hidden="true">giorni</span>
+                </div>
+              </div>
+              <div class="lato"><div id="bm-dil1"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">13.2</span>
+                <label class="d-tit" for="dil2">Dilazione con i fornitori con posa in opera <span class="facolt">Facoltativo</span></label>
+                <p class="d-sup">Giorni</p>
+                <div class="d-campo campo unita">
+                  <input type="number" id="dil2" min="0" max="400" placeholder="0">
+                  <span class="um" aria-hidden="true">giorni</span>
+                </div>
+              </div>
+              <div class="lato"><div id="bm-dil2"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">13.3</span>
+                <label class="d-tit" for="dil3">Dilazione con i noleggiatori a caldo <span class="facolt">Facoltativo</span></label>
+                <p class="d-sup">Giorni</p>
+                <div class="d-campo campo unita">
+                  <input type="number" id="dil3" min="0" max="400" placeholder="0">
+                  <span class="um" aria-hidden="true">giorni</span>
+                </div>
+              </div>
+              <div class="lato"><div id="bm-dil3"></div></div>
+            </div>
+
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">14.1</span>
+                <label class="d-tit" for="credBanc">Il costo del credito bancario a breve è <span class="facolt">Facoltativo</span></label>
+                <div class="d-campo campo">
+                  <select id="credBanc">
+                    <option value="0">— non indicato —</option>
+                    <option value="1">in aumento</option>
+                    <option value="2">invariato</option>
+                    <option value="3">in riduzione</option>
                   </select>
                 </div>
               </div>
+              <div class="lato"><div id="bm-credBanc"></div></div>
             </div>
-            <p class="d-err" id="err-a1">Campo obbligatorio: selezionare l'area di attività principale.</p>
-          </div>
-          <div class="lato"></div>
-        </div>
 
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">2</span>
-            <label class="d-tit" for="cls">Classe dimensionale <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <p class="d-sup">Dipendenti e soci operativi</p>
-            <div class="d-campo campo">
-              <select id="cls" required data-req aria-describedby="err-cls">
-                <option value="">— seleziona —</option>
-                <option value="1">1-5 addetti</option>
-                <option value="2">6-10 addetti</option>
-                <option value="3">11-20 addetti</option>
-                <option value="4">21-50 addetti</option>
-                <option value="5">51-100 addetti</option>
-                <option value="6">oltre 100 addetti</option>
-              </select>
-            </div>
-            <p class="d-err" id="err-cls">Campo obbligatorio: selezionare la classe dimensionale.</p>
-          </div>
-          <div class="lato"><div id="bm-cls"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">2.1</span>
-            <label class="d-tit" for="ext">Percentuale di extracomunitari sul totale degli addetti <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <div class="d-campo campo">
-              <select id="ext" required data-req aria-describedby="err-ext">
-                <option value="">— seleziona —</option>
-                <option value="0">0%</option><option value="5">5%</option><option value="10">10%</option>
-                <option value="20">20%</option><option value="30">30%</option><option value="40">40%</option>
-                <option value="50">50%</option><option value="60">60%</option><option value="70">70%</option>
-                <option value="80">80%</option><option value="90">90%</option><option value="100">100%</option>
-              </select>
-            </div>
-            <p class="d-err" id="err-ext">Campo obbligatorio: selezionare la percentuale.</p>
-          </div>
-          <div class="lato"><div id="bm-ext"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">3</span>
-            <label class="d-tit" for="clf">Classe di fatturato (euro) <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <div class="d-campo campo">
-              <select id="clf" required data-req aria-describedby="err-clf">
-                <option value="">— seleziona —</option>
-                <option value="1">fino a 0,5 mln</option>
-                <option value="2">0,5 - 1,5 mln</option>
-                <option value="3">1,5 - 2,5 mln</option>
-                <option value="4">2,5 - 5 mln</option>
-                <option value="5">5 - 15 mln</option>
-                <option value="6">oltre 15 mln</option>
-              </select>
-            </div>
-            <p class="d-nota">Riferita all'ultimo esercizio chiuso.</p>
-            <p class="d-err" id="err-clf">Campo obbligatorio: selezionare la classe di fatturato.</p>
-          </div>
-          <div class="lato"></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">4</span>
-            <label class="d-tit" for="ffp">Quota di fatturato realizzata fuori provincia <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <div class="d-campo campo">
-              <select id="ffp" required data-req aria-describedby="err-ffp">
-                <option value="">— seleziona —</option>
-                <option value="1">nulla</option>
-                <option value="2">fino al 10%</option>
-                <option value="3">10 - 25%</option>
-                <option value="4">25 - 50%</option>
-                <option value="5">oltre il 50%</option>
-              </select>
-            </div>
-            <p class="d-nota">Quota di fatturato prodotta al di fuori della provincia di appartenenza.</p>
-            <p class="d-err" id="err-ffp">Campo obbligatorio: selezionare la quota.</p>
-          </div>
-          <div class="lato"></div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ============ 02 · PREVISIONI ============ -->
-    <section class="sezione">
-      <header>
-        <span class="ord" aria-hidden="true">02</span>
-        <div>
-          <h2>Previsioni</h2>
-          <p class="occhiello">Semestre luglio–dicembre 2026</p>
-        </div>
-      </header>
-      <div class="riga"></div>
-      <div class="corpo-sezione">
-        <div class="fascia-info">Risposte riferite all'andamento atteso rispetto al semestre precedente</div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">5</span>
-            <label class="d-tit" for="andf">Andamento del fatturato <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <p class="d-sup">Rispetto al semestre precedente</p>
-            <div class="d-campo campo">
-              <select id="andf" required data-req aria-describedby="err-andf">
-                <option value="">— seleziona —</option>
-                <option value="1">in aumento</option>
-                <option value="2">nessuna variazione</option>
-                <option value="3">in riduzione</option>
-              </select>
-            </div>
-            <p class="d-err" id="err-andf">Campo obbligatorio: indicare l'andamento atteso.</p>
-          </div>
-          <div class="lato"><div id="bm-andf"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">6.1</span>
-            <label class="d-tit" for="pp">Portafoglio lavori privati <span class="facolt">Facoltativo</span></label>
-            <p class="d-sup">Mesi di attività garantiti</p>
-            <div class="d-campo campo">
-              <select id="pp">
-                <option value="0">— nessuno / non indicato —</option>
-                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
-                <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
-                <option value="oltre">oltre 12 mesi…</option>
-              </select>
-              <div class="sub campo unita" id="w-ppM" style="display:none">
-                <label class="eti" for="ppM">6.1.1 Indicare i mesi (solo se oltre 12)</label>
-                <input type="number" id="ppM" min="13" max="120" placeholder="13">
-                <span class="um" aria-hidden="true">mesi</span>
+            <div class="d">
+              <div class="d-testo">
+                <span class="d-ord" aria-hidden="true">14.2</span>
+                <label class="d-tit" for="credBreve">Costo del credito bancario a breve — valore percentuale <span class="facolt">Facoltativo</span></label>
+                <div class="d-campo campo">
+                  <select id="credBreve">
+                    <option value="0">— non indicato —</option>
+                    <option value="1">1%</option><option value="2">2%</option><option value="3">3%</option>
+                    <option value="4">4%</option><option value="5">5%</option><option value="6">6%</option><option value="7">7%</option>
+                  </select>
+                </div>
               </div>
+              <div class="lato"><div id="bm-credBreve"></div></div>
             </div>
-          </div>
-          <div class="lato"><div id="bm-pp"></div></div>
-        </div>
 
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">6.2</span>
-            <label class="d-tit" for="pb">Portafoglio lavori pubblici <span class="facolt">Facoltativo</span></label>
-            <p class="d-sup">Mesi di attività garantiti</p>
-            <div class="d-campo campo">
-              <select id="pb">
-                <option value="0">— nessuno / non indicato —</option>
-                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
-                <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
-                <option value="oltre">oltre 12 mesi…</option>
-              </select>
-              <div class="sub campo unita" id="w-pbM" style="display:none">
-                <label class="eti" for="pbM">6.2.1 Indicare i mesi (solo se oltre 12)</label>
-                <input type="number" id="pbM" min="13" max="120" placeholder="13">
-                <span class="um" aria-hidden="true">mesi</span>
-              </div>
-            </div>
           </div>
-          <div class="lato"><div id="bm-pb"></div></div>
-        </div>
+        </section>
+      </form>
+    </div>
 
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">7</span>
-            <label class="d-tit" for="inv">Investimenti programmati per i prossimi 6 mesi <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <div class="d-campo campo">
-              <select id="inv" required data-req aria-describedby="err-inv">
-                <option value="">— seleziona —</option>
-                <option value="1">No, nessun investimento</option>
-                <option value="2">Sì, solo immobiliari</option>
-                <option value="3">Sì, solo non immobiliari</option>
-                <option value="4">Sì, immobiliari e non immobiliari</option>
-              </select>
-            </div>
-            <p class="d-err" id="err-inv">Campo obbligatorio: indicare gli investimenti programmati.</p>
-          </div>
-          <div class="lato"><div id="bm-inv"></div></div>
+    <!-- ============ NOTE METODOLOGICHE + INVIO ============ -->
+    <div class="fondo">
+      <details class="metodo">
+        <summary>
+          <svg class="frec" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Note metodologiche
+        </summary>
+        <div class="testo">
+          <p><b>Anonimato e trattamento dei dati.</b> Il questionario è anonimo. L'eventuale nominativo dell'impresa è impiegato unicamente per il controllo dei doppioni e non compare in alcuna elaborazione. I dati sono trattati esclusivamente in forma aggregata dal Centro Studi di ANCE Piemonte e Valle d'Aosta.</p>
+          <p><b>Fonte dei confronti.</b> I riquadri di benchmark riportano i dati della 48ª Indagine Congiunturale (I semestre 2026, 117 imprese rispondenti), elaborati sui microdati del Centro Studi.</p>
+          <p><b>Criterio del gruppo di confronto.</b> Il gruppo di confronto è il più specifico fra provincia e classe dimensionale, provincia, classe dimensionale e totale regionale che disponga di almeno 8 imprese e di almeno 5 risposte sulla singola domanda. Il gruppo effettivamente utilizzato e la relativa numerosità sono sempre indicati all'interno di ciascun riquadro.</p>
+          <p><b>Difficoltà di reperimento della manodopera (quesiti 10 e 11).</b> Nella 48ª Indagine le modalità di risposta erano «Sì», «No» e «In parte»: i riquadri di benchmark riportano pertanto quelle diciture e non sono puntualmente confrontabili con le modalità adottate nella presente rilevazione.</p>
+          <p><b>Tempi di pagamento dei committenti.</b> I valori di confronto sono espressi come media dei microdati e possono differire dai valori rettificati pubblicati nella serie storica.</p>
+          <p><b>Numero progressivo di questionari acquisiti.</b> Il contatore riporta le risposte registrate nei microdati del semestre in corso alla data indicata; è aggiornato periodicamente dal Centro Studi e non in tempo reale.</p>
         </div>
+      </details>
 
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">8</span>
-            <label class="d-tit" for="occ">Andamento dell'occupazione dipendente <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <div class="d-campo campo">
-              <select id="occ" required data-req aria-describedby="err-occ">
-                <option value="">— seleziona —</option>
-                <option value="1">in aumento</option>
-                <option value="2">nessuna variazione</option>
-                <option value="3">in riduzione</option>
-              </select>
-            </div>
-            <p class="d-err" id="err-occ">Campo obbligatorio: indicare l'andamento atteso.</p>
-          </div>
-          <div class="lato"><div id="bm-occ"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">9</span>
-            <label class="d-tit" for="man">Ricorso alla manodopera esterna <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <div class="d-campo campo">
-              <select id="man" required data-req aria-describedby="err-man">
-                <option value="">— seleziona —</option>
-                <option value="1">in aumento</option>
-                <option value="2">nessuna variazione</option>
-                <option value="3">in riduzione</option>
-              </select>
-            </div>
-            <p class="d-err" id="err-man">Campo obbligatorio: indicare l'andamento atteso.</p>
-          </div>
-          <div class="lato"><div id="bm-man"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">10</span>
-            <label class="d-tit" for="dq">Difficoltà a reperire manodopera specializzata o qualificata <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <div class="d-campo campo">
-              <select id="dq" required data-req aria-describedby="err-dq">
-                <option value="">— seleziona —</option>
-                <option value="1">Sì</option>
-                <option value="2">No, non ho difficoltà</option>
-                <option value="3">No, la reperisco facilmente</option>
-              </select>
-            </div>
-            <p class="d-err" id="err-dq">Campo obbligatorio: indicare la risposta.</p>
-          </div>
-          <div class="lato"><div id="bm-dq"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">11</span>
-            <label class="d-tit" for="dg">Difficoltà a reperire manodopera generica <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-            <div class="d-campo campo">
-              <select id="dg" required data-req aria-describedby="err-dg">
-                <option value="">— seleziona —</option>
-                <option value="1">Sì</option>
-                <option value="2">No, non ho difficoltà</option>
-                <option value="3">No, la reperisco facilmente</option>
-              </select>
-            </div>
-            <p class="d-err" id="err-dg">Campo obbligatorio: indicare la risposta.</p>
-          </div>
-          <div class="lato"><div id="bm-dg"></div></div>
-        </div>
-
+      <div class="invio">
+        <div id="msg" class="esito" role="status" aria-live="polite"></div>
+        <p class="avviso">Verificare le risposte prima di inviare il questionario.</p>
+        <button type="submit" form="q" id="btn" class="invia">
+          Invia il questionario
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="privacy">Dati raccolti in forma anonima e trattati esclusivamente in forma aggregata dal Centro Studi. Termine: 5 ottobre 2026.</p>
       </div>
-    </section>
-
-    <!-- ============ 03 · SITUAZIONE FINANZIARIA ============ -->
-    <section class="sezione">
-      <header>
-        <span class="ord" aria-hidden="true">03</span>
-        <div>
-          <h2>Situazione finanziaria</h2>
-          <p class="occhiello">Semestre gennaio–giugno 2026</p>
-        </div>
-      </header>
-      <div class="riga"></div>
-      <div class="corpo-sezione">
-        <div class="fascia-info">Dati riferiti al semestre gennaio–giugno 2026 · lasciare vuoto se il dato non è applicabile o non è disponibile</div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">12.1</span>
-            <label class="d-tit" for="pagTot">Tempi di pagamento dei committenti — pubblici e privati <span class="facolt">Facoltativo</span></label>
-            <p class="d-sup">Giorni medi</p>
-            <div class="d-campo campo unita">
-              <input type="number" id="pagTot" min="0" max="400" placeholder="0">
-              <span class="um" aria-hidden="true">giorni</span>
-            </div>
-          </div>
-          <div class="lato"><div id="bm-pagTot"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">12.2</span>
-            <label class="d-tit" for="pagPubb">Tempi di pagamento dei committenti pubblici <span class="facolt">Facoltativo</span></label>
-            <p class="d-sup">Giorni medi</p>
-            <div class="d-campo campo unita">
-              <input type="number" id="pagPubb" min="0" max="400" placeholder="0">
-              <span class="um" aria-hidden="true">giorni</span>
-            </div>
-          </div>
-          <div class="lato"><div id="bm-pagPubb"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">13.1</span>
-            <label class="d-tit" for="dil1">Dilazione pattuita con i fornitori <span class="facolt">Facoltativo</span></label>
-            <p class="d-sup">Giorni</p>
-            <div class="d-campo campo unita">
-              <input type="number" id="dil1" min="0" max="400" placeholder="0">
-              <span class="um" aria-hidden="true">giorni</span>
-            </div>
-          </div>
-          <div class="lato"><div id="bm-dil1"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">13.2</span>
-            <label class="d-tit" for="dil2">Dilazione con i fornitori con posa in opera <span class="facolt">Facoltativo</span></label>
-            <p class="d-sup">Giorni</p>
-            <div class="d-campo campo unita">
-              <input type="number" id="dil2" min="0" max="400" placeholder="0">
-              <span class="um" aria-hidden="true">giorni</span>
-            </div>
-          </div>
-          <div class="lato"><div id="bm-dil2"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">13.3</span>
-            <label class="d-tit" for="dil3">Dilazione con i noleggiatori a caldo <span class="facolt">Facoltativo</span></label>
-            <p class="d-sup">Giorni</p>
-            <div class="d-campo campo unita">
-              <input type="number" id="dil3" min="0" max="400" placeholder="0">
-              <span class="um" aria-hidden="true">giorni</span>
-            </div>
-          </div>
-          <div class="lato"><div id="bm-dil3"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">14.1</span>
-            <label class="d-tit" for="credBanc">Il costo del credito bancario a breve è <span class="facolt">Facoltativo</span></label>
-            <div class="d-campo campo">
-              <select id="credBanc">
-                <option value="0">— non indicato —</option>
-                <option value="1">in aumento</option>
-                <option value="2">invariato</option>
-                <option value="3">in riduzione</option>
-              </select>
-            </div>
-          </div>
-          <div class="lato"><div id="bm-credBanc"></div></div>
-        </div>
-
-        <div class="d">
-          <div class="d-testo">
-            <span class="d-ord" aria-hidden="true">14.2</span>
-            <label class="d-tit" for="credBreve">Costo del credito bancario a breve — valore percentuale <span class="facolt">Facoltativo</span></label>
-            <div class="d-campo campo">
-              <select id="credBreve">
-                <option value="0">— non indicato —</option>
-                <option value="1">1%</option><option value="2">2%</option><option value="3">3%</option>
-                <option value="4">4%</option><option value="5">5%</option><option value="6">6%</option><option value="7">7%</option>
-              </select>
-            </div>
-          </div>
-          <div class="lato"><div id="bm-credBreve"></div></div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ============ INVIO ============ -->
-    <div class="chiusura">
-      <div id="msg" class="esito" role="status" aria-live="polite"></div>
-      <p class="avviso">Verificare le risposte prima di inviare il questionario.</p>
-      <button type="submit" id="btn" class="invia">
-        Invia il questionario
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <p class="privacy">I dati sono raccolti in forma anonima e trattati esclusivamente in forma aggregata dal Centro Studi di ANCE Piemonte e Valle d'Aosta. Termine per la compilazione: 5 ottobre 2026.</p>
     </div>
-  </form>
 
-  <!-- ============ NOTE METODOLOGICHE ============ -->
-  <details class="metodo">
-    <summary>
-      <svg class="frec" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Note metodologiche
-    </summary>
-    <div class="testo">
-      <p><b>Anonimato e trattamento dei dati.</b> Il questionario è anonimo. L'eventuale nominativo dell'impresa è impiegato unicamente per il controllo dei doppioni e non compare in alcuna elaborazione. I dati sono trattati esclusivamente in forma aggregata dal Centro Studi di ANCE Piemonte e Valle d'Aosta.</p>
-      <p><b>Fonte dei confronti.</b> I riquadri di benchmark riportano i dati della 48ª Indagine Congiunturale (I semestre 2026, 117 imprese rispondenti), elaborati sui microdati del Centro Studi.</p>
-      <p><b>Criterio del gruppo di confronto.</b> Il gruppo di confronto è il più specifico fra provincia e classe dimensionale, provincia, classe dimensionale e totale regionale che disponga di almeno 8 imprese e di almeno 5 risposte sulla singola domanda. Il gruppo effettivamente utilizzato e la relativa numerosità sono sempre indicati all'interno di ciascun riquadro.</p>
-      <p><b>Difficoltà di reperimento della manodopera (quesiti 10 e 11).</b> Nella 48ª Indagine le modalità di risposta erano «Sì», «No» e «In parte»: i riquadri di benchmark riportano pertanto quelle diciture e non sono puntualmente confrontabili con le modalità adottate nella presente rilevazione.</p>
-      <p><b>Tempi di pagamento dei committenti.</b> I valori di confronto sono espressi come media dei microdati e possono differire dai valori rettificati pubblicati nella serie storica.</p>
-    </div>
-  </details>
-</main>
+    <footer class="piede">
+      <div><b>ANCE Piemonte Valle d'Aosta</b> — Centro Studi<br>Corso Duca degli Abruzzi 15 – 10129 Torino</div>
+      <div><b>49ª Indagine Congiunturale</b><br>Secondo semestre 2026</div>
+    </footer>
 
-<!-- ===================== PIEDE ===================== -->
-<footer class="piede">
-  <div class="contenitore">
-    <div>
-      <div class="n1">ANCE Piemonte Valle d'Aosta</div>
-      <div class="n2">Centro Studi</div>
-      <address>Corso Duca degli Abruzzi 15 – 10129 Torino</address>
-    </div>
-    <div class="dx">
-      <div class="r">49ª Indagine Congiunturale</div>
-      <div class="r">Secondo semestre 2026</div>
-      <p>Rilevazione anonima. Le risposte sono elaborate esclusivamente in forma aggregata e non consentono in alcun modo di risalire alla singola impresa.</p>
-    </div>
   </div>
-</footer>
+</div>
 
 <script>
 /* =========================================================================
@@ -885,10 +943,49 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
 const $ = id => document.getElementById(id);
 let BM = null, SOGLIA = 8;
 
+/* Web-App Apps Script: riceve i questionari (POST) e restituisce i conteggi (GET). */
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbwL9yJKQb1cQJacZQ6b-ZfTh2HLhWBW0ZuN4d5B8T6_hWXmpJQyFv_65yLKn28gf4JL/exec";
+
 fetch('benchmark_I2026.json', {cache:'no-store'})
   .then(r => r.ok ? r.json() : Promise.reject(r.status))
   .then(j => { BM = j; SOGLIA = (j.meta && j.meta.soglia_min) || 8; aggiornaTutti(); })
   .catch(() => { BM = false; aggiornaTutti(); });
+
+/* ---- contatore dei questionari acquisiti nel semestre in corso ----
+   Prima si interroga la Web-App (dato aggiornato); se non risponde si ripiega
+   sul file statico conteggio_semestre.json rigenerato dal Centro Studi. ---- */
+function mostraContatore(c){
+  if(!c || c.ok === false) return false;
+  const box = $('contatore'), lista = $('cont-lista'), vuoto = $('cont-vuoto');
+  const prov = Array.isArray(c.province) ? c.province : [];
+  const max = prov.reduce((m,p) => Math.max(m, p.n||0), 0) || 1;
+  lista.innerHTML = prov.map(p =>
+    '<li><span class="p">' + p.nome + '</span><span class="n">' + p.n + '</span>'
+    + '<span class="b"><i style="width:' + (100*(p.n||0)/max) + '%"></i></span></li>').join('');
+  if(!prov.length){
+    vuoto.textContent = 'Rilevazione appena avviata: non risultano ancora questionari registrati.';
+    vuoto.hidden = false;
+  } else {
+    vuoto.hidden = true;
+  }
+  $('cont-tot').textContent = (c.totale != null ? c.totale : 0);
+  $('cont-agg').textContent = c.aggiornato
+    ? ('Aggiornato al ' + c.aggiornato + (c.aggiornato_ora ? ', ore ' + c.aggiornato_ora : '')
+       + (c.periodo ? ' · ' + c.periodo : ''))
+    : '';
+  box.hidden = false;
+  return true;
+}
+function contatoreDaFile(){
+  fetch('conteggio_semestre.json', {cache:'no-store'})
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(mostraContatore)
+    .catch(() => { /* contatore non disponibile: il riquadro resta nascosto */ });
+}
+fetch(ENDPOINT + '?azione=conteggio', {cache:'no-store'})
+  .then(r => r.ok ? r.json() : Promise.reject(r.status))
+  .then(c => { if(!mostraContatore(c)) contatoreDaFile(); })
+  .catch(contatoreDaFile);
 
 /* ---- risoluzione del gruppo di confronto, a cascata ---- */
 const MIN_M = 5;   /* numerosita minima delle risposte sulla singola domanda */
@@ -957,7 +1054,7 @@ function svuota(el){ el.className = ''; el.innerHTML = ''; }
 
 const ETIC3  = ['in aumento','nessuna variazione','in riduzione'];
 const ETIC3B = ['in aumento','invariato','in riduzione'];
-const CLS3   = ['', 'g2', 'g3'];
+const CLS3   = ['g1','g2','g3'];
 /* Modalita della 48ª Indagine per i quesiti 10 e 11: mantenute come rilevate. */
 const ETICSN = ['Sì','No','In parte'];
 const ETICINV= ['Nessun investimento','Sì, non immobiliari (anche misti)','Sì, solo immobiliari'];
@@ -986,7 +1083,6 @@ const vNum = id => { const v = Number($(id).value); return isFinite(v) && v>0 ? 
 const portMesi = (sel, man) => { const v = $(sel).value; return v==='oltre' ? (Number($(man).value)||null) : (Number(v)||null); };
 
 function aggiornaTutti(){
-  /* riquadro di riepilogo del gruppo, accanto a provincia e classe */
   const gEl = $('bm-gruppo'), cEl = $('bm-cls');
   const res = trovaGruppo('andf');
   if(res && ($('prov').value || $('cls').value)){
@@ -1062,7 +1158,6 @@ document.querySelectorAll('#q select, #q input').forEach(el => {
 });
 
 /* ---- invio ---- */
-const ENDPOINT = "https://script.google.com/macros/s/AKfycbwL9yJKQb1cQJacZQ6b-ZfTh2HLhWBW0ZuN4d5B8T6_hWXmpJQyFv_65yLKn28gf4JL/exec";
 function show(type, text){ const m = $('msg'); m.className = 'esito ' + type; m.textContent = text;
   m.scrollIntoView({block:'center', behavior:'smooth'}); }
 
