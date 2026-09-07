@@ -187,8 +187,14 @@ label.d-tit{cursor:pointer}
 .d-campo{grid-column:2;margin-top:13px}
 .d-nota{grid-column:2;margin-top:8px;font-size:12.5px;color:var(--testo-2);line-height:1.55}
 .d-err{grid-column:2;margin-top:8px;font-size:12.5px;font-weight:500;color:var(--err);display:none}
-.d.errata .d-err{display:block}
+.d.errata{background:#FDF2F1;box-shadow:inset 5px 0 0 0 var(--err)}
+.d.errata .d-testo{padding-left:14px}
+.d.errata .d-err{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600}
+.d.errata .d-err::before{content:"!";flex:none;width:17px;height:17px;border-radius:50%;
+  background:var(--err);color:#fff;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;line-height:1}
 .d.errata .d-ord{color:var(--err)}
+.d.errata .d-tit{color:var(--err)}
 
 /* --- 9. CAMPI E OPZIONI -------------------------------------------------- */
 .campo{position:relative}
@@ -206,10 +212,15 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 select:hover,input:hover{border-color:#AFC0CF}
 select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);box-shadow:0 0 0 3px rgba(0,59,115,.13)}
 .campo.compilato select,.campo.compilato input{border-color:var(--blu);background:var(--campo-attivo)}
-.d.errata select,.d.errata input,.d.errata .opz .opt{border-color:var(--err)}
+.d.errata select,.d.errata input[type=text],.d.errata input[type=number]{
+  border:2px solid var(--err);box-shadow:0 0 0 3px rgba(163,34,25,.16)}
+.d.errata .opz .opt{border:2px solid var(--err)}
+.d.errata .cursore input[type=range]::-webkit-slider-runnable-track{border:2px solid var(--err)}
+.d.errata .cursore input[type=range]::-moz-range-track{border:2px solid var(--err)}
+.d.errata .cursore .valore .v.vuoto{color:var(--err);font-weight:600}
 .coppia{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .sub{margin-top:13px}
-.sub .eti{display:block;font-size:12.5px;font-weight:600;color:var(--testo-2);margin-bottom:7px}
+.sub .eti{display:block;font-size:14.5px;font-weight:600;color:var(--testo);margin-bottom:7px}
 .campo.unita input{padding-right:76px}
 .campo.unita .um{position:absolute;right:16px;top:50%;transform:translateY(-50%);
                  font-size:13.5px;color:var(--testo-2);pointer-events:none}
@@ -233,6 +244,44 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
 .opt:focus-within{box-shadow:0 0 0 3px rgba(0,59,115,.22)}
 .opt.sel:focus-within{box-shadow:inset 0 0 0 1px var(--blu),0 0 0 3px rgba(0,59,115,.22)}
 .opt.neutra{color:var(--testo-2)}
+
+/* cursore scorrevole per percentuali e mesi */
+.cursore{max-width:560px}
+.cursore .valore{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;min-height:36px}
+.cursore .valore .v{font-size:27px;font-weight:700;color:var(--blu);line-height:1;
+                    letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.cursore .valore .v.vuoto{font-size:16px;font-weight:500;color:var(--testo-2);letter-spacing:0}
+.cursore .valore .u{font-size:14px;color:var(--testo-2);font-weight:500}
+.cursore input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent;
+  cursor:pointer;margin:0;display:block;
+}
+.cursore input[type=range]::-webkit-slider-runnable-track{
+  height:9px;border-radius:99px;border:1px solid var(--bordo-campo);
+  background:linear-gradient(90deg,var(--s3) 0 var(--riempi,0%),var(--velo) var(--riempi,0%) 100%);
+}
+.cursore input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:26px;height:26px;margin-top:-9.5px;border-radius:50%;
+  background:var(--blu);border:3px solid #fff;box-shadow:0 0 0 1px var(--blu);
+}
+.cursore input[type=range]::-moz-range-track{
+  height:9px;border-radius:99px;border:1px solid var(--bordo-campo);
+  background:linear-gradient(90deg,var(--s3) 0 var(--riempi,0%),var(--velo) var(--riempi,0%) 100%);
+}
+.cursore input[type=range]::-moz-range-thumb{
+  width:22px;height:22px;border-radius:50%;background:var(--blu);border:3px solid #fff;
+  box-shadow:0 0 0 1px var(--blu);
+}
+.cursore input[type=range]:focus-visible{outline:none}
+.cursore input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 1px var(--blu),0 0 0 5px rgba(0,59,115,.28)}
+.cursore input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 1px var(--blu),0 0 0 5px rgba(0,59,115,.28)}
+/* le tacche sono collocate sulla posizione reale della rispettiva fermata */
+.cursore .tacche{position:relative;height:17px;margin-top:2px;
+                 font-size:11.5px;color:var(--testo-2);font-variant-numeric:tabular-nums}
+.cursore .tacche span{position:absolute;left:var(--p);transform:translateX(-50%);white-space:nowrap}
+.cursore .tacche span:first-child{transform:none}
+.cursore .tacche span:last-child{transform:translateX(-100%)}
+.cursore .aiuto{margin-top:8px;font-size:12.5px;color:var(--testo-2)}
 
 /* --- 10. BENCHMARK ------------------------------------------------------- */
 .lato{min-width:0}
@@ -446,6 +495,11 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   .opt.sel .txt{font-weight:700;color:#000}
   .opt.sel::before{content:"\25A0\00a0";font-weight:700}
   .opz.senza-scelta::after{content:"— non indicato —";color:#666;font-size:11pt}
+  .cursore input[type=range],.cursore .tacche,.cursore .aiuto{display:none!important}
+  .cursore .valore{margin:0;min-height:0}
+  .cursore .valore .v{font-size:11.5pt;color:#000}
+  .cursore .valore .v.vuoto{font-size:11pt;color:#666}
+  .cursore .valore .u{font-size:10.5pt}
   select,input[type=text],input[type=number]{height:auto;padding:2px 0;border:0;border-bottom:1px solid #999;
     border-radius:0;background:#fff!important;font-size:11.5pt;font-weight:700;color:#000;
     appearance:none;-webkit-appearance:none;background-image:none!important}
@@ -655,15 +709,16 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">2.1</span>
-                <label class="d-tit" for="ext">Percentuale di extracomunitari sul totale degli addetti <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-                <div class="d-campo campo">
-                  <select id="ext" required data-req aria-describedby="err-ext">
-                    <option value="">— seleziona —</option>
-                    <option value="0">0%</option><option value="5">5%</option><option value="10">10%</option>
-                    <option value="20">20%</option><option value="30">30%</option><option value="40">40%</option>
-                    <option value="50">50%</option><option value="60">60%</option><option value="70">70%</option>
-                    <option value="80">80%</option><option value="90">90%</option><option value="100">100%</option>
-                  </select>
+                <span class="d-tit" id="lab-ext">Percentuale di extracomunitari sul totale degli addetti <abbr class="req" title="Campo obbligatorio">*</abbr></span>
+                <p class="d-sup">Spostare il cursore fino al valore</p>
+                <div class="d-campo">
+                  <input type="hidden" id="ext" data-req>
+                  <div class="cursore" id="cur-ext">
+                    <p class="valore"><span class="v vuoto" id="ext-v">— non indicato —</span><span class="u" id="ext-u" hidden>degli addetti</span></p>
+                    <input type="range" id="ext-r" min="-1" max="11" step="1" value="-1"
+                           aria-labelledby="lab-ext" aria-valuetext="non indicato">
+                    <p class="tacche"><span style="--p:0%">n.d.</span><span style="--p:8.33%">0%</span><span style="--p:58.33%">50%</span><span style="--p:100%">100%</span></p>
+                  </div>
                 </div>
                 <p class="d-err" id="err-ext">Campo obbligatorio: selezionare la percentuale.</p>
               </div>
@@ -747,15 +802,16 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">6.1</span>
-                <label class="d-tit" for="pp">Portafoglio lavori privati <span class="facolt">Facoltativo</span></label>
-                <p class="d-sup">Mesi di attività garantiti</p>
-                <div class="d-campo campo">
-                  <select id="pp">
-                    <option value="0">— nessuno / non indicato —</option>
-                    <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
-                    <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
-                    <option value="oltre">oltre 12 mesi…</option>
-                  </select>
+                <span class="d-tit" id="lab-pp">Portafoglio lavori privati <span class="facolt">Facoltativo</span></span>
+                <p class="d-sup">Mesi di attività garantiti — spostare il cursore</p>
+                <div class="d-campo">
+                  <input type="hidden" id="pp" value="0">
+                  <div class="cursore" id="cur-pp">
+                    <p class="valore"><span class="v vuoto" id="pp-v">nessuno</span><span class="u" id="pp-u" hidden>mesi</span></p>
+                    <input type="range" id="pp-r" min="0" max="13" step="1" value="0"
+                           aria-labelledby="lab-pp" aria-valuetext="nessuno">
+                    <p class="tacche"><span style="--p:0%">0</span><span style="--p:46.15%">6</span><span style="--p:92.3%">12</span><span style="--p:100%">oltre</span></p>
+                  </div>
                   <div class="sub campo unita" id="w-ppM" style="display:none">
                     <label class="eti" for="ppM">6.1.1 Indicare i mesi (solo se oltre 12)</label>
                     <input type="number" id="ppM" min="13" max="120" placeholder="13">
@@ -769,15 +825,16 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">6.2</span>
-                <label class="d-tit" for="pb">Portafoglio lavori pubblici <span class="facolt">Facoltativo</span></label>
-                <p class="d-sup">Mesi di attività garantiti</p>
-                <div class="d-campo campo">
-                  <select id="pb">
-                    <option value="0">— nessuno / non indicato —</option>
-                    <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
-                    <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
-                    <option value="oltre">oltre 12 mesi…</option>
-                  </select>
+                <span class="d-tit" id="lab-pb">Portafoglio lavori pubblici <span class="facolt">Facoltativo</span></span>
+                <p class="d-sup">Mesi di attività garantiti — spostare il cursore</p>
+                <div class="d-campo">
+                  <input type="hidden" id="pb" value="0">
+                  <div class="cursore" id="cur-pb">
+                    <p class="valore"><span class="v vuoto" id="pb-v">nessuno</span><span class="u" id="pb-u" hidden>mesi</span></p>
+                    <input type="range" id="pb-r" min="0" max="13" step="1" value="0"
+                           aria-labelledby="lab-pb" aria-valuetext="nessuno">
+                    <p class="tacche"><span style="--p:0%">0</span><span style="--p:46.15%">6</span><span style="--p:92.3%">12</span><span style="--p:100%">oltre</span></p>
+                  </div>
                   <div class="sub campo unita" id="w-pbM" style="display:none">
                     <label class="eti" for="pbM">6.2.1 Indicare i mesi (solo se oltre 12)</label>
                     <input type="number" id="pbM" min="13" max="120" placeholder="13">
@@ -1277,16 +1334,68 @@ window.addEventListener('scroll', () => {
   window.requestAnimationFrame(() => { sezioneCorrente(); inCorso = false; });
 }, {passive:true});
 
-/* ---- campi "oltre 12 mesi" ---- */
-function toggleManual(sel, man, wrap){
-  $(sel).addEventListener('change', e => {
-    const w = $(wrap), on = e.target.value === 'oltre';
-    w.style.display = on ? 'block' : 'none'; if(!on) $(man).value = '';
-  });
-}
-toggleManual('pp','ppM','w-ppM'); toggleManual('pb','pbM','w-pbM');
+/* ---- cursori scorrevoli ------------------------------------------------
+   Anche qui il valore finisce in un campo nascosto con l'id di sempre, cosi'
+   payload, obbligatori e benchmark continuano a leggere quello che leggevano.
+   I valori ammessi restano quelli dei microdati: nessun valore intermedio. */
+const EXT_VALORI = [0,5,10,20,30,40,50,60,70,80,90,100];
 
-document.querySelectorAll('#q select, #q input').forEach(el => {
+function riempi(r){
+  const min = Number(r.min), max = Number(r.max), v = Number(r.value);
+  r.style.setProperty('--riempi', (100*(v-min)/(max-min)) + '%');
+}
+function ripulisciErrore(r, h){
+  const d = r.closest('.d');
+  if(d && h.value) d.classList.remove('errata');
+}
+
+/* 2.1 percentuale di extracomunitari: la tacca piu' a sinistra vale "non indicato" */
+(function(){
+  const r = $('ext-r'), v = $('ext-v'), u = $('ext-u'), h = $('ext');
+  function mostra(){
+    const i = Number(r.value);
+    if(i < 0){
+      h.value = ''; v.textContent = '— non indicato —'; v.classList.add('vuoto');
+      u.hidden = true; r.setAttribute('aria-valuetext','non indicato');
+    } else {
+      const n = EXT_VALORI[i];
+      h.value = String(n); v.textContent = n + '%'; v.classList.remove('vuoto');
+      u.hidden = false; r.setAttribute('aria-valuetext', n + ' per cento degli addetti');
+    }
+    riempi(r);
+  }
+  r.addEventListener('input', () => { mostra(); ripulisciErrore(r,h); aggiornaTutti(); });
+  mostra();
+})();
+
+/* 6.1 e 6.2 portafoglio lavori: 0 = nessuno, ultima tacca = oltre 12 mesi */
+function avviaPortafoglio(base, man, wrap){
+  const r = $(base+'-r'), v = $(base+'-v'), u = $(base+'-u'), h = $(base), w = $(wrap);
+  function mostra(){
+    const i = Number(r.value);
+    if(i === 0){
+      h.value = '0'; v.textContent = 'nessuno'; v.classList.add('vuoto');
+      u.hidden = true; r.setAttribute('aria-valuetext','nessuno');
+    } else if(i === 13){
+      h.value = 'oltre'; v.textContent = 'oltre 12'; v.classList.remove('vuoto');
+      u.hidden = false; u.textContent = 'mesi'; r.setAttribute('aria-valuetext','oltre 12 mesi');
+    } else {
+      h.value = String(i); v.textContent = String(i); v.classList.remove('vuoto');
+      u.hidden = false; u.textContent = (i === 1 ? 'mese' : 'mesi');
+      r.setAttribute('aria-valuetext', i + (i === 1 ? ' mese' : ' mesi'));
+    }
+    const oltre = (i === 13);
+    w.style.display = oltre ? 'block' : 'none';
+    if(!oltre) $(man).value = '';
+    riempi(r);
+  }
+  r.addEventListener('input', () => { mostra(); aggiornaTutti(); });
+  mostra();
+}
+avviaPortafoglio('pp','ppM','w-ppM');
+avviaPortafoglio('pb','pbM','w-pbM');
+
+document.querySelectorAll('#q select, #q input:not([type=range])').forEach(el => {
   el.addEventListener('change', aggiornaTutti);
   el.addEventListener('input', aggiornaTutti);
   el.addEventListener('change', () => {
