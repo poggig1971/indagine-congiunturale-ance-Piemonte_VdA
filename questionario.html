@@ -16,17 +16,15 @@
    Impianto a due riquadri: pannello informativo fisso a sinistra,
    riquadro di compilazione scorrevole a destra.
    Blocchi: 1 token · 2 basi · 3 testata · 4 pannello · 5 contatore
-            6 progresso · 7 sezioni · 8 domande · 9 campi · 10 benchmark
-            11 chiusura · 12 responsive · 13 accessibilità
+            6 progresso · 7 sezioni · 8 domande · 9 campi e opzioni
+            10 benchmark · 11 chiusura · 12 conferma · 13 responsive
    ========================================================================== */
 
 /* --- 1. TOKEN ------------------------------------------------------------ */
 :root{
-  /* struttura */
   --blu:#003B73;
   --blu-scuro:#002B54;
   --blu-notte:#0A3041;
-  /* scala azzurra (palette Centro Studi) */
   --s5:#0F4861;
   --s4:#156082;
   --s3:#45B0E1;
@@ -34,7 +32,6 @@
   --s1:#C1E4F5;
   --velo:#EAF2F8;
   --velo-2:#DCEAF7;
-  /* neutri */
   --fondo:#EEF2F6;
   --bianco:#FFFFFF;
   --testo:#25313C;
@@ -44,11 +41,10 @@
   --campo-attivo:#F7FBFE;
   --ok:#0F6B3F;
   --err:#A32219;
-  /* misure */
   --h-testata:92px;
   --w-pannello:400px;
   --max:1700px;
-  --t:160ms ease;
+  --t:150ms ease;
 }
 
 /* --- 2. BASI ------------------------------------------------------------- */
@@ -65,69 +61,44 @@ abbr{text-decoration:none}
 [hidden]{display:none!important}
 
 /* --- 3. TESTATA ---------------------------------------------------------- */
-.testata{
-  position:sticky;top:0;z-index:50;background:var(--blu);color:var(--bianco);
-  height:var(--h-testata);display:flex;align-items:center;
-}
-.testata .interno{
-  width:100%;max-width:var(--max);margin:0 auto;padding:0 30px;
-  display:flex;align-items:center;gap:34px;
-}
+.testata{position:sticky;top:0;z-index:50;background:var(--blu);color:var(--bianco);
+         height:var(--h-testata);display:flex;align-items:center}
+.testata .interno{width:100%;max-width:var(--max);margin:0 auto;padding:0 30px;
+                  display:flex;align-items:center;gap:34px}
 .sigla{display:flex;align-items:center;gap:22px;flex:none}
-.sigla .ance{
-  font-size:38px;font-weight:700;letter-spacing:.055em;line-height:1;color:var(--bianco);
-}
+.sigla .ance{font-size:38px;font-weight:700;letter-spacing:.055em;line-height:1;color:var(--bianco)}
 .sigla .filetto{width:2px;height:56px;background:rgba(255,255,255,.85);flex:none}
-.sigla .ente .e1{
-  font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;line-height:1.25;
-}
+.sigla .ente .e1{font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;line-height:1.25}
 .sigla .ente .e2{font-size:13.5px;color:rgba(255,255,255,.7);letter-spacing:.02em}
-
-.chiavi{
-  display:flex;background:var(--bianco);flex:0 1 auto;margin:0 auto;
-}
+.chiavi{display:flex;background:var(--bianco);flex:0 1 auto;margin:0 auto}
 .chiavi > div{padding:11px 26px;border-left:1px solid var(--bordo);white-space:nowrap}
 .chiavi > div:first-child{border-left:0}
 .chiavi .v{font-size:15px;font-weight:600;color:var(--testo);line-height:1.35}
 .chiavi .v.rilievo{color:var(--blu)}
 .chiavi .e{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2);margin-top:1px}
-
 .rilevazione{text-align:right;line-height:1.4;flex:none;margin-left:auto}
 .rilevazione .r1{font-size:14.5px;font-weight:700;letter-spacing:.075em;text-transform:uppercase}
 .rilevazione .r2{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.7)}
 
 /* --- 4. SCENA E PANNELLO SINISTRO ---------------------------------------- */
-.scena{
-  max-width:var(--max);margin:0 auto;
-  display:grid;grid-template-columns:var(--w-pannello) minmax(0,1fr);
-  align-items:start;gap:0;background:var(--fondo);
-}
-.pannello{
-  position:sticky;top:var(--h-testata);
-  height:calc(100vh - var(--h-testata));overflow-y:auto;overscroll-behavior:contain;
-  background:var(--bianco);border-right:1px solid var(--bordo);
-  border-left:5px solid var(--blu);
-  padding:38px 34px 34px;
-}
-.pannello h1{
-  font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.015em;color:var(--blu);
-}
-.pannello .periodo{
-  margin-top:12px;font-size:13px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--s3);
-}
+.scena{max-width:var(--max);margin:0 auto;display:grid;
+       grid-template-columns:var(--w-pannello) minmax(0,1fr);align-items:start;background:var(--fondo)}
+.pannello{position:sticky;top:var(--h-testata);
+          height:calc(100vh - var(--h-testata));overflow-y:auto;overscroll-behavior:contain;
+          background:var(--bianco);border-right:1px solid var(--bordo);border-left:5px solid var(--blu);
+          padding:38px 34px 34px}
+.pannello h1{font-size:27px;line-height:1.28;font-weight:600;letter-spacing:-.015em;color:var(--blu)}
+.pannello .periodo{margin-top:12px;font-size:13px;font-weight:700;letter-spacing:.11em;
+                   text-transform:uppercase;color:var(--s3)}
 .pannello .sommario{margin-top:20px;font-size:14.5px;color:var(--testo-2);line-height:1.7}
-.pannello .obbligo{
-  margin-top:22px;padding-top:18px;border-top:1px solid var(--bordo);
-  font-size:13px;color:var(--testo-2);line-height:1.6;
-}
+.pannello .obbligo{margin-top:22px;padding-top:18px;border-top:1px solid var(--bordo);
+                   font-size:13px;color:var(--testo-2);line-height:1.6}
 .pannello .obbligo .ast{color:var(--err);font-weight:700}
 
-/* --- 5. CONTATORE QUESTIONARI -------------------------------------------- */
+/* --- 5. CONTATORE -------------------------------------------------------- */
 .contatore{margin-top:28px}
-.contatore h2{
-  background:var(--velo-2);padding:10px 14px;
-  font-size:11.5px;font-weight:700;letter-spacing:.07em;color:var(--blu);line-height:1.4;
-}
+.contatore h2{background:var(--velo-2);padding:10px 14px;font-size:11.5px;font-weight:700;
+              letter-spacing:.07em;color:var(--blu);line-height:1.4}
 .contatore ul{margin-top:16px}
 .contatore li{display:grid;grid-template-columns:1fr auto;gap:6px 10px;margin-bottom:11px}
 .contatore .p{font-size:13.5px;color:var(--testo)}
@@ -139,10 +110,8 @@ abbr{text-decoration:none}
 .contatore li:nth-child(3) .b > i{background:var(--s3)}
 .contatore li:nth-child(4) .b > i{background:var(--s2)}
 .contatore li:nth-child(n+5) .b > i{background:var(--s1)}
-.contatore .totale{
-  display:flex;justify-content:space-between;align-items:baseline;
-  margin-top:16px;padding-top:14px;border-top:2px solid var(--blu);
-}
+.contatore .totale{display:flex;justify-content:space-between;align-items:baseline;
+                   margin-top:16px;padding-top:14px;border-top:2px solid var(--blu)}
 .contatore .totale .l{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blu)}
 .contatore .totale .v{font-size:26px;font-weight:600;color:var(--blu);line-height:1;font-variant-numeric:tabular-nums}
 .contatore .agg{margin-top:10px;font-size:11.5px;color:var(--testo-2)}
@@ -150,59 +119,58 @@ abbr{text-decoration:none}
 
 /* --- 6. PROGRESSO -------------------------------------------------------- */
 .lavoro{min-width:0;padding:0 0 46px}
-.progresso{
-  position:sticky;top:var(--h-testata);z-index:20;
-  background:var(--bianco);border-bottom:1px solid var(--bordo);
-  display:flex;align-items:center;gap:22px;padding:14px 34px;
-}
-.progresso .e{
-  font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--testo-2);white-space:nowrap;
-}
+.progresso{position:sticky;top:var(--h-testata);z-index:20;background:var(--bianco);
+           border-bottom:1px solid var(--bordo);display:flex;align-items:center;gap:22px;padding:12px 34px}
+.sez-corr{display:flex;align-items:baseline;gap:9px;white-space:nowrap;flex:none;min-width:230px}
+.sez-corr .num{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2)}
+.sez-corr .nome{font-size:13.5px;font-weight:600;color:var(--blu)}
 .pista{flex:1;height:5px;background:var(--velo);min-width:60px}
 .pista > i{display:block;height:100%;width:0;background:var(--blu);transition:width 220ms ease,background-color var(--t)}
-.progresso .c{
-  font-size:13px;font-weight:700;letter-spacing:.05em;color:var(--blu);
-  font-variant-numeric:tabular-nums;white-space:nowrap;text-transform:uppercase;
-}
+.conteggio{text-align:right;white-space:nowrap;flex:none;min-width:150px}
+.conteggio .c{font-size:13.5px;font-weight:700;color:var(--blu);font-variant-numeric:tabular-nums}
+.conteggio .m{font-size:11px;color:var(--testo-2);display:block;margin-top:1px}
 .progresso.completo .pista > i{background:var(--ok)}
-.progresso.completo .c{color:var(--ok)}
+.progresso.completo .conteggio .c{color:var(--ok)}
 
 /* --- 7. SEZIONI ---------------------------------------------------------- */
 .interno-lavoro{padding:0 34px}
-.sezione{margin-top:34px}
-.sezione > header{
-  display:flex;align-items:center;gap:20px;background:var(--bianco);
-  border:1px solid var(--bordo);border-bottom:0;border-left:4px solid var(--blu);
-  padding:16px 24px;
-}
-.sezione .ord{
-  font-size:34px;font-weight:600;line-height:1;color:var(--blu);
-  letter-spacing:-.03em;font-variant-numeric:tabular-nums;flex:none;
-}
-.sezione h2{
-  font-size:17px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--blu-scuro);line-height:1.3;
-}
+.sezione{margin-top:34px;scroll-margin-top:150px}
+.sezione > header{display:flex;align-items:center;gap:20px;background:var(--bianco);
+                  border:1px solid var(--bordo);border-bottom:0;border-left:4px solid var(--blu);padding:16px 24px}
+.sezione .ord{font-size:34px;font-weight:600;line-height:1;color:var(--blu);
+              letter-spacing:-.03em;font-variant-numeric:tabular-nums;flex:none}
+.sezione h2{font-size:17px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+            color:var(--blu-scuro);line-height:1.3}
 .sezione .occhiello{margin-top:3px;font-size:13.5px;color:var(--testo-2)}
-.corpo{background:var(--bianco);border:1px solid var(--bordo);border-top:0;padding:0 26px}
-.fascia{
-  background:var(--velo);border-bottom:1px solid var(--bordo);margin:0 -26px;padding:11px 26px;
-  font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--blu);
-}
+.corpo{border:1px solid var(--bordo);border-top:0;padding:0 26px}
+.fascia{border-bottom:1px solid var(--bordo);margin:0 -26px;padding:11px 26px;
+        font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--blu)}
+
+/* sfondi differenziati per sezione */
+.sezione.s1 .corpo{background:var(--bianco)}
+.sezione.s1 .fascia{background:var(--velo)}
+.sezione.s2 > header{border-left-color:var(--s4)}
+.sezione.s2 .ord{color:var(--s4)}
+.sezione.s2 .corpo{background:#F6FAFD}
+.sezione.s2 .fascia{background:#E4EFF8;color:var(--s5)}
+.sezione.s3 > header{border-left-color:var(--s5)}
+.sezione.s3 .ord{color:var(--s5)}
+.sezione.s3 .corpo{background:#F1F6FA}
+.sezione.s3 .fascia{background:#DFEAF3;color:var(--s5)}
 
 /* --- 8. DOMANDE ---------------------------------------------------------- */
-.d{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:28px;
+.d{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:28px;
    align-items:start;padding:24px 0;border-bottom:1px solid var(--bordo)}
 .d:last-child{border-bottom:0}
 .d-testo{min-width:0;display:grid;grid-template-columns:44px minmax(0,1fr);gap:0}
 .d-ord{grid-row:1/span 5;font-size:14.5px;font-weight:700;color:var(--blu);
        font-variant-numeric:tabular-nums;padding-top:3px}
-.d-tit{grid-column:2;font-size:17px;line-height:1.45;font-weight:600;color:var(--testo);display:block;cursor:pointer}
+.d-tit{grid-column:2;font-size:17px;line-height:1.45;font-weight:600;color:var(--testo);display:block}
+label.d-tit{cursor:pointer}
 .d-tit abbr.req{color:var(--err);font-weight:700;margin-left:3px}
-.facolt{display:inline-block;vertical-align:2px;margin-left:9px;
-        font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-        color:var(--s4);border:1px solid #BBDCEE;background:var(--velo);padding:2px 7px}
+.facolt{display:inline-block;vertical-align:2px;margin-left:9px;font-size:9.5px;font-weight:700;
+        letter-spacing:.1em;text-transform:uppercase;color:var(--s4);
+        border:1px solid #BBDCEE;background:var(--velo);padding:2px 7px}
 .d-sup{grid-column:2;margin-top:4px;font-size:13px;color:var(--testo-2)}
 .d-campo{grid-column:2;margin-top:13px}
 .d-nota{grid-column:2;margin-top:8px;font-size:12.5px;color:var(--testo-2);line-height:1.55}
@@ -210,26 +178,23 @@ abbr{text-decoration:none}
 .d.errata .d-err{display:block}
 .d.errata .d-ord{color:var(--err)}
 
-/* --- 9. CAMPI ------------------------------------------------------------ */
+/* --- 9. CAMPI E OPZIONI -------------------------------------------------- */
 .campo{position:relative}
 select,input[type=text],input[type=number]{
-  width:100%;height:52px;padding:0 16px;
-  border:1px solid var(--bordo-campo);border-radius:7px;
+  width:100%;height:52px;padding:0 16px;border:1px solid var(--bordo-campo);border-radius:7px;
   background:var(--bianco);color:var(--testo);font:inherit;font-size:15.5px;
   transition:border-color var(--t),background-color var(--t),box-shadow var(--t);
 }
-select{
-  appearance:none;-webkit-appearance:none;padding-right:46px;cursor:pointer;
+select{appearance:none;-webkit-appearance:none;padding-right:46px;cursor:pointer;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='8' viewBox='0 0 13 8'%3E%3Cpath d='M1 1.2 6.5 6.8 12 1.2' fill='none' stroke='%23003B73' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 17px center;
-}
+  background-repeat:no-repeat;background-position:right 17px center}
 input[type=number]{appearance:textfield;-moz-appearance:textfield}
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 select:hover,input:hover{border-color:#AFC0CF}
 select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);box-shadow:0 0 0 3px rgba(0,59,115,.13)}
 .campo.compilato select,.campo.compilato input{border-color:var(--blu);background:var(--campo-attivo)}
-.d.errata select,.d.errata input{border-color:var(--err);box-shadow:0 0 0 3px rgba(163,34,25,.10)}
+.d.errata select,.d.errata input,.d.errata .opz .opt{border-color:var(--err)}
 .coppia{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .sub{margin-top:13px}
 .sub .eti{display:block;font-size:12.5px;font-weight:600;color:var(--testo-2);margin-bottom:7px}
@@ -238,50 +203,71 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
                  font-size:13.5px;color:var(--testo-2);pointer-events:none}
 .campo.unita.compilato .um{color:var(--blu)}
 
+/* selezione diretta (flag) al posto delle tendine brevi */
+.opz{display:flex;flex-wrap:wrap;gap:10px}
+.opz.larghe .opt{flex:1 1 260px}
+.opt{display:inline-flex;align-items:center;gap:11px;min-height:50px;padding:10px 18px 10px 15px;
+     border:1px solid var(--bordo-campo);border-radius:7px;background:var(--bianco);
+     font-size:15px;line-height:1.35;color:var(--testo);cursor:pointer;
+     transition:border-color var(--t),background-color var(--t),box-shadow var(--t)}
+.opt input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.opt .seg{width:19px;height:19px;border:2px solid #B4C3D2;border-radius:50%;flex:none;
+          position:relative;transition:border-color var(--t)}
+.opt:hover{border-color:#9FB4C7;background:#FBFDFF}
+.opt.sel{border-color:var(--blu);background:var(--campo-attivo);box-shadow:inset 0 0 0 1px var(--blu)}
+.opt.sel .seg{border-color:var(--blu)}
+.opt.sel .seg::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--blu)}
+.opt.sel .txt{font-weight:600;color:var(--blu)}
+.opt:focus-within{box-shadow:0 0 0 3px rgba(0,59,115,.16)}
+.opt.neutra{color:var(--testo-2)}
+
 /* --- 10. BENCHMARK ------------------------------------------------------- */
 .lato{min-width:0}
-.bm{background:var(--velo);border:1px solid #D3E2EE;border-left:4px solid var(--blu);padding:16px 18px 15px}
-.bm-t{font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--blu)}
-.bm-s{font-size:12px;color:var(--testo-2);margin-top:2px}
-.bm-f{font-size:11px;color:var(--testo-2);margin-top:7px;padding-bottom:12px;border-bottom:1px solid #CFDFEC}
-.bm-g{margin-top:12px}
-.bm-g .k{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2)}
-.bm-g .v{font-size:13.5px;font-weight:600;color:var(--testo);line-height:1.4;margin-top:3px}
-.bm-g .q{font-size:11px;color:var(--testo-2);margin-top:3px}
-.bm-d{margin-top:14px;padding-top:12px;border-top:1px solid #CFDFEC}
-.bm-d > .k{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2)}
-.riga-b{margin-top:9px}
+.bm{background:var(--velo);border:1px solid #D3E2EE;border-left:4px solid var(--blu);padding:17px 19px 16px}
+.bm-t{font-size:11.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--blu)}
+.bm-s{font-size:13px;color:var(--testo-2);margin-top:3px}
+.bm-f{font-size:12px;color:var(--testo-2);margin-top:8px;padding-bottom:13px;border-bottom:1px solid #CFDFEC}
+.bm-g{margin-top:13px}
+.bm-g .k{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2)}
+.bm-g .v{font-size:15px;font-weight:600;color:var(--testo);line-height:1.4;margin-top:4px}
+.bm-g .q{font-size:12px;color:var(--testo-2);margin-top:4px}
+.bm-d{margin-top:15px;padding-top:13px;border-top:1px solid #CFDFEC}
+.bm-d > .k{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2)}
+.riga-b{margin-top:11px}
 .riga-b .l{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
-           font-size:12px;color:var(--testo);margin-bottom:4px}
+           font-size:13.5px;color:var(--testo);margin-bottom:5px}
 .riga-b .l .n{font-weight:600;font-variant-numeric:tabular-nums}
-.riga-b .t{height:5px;background:#D3E2EE}
+.riga-b .t{height:6px;background:#D3E2EE}
 .riga-b .f{height:100%;background:var(--s3);transition:width 200ms ease}
 .riga-b.g1 .f{background:var(--s5)}
 .riga-b.g2 .f{background:var(--s3)}
 .riga-b.g3 .f{background:var(--s2)}
 .riga-b.mia .l{font-weight:600;color:var(--blu)}
 .riga-b.mia .f{background:var(--blu)}
-.mia-r{display:block;margin-top:12px;padding:8px 11px;background:var(--bianco);
-       border:1px solid #CFDFEC;font-size:11px;line-height:1.45;color:var(--testo)}
+.mia-r{display:block;margin-top:13px;padding:9px 12px;background:var(--bianco);
+       border:1px solid #CFDFEC;font-size:12.5px;line-height:1.5;color:var(--testo)}
 .mia-r b{color:var(--blu);font-weight:600}
-.bm-n{display:flex;align-items:baseline;gap:8px;margin-top:8px}
-.bm-n .c{font-size:30px;font-weight:600;color:var(--blu);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.bm-n .u{font-size:12.5px;color:var(--testo-2)}
-.asse{position:relative;height:5px;background:#D3E2EE;margin:14px 0 6px}
-.asse .m{position:absolute;top:-4px;width:2px;height:13px;background:var(--blu)}
-.asse .p{position:absolute;top:-4px;width:11px;height:11px;border-radius:50%;background:var(--bianco);
+.bm-n{display:flex;align-items:baseline;gap:9px;margin-top:9px}
+.bm-n .c{font-size:36px;font-weight:600;color:var(--blu);line-height:1;letter-spacing:-.02em;
+         font-variant-numeric:tabular-nums}
+.bm-n .u{font-size:14px;color:var(--testo-2)}
+.asse{position:relative;height:6px;background:#D3E2EE;margin:15px 0 6px}
+.asse .m{position:absolute;top:-4px;width:2px;height:14px;background:var(--blu)}
+.asse .p{position:absolute;top:-5px;width:12px;height:12px;border-radius:50%;background:var(--bianco);
          border:2.5px solid var(--s3);transform:translateX(-50%);transition:left 200ms ease}
-.asse-l{display:flex;justify-content:space-between;font-size:10px;color:var(--testo-2);font-variant-numeric:tabular-nums}
-.bm-p{margin-top:12px;padding-top:10px;border-top:1px solid #CFDFEC;font-size:11px;line-height:1.5;color:var(--testo-2)}
+.asse-l{display:flex;justify-content:space-between;font-size:11.5px;color:var(--testo-2);
+        font-variant-numeric:tabular-nums}
+.bm-p{margin-top:13px;padding-top:11px;border-top:1px solid #CFDFEC;font-size:12.5px;
+      line-height:1.55;color:var(--testo-2)}
 .bm-p b{color:var(--testo);font-weight:600}
-.bm-attesa{border:1px solid var(--bordo);border-left:4px solid var(--bordo-campo);
-           background:var(--bianco);padding:16px 18px;font-size:12px;line-height:1.55;color:var(--testo-2)}
-.bm-attesa .t{display:block;font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
-              color:var(--testo-2);margin-bottom:6px}
+.bm-attesa{border:1px solid var(--bordo);border-left:4px solid var(--bordo-campo);background:var(--bianco);
+           padding:17px 19px;font-size:13px;line-height:1.6;color:var(--testo-2)}
+.bm-attesa .t{display:block;font-size:11.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+              color:var(--testo-2);margin-bottom:7px}
 
-/* --- 11. CHIUSURA: NOTE + INVIO ------------------------------------------ */
-.fondo{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;
-       align-items:start;margin-top:34px;padding:0 34px}
+/* --- 11. CHIUSURA -------------------------------------------------------- */
+.fondo{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;align-items:start;
+       margin-top:34px;padding:0 34px}
 .metodo{background:var(--bianco);border:1px solid var(--bordo)}
 .metodo summary{list-style:none;cursor:pointer;padding:16px 22px;display:flex;align-items:center;gap:12px;
                 font-size:11.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--blu)}
@@ -295,15 +281,12 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
 .metodo .testo p{margin-bottom:12px}
 .metodo .testo p:last-child{margin-bottom:0}
 .metodo .testo b{color:var(--testo);font-weight:600}
-
 .invio{background:var(--bianco);border:1px solid var(--bordo);border-top:3px solid var(--blu);padding:26px 24px 24px}
 .invio .avviso{font-size:13.5px;color:var(--testo-2);margin-bottom:18px;text-align:center}
-.invia{
-  display:flex;align-items:center;justify-content:center;gap:13px;width:100%;height:54px;
-  border:0;border-radius:6px;background:var(--blu);color:var(--bianco);cursor:pointer;
-  font:inherit;font-size:14.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  transition:background-color var(--t);
-}
+.invia{display:flex;align-items:center;justify-content:center;gap:13px;width:100%;height:54px;
+       border:0;border-radius:6px;background:var(--blu);color:var(--bianco);cursor:pointer;
+       font:inherit;font-size:14.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+       transition:background-color var(--t)}
 .invia:hover{background:var(--blu-scuro)}
 .invia:focus-visible{outline:3px solid rgba(0,59,115,.32);outline-offset:3px}
 .invia:disabled{background:#7E93A6;cursor:default}
@@ -311,19 +294,37 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
 .invio .privacy{margin-top:16px;font-size:12px;color:var(--testo-2);line-height:1.6;text-align:center}
 .esito{display:none;margin-bottom:18px;padding:13px 15px;font-size:13.5px;font-weight:500;
        border:1px solid transparent;border-left-width:4px}
-.esito.ok{display:block;background:#EFF6F1;border-color:#C4DDCD;border-left-color:var(--ok);color:var(--ok)}
 .esito.err{display:block;background:#FBF0EF;border-color:#EBCFCC;border-left-color:var(--err);color:var(--err)}
-
 .piede{background:var(--blu-notte);color:rgba(255,255,255,.75);padding:26px 34px;margin-top:34px;
        display:flex;justify-content:space-between;gap:26px;flex-wrap:wrap;font-size:12.5px;line-height:1.6}
 .piede b{color:var(--bianco);font-weight:600}
 
-/* --- 12. RESPONSIVE ------------------------------------------------------ */
+/* --- 12. SCHERMATA DI CONFERMA ------------------------------------------- */
+.grazie{min-height:calc(100vh - var(--h-testata));display:flex;align-items:center;justify-content:center;
+        background:var(--bianco);padding:60px 30px;text-align:center}
+.grazie .box{max-width:640px}
+.grazie .segno{width:78px;height:78px;border-radius:50%;background:var(--velo);
+               display:flex;align-items:center;justify-content:center;margin:0 auto 26px}
+.grazie .segno svg{width:38px;height:38px;stroke:var(--ok);fill:none;stroke-width:2.4}
+.grazie h2{font-size:30px;font-weight:600;color:var(--blu);letter-spacing:-.015em;line-height:1.25}
+.grazie .prot{display:inline-block;margin-top:22px;padding:12px 24px;background:var(--velo);
+              border-left:4px solid var(--blu);text-align:left}
+.grazie .prot .k{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--testo-2)}
+.grazie .prot .v{font-size:19px;font-weight:600;color:var(--blu);font-variant-numeric:tabular-nums;margin-top:2px}
+.grazie p{margin-top:22px;font-size:15.5px;color:var(--testo-2);line-height:1.7}
+.grazie .di-nuovo{margin-top:30px;display:inline-flex;align-items:center;justify-content:center;height:50px;
+                  padding:0 30px;border:1px solid var(--blu);background:var(--bianco);color:var(--blu);
+                  font:inherit;font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+                  border-radius:6px;cursor:pointer;transition:background-color var(--t),color var(--t)}
+.grazie .di-nuovo:hover{background:var(--blu);color:var(--bianco)}
+
+/* --- 13. RESPONSIVE ------------------------------------------------------ */
 @media(max-width:1480px){
   .d{grid-template-columns:1fr;gap:0}
   .lato{margin:16px 0 0 44px;max-width:560px}
   :root{--w-pannello:350px}
   .fondo{grid-template-columns:minmax(0,1fr) 330px}
+  .sez-corr{min-width:0}
 }
 @media(max-width:1180px){
   :root{--h-testata:auto}
@@ -338,10 +339,12 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   .pannello h1{font-size:26px;max-width:760px}
   .pannello .sommario{max-width:760px}
   .contatore{max-width:520px}
-  .progresso{position:sticky;top:0;padding:12px 24px}
+  .progresso{position:sticky;top:0;padding:11px 24px;gap:16px}
   .interno-lavoro,.fondo{padding-left:24px;padding-right:24px}
   .fondo{grid-template-columns:1fr;gap:18px}
   .piede{padding:24px}
+  .sezione{scroll-margin-top:110px}
+  .grazie{min-height:60vh}
 }
 @media(max-width:720px){
   .testata .interno{padding:0 18px;gap:14px}
@@ -356,8 +359,14 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   .chiavi .e{font-size:8.5px;letter-spacing:.06em}
   .pannello{padding:24px 18px}
   .pannello h1{font-size:22px}
-  .progresso .e{display:none}
-  .progresso{padding:11px 18px;gap:14px}
+  .progresso{padding:10px 18px;gap:10px;flex-wrap:wrap;row-gap:9px}
+  .sez-corr{order:1;flex:1 1 auto;min-width:0;flex-direction:column;gap:0;align-items:flex-start}
+  .sez-corr .num{font-size:9.5px}
+  .sez-corr .nome{font-size:12px}
+  .conteggio{order:2;flex:0 0 auto;min-width:0;max-width:52%}
+  .conteggio .c{font-size:12.5px}
+  .conteggio .m{font-size:9.5px;white-space:normal;line-height:1.3}
+  .pista{order:3;flex:1 1 100%;min-width:100%}
   .interno-lavoro,.fondo{padding-left:18px;padding-right:18px}
   .sezione > header{padding:14px 18px;gap:14px}
   .sezione .ord{font-size:28px}
@@ -368,10 +377,14 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   .lato{margin-left:36px}
   .coppia{grid-template-columns:1fr;gap:13px}
   select,input[type=text],input[type=number]{height:50px;font-size:16px}
+  .opz{gap:8px}
+  .opt{width:100%;font-size:15.5px}
+  .grazie{padding:44px 20px}
+  .grazie h2{font-size:24px}
   .piede{padding:22px 18px}
 }
 
-/* --- 13. ACCESSIBILITÀ E STAMPA ------------------------------------------ */
+/* --- ACCESSIBILITÀ E STAMPA --------------------------------------------- */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
@@ -413,7 +426,7 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   </div>
 </header>
 
-<div class="scena">
+<div class="scena" id="scena">
 
   <!-- ===================== PANNELLO SINISTRO ===================== -->
   <aside class="pannello">
@@ -435,16 +448,22 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   <div class="lavoro">
 
     <div class="progresso" id="progresso">
-      <span class="e">Progresso della compilazione</span>
+      <span class="sez-corr">
+        <span class="num" id="sez-num">Sezione 1 di 3</span>
+        <span class="nome" id="sez-nome">Profilo dell'impresa</span>
+      </span>
       <div class="pista" role="progressbar" aria-labelledby="cifre" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0" id="pista"><i id="fill"></i></div>
-      <span class="c" id="cifre" aria-live="polite">0 / 12</span>
+      <span class="conteggio">
+        <span class="c" id="cifre" aria-live="polite">0 / 12</span>
+        <span class="m" id="mancano">mancano 12 risposte obbligatorie</span>
+      </span>
     </div>
 
     <div class="interno-lavoro" id="modulo">
       <form id="q" novalidate>
 
         <!-- ============ 01 · PROFILO DELL'IMPRESA ============ -->
-        <section class="sezione">
+        <section class="sezione s1" id="sez1" data-nome="Profilo dell'impresa">
           <header>
             <span class="ord" aria-hidden="true">01</span>
             <div>
@@ -494,18 +513,18 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">1.1</span>
-                <label class="d-tit" for="a1">Area di attività — principale <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <span class="d-tit" id="lab-a1">Area di attività — principale <abbr class="req" title="Campo obbligatorio">*</abbr></span>
                 <p class="d-sup">È possibile indicare fino a tre aree di attività</p>
-                <div class="d-campo campo">
-                  <select id="a1" required data-req aria-describedby="err-a1">
-                    <option value="">— seleziona —</option>
-                    <option value="1">Edilizia privata abitativa</option>
-                    <option value="2">Edilizia privata non abitativa</option>
-                    <option value="3">Lavori pubblici</option>
-                    <option value="4">Lavori complementari e affini</option>
-                    <option value="5">Calcestruzzo</option>
-                    <option value="6">Altri settori</option>
-                  </select>
+                <div class="d-campo">
+                  <input type="hidden" id="a1" data-req>
+                  <div class="opz larghe" role="radiogroup" aria-labelledby="lab-a1" data-per="a1">
+                    <label class="opt"><input type="radio" name="r_a1" value="1"><span class="seg"></span><span class="txt">Edilizia privata abitativa</span></label>
+                    <label class="opt"><input type="radio" name="r_a1" value="2"><span class="seg"></span><span class="txt">Edilizia privata non abitativa</span></label>
+                    <label class="opt"><input type="radio" name="r_a1" value="3"><span class="seg"></span><span class="txt">Lavori pubblici</span></label>
+                    <label class="opt"><input type="radio" name="r_a1" value="4"><span class="seg"></span><span class="txt">Lavori complementari e affini</span></label>
+                    <label class="opt"><input type="radio" name="r_a1" value="5"><span class="seg"></span><span class="txt">Calcestruzzo</span></label>
+                    <label class="opt"><input type="radio" name="r_a1" value="6"><span class="seg"></span><span class="txt">Altri settori</span></label>
+                  </div>
                   <div class="coppia sub">
                     <div class="campo">
                       <label class="eti" for="a2">1.2 Seconda area (facoltativa)</label>
@@ -541,19 +560,20 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">2</span>
-                <label class="d-tit" for="cls">Classe dimensionale <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <span class="d-tit" id="lab-cls">Classe dimensionale <abbr class="req" title="Campo obbligatorio">*</abbr></span>
                 <p class="d-sup">Dipendenti e soci operativi</p>
-                <div class="d-campo campo">
-                  <select id="cls" required data-req aria-describedby="err-cls">
-                    <option value="">— seleziona —</option>
-                    <option value="1">1-5 addetti</option>
-                    <option value="2">6-10 addetti</option>
-                    <option value="3">11-20 addetti</option>
-                    <option value="4">21-50 addetti</option>
-                    <option value="5">51-100 addetti</option>
-                    <option value="6">oltre 100 addetti</option>
-                  </select>
+                <div class="d-campo">
+                  <input type="hidden" id="cls" data-req>
+                  <div class="opz" role="radiogroup" aria-labelledby="lab-cls" data-per="cls">
+                    <label class="opt"><input type="radio" name="r_cls" value="1"><span class="seg"></span><span class="txt">1-5</span></label>
+                    <label class="opt"><input type="radio" name="r_cls" value="2"><span class="seg"></span><span class="txt">6-10</span></label>
+                    <label class="opt"><input type="radio" name="r_cls" value="3"><span class="seg"></span><span class="txt">11-20</span></label>
+                    <label class="opt"><input type="radio" name="r_cls" value="4"><span class="seg"></span><span class="txt">21-50</span></label>
+                    <label class="opt"><input type="radio" name="r_cls" value="5"><span class="seg"></span><span class="txt">51-100</span></label>
+                    <label class="opt"><input type="radio" name="r_cls" value="6"><span class="seg"></span><span class="txt">oltre 100</span></label>
+                  </div>
                 </div>
+                <p class="d-nota">Numero di addetti.</p>
                 <p class="d-err" id="err-cls">Campo obbligatorio: selezionare la classe dimensionale.</p>
               </div>
               <div class="lato"><div id="bm-cls"></div></div>
@@ -580,17 +600,17 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">3</span>
-                <label class="d-tit" for="clf">Classe di fatturato (euro) <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-                <div class="d-campo campo">
-                  <select id="clf" required data-req aria-describedby="err-clf">
-                    <option value="">— seleziona —</option>
-                    <option value="1">fino a 0,5 mln</option>
-                    <option value="2">0,5 - 1,5 mln</option>
-                    <option value="3">1,5 - 2,5 mln</option>
-                    <option value="4">2,5 - 5 mln</option>
-                    <option value="5">5 - 15 mln</option>
-                    <option value="6">oltre 15 mln</option>
-                  </select>
+                <span class="d-tit" id="lab-clf">Classe di fatturato (euro) <abbr class="req" title="Campo obbligatorio">*</abbr></span>
+                <div class="d-campo">
+                  <input type="hidden" id="clf" data-req>
+                  <div class="opz" role="radiogroup" aria-labelledby="lab-clf" data-per="clf">
+                    <label class="opt"><input type="radio" name="r_clf" value="1"><span class="seg"></span><span class="txt">fino a 0,5 mln</span></label>
+                    <label class="opt"><input type="radio" name="r_clf" value="2"><span class="seg"></span><span class="txt">0,5 - 1,5 mln</span></label>
+                    <label class="opt"><input type="radio" name="r_clf" value="3"><span class="seg"></span><span class="txt">1,5 - 2,5 mln</span></label>
+                    <label class="opt"><input type="radio" name="r_clf" value="4"><span class="seg"></span><span class="txt">2,5 - 5 mln</span></label>
+                    <label class="opt"><input type="radio" name="r_clf" value="5"><span class="seg"></span><span class="txt">5 - 15 mln</span></label>
+                    <label class="opt"><input type="radio" name="r_clf" value="6"><span class="seg"></span><span class="txt">oltre 15 mln</span></label>
+                  </div>
                 </div>
                 <p class="d-nota">Riferita all'ultimo esercizio chiuso.</p>
                 <p class="d-err" id="err-clf">Campo obbligatorio: selezionare la classe di fatturato.</p>
@@ -601,16 +621,16 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">4</span>
-                <label class="d-tit" for="ffp">Quota di fatturato realizzata fuori provincia <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-                <div class="d-campo campo">
-                  <select id="ffp" required data-req aria-describedby="err-ffp">
-                    <option value="">— seleziona —</option>
-                    <option value="1">nulla</option>
-                    <option value="2">fino al 10%</option>
-                    <option value="3">10 - 25%</option>
-                    <option value="4">25 - 50%</option>
-                    <option value="5">oltre il 50%</option>
-                  </select>
+                <span class="d-tit" id="lab-ffp">Quota di fatturato realizzata fuori provincia <abbr class="req" title="Campo obbligatorio">*</abbr></span>
+                <div class="d-campo">
+                  <input type="hidden" id="ffp" data-req>
+                  <div class="opz" role="radiogroup" aria-labelledby="lab-ffp" data-per="ffp">
+                    <label class="opt"><input type="radio" name="r_ffp" value="1"><span class="seg"></span><span class="txt">nulla</span></label>
+                    <label class="opt"><input type="radio" name="r_ffp" value="2"><span class="seg"></span><span class="txt">fino al 10%</span></label>
+                    <label class="opt"><input type="radio" name="r_ffp" value="3"><span class="seg"></span><span class="txt">10 - 25%</span></label>
+                    <label class="opt"><input type="radio" name="r_ffp" value="4"><span class="seg"></span><span class="txt">25 - 50%</span></label>
+                    <label class="opt"><input type="radio" name="r_ffp" value="5"><span class="seg"></span><span class="txt">oltre il 50%</span></label>
+                  </div>
                 </div>
                 <p class="d-nota">Quota di fatturato prodotta al di fuori della provincia di appartenenza.</p>
                 <p class="d-err" id="err-ffp">Campo obbligatorio: selezionare la quota.</p>
@@ -622,7 +642,7 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
         </section>
 
         <!-- ============ 02 · PREVISIONI ============ -->
-        <section class="sezione">
+        <section class="sezione s2" id="sez2" data-nome="Previsioni">
           <header>
             <span class="ord" aria-hidden="true">02</span>
             <div>
@@ -636,15 +656,15 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">5</span>
-                <label class="d-tit" for="andf">Andamento del fatturato <abbr class="req" title="Campo obbligatorio">*</abbr></label>
+                <span class="d-tit" id="lab-andf">Andamento del fatturato <abbr class="req" title="Campo obbligatorio">*</abbr></span>
                 <p class="d-sup">Rispetto al semestre precedente</p>
-                <div class="d-campo campo">
-                  <select id="andf" required data-req aria-describedby="err-andf">
-                    <option value="">— seleziona —</option>
-                    <option value="1">in aumento</option>
-                    <option value="2">nessuna variazione</option>
-                    <option value="3">in riduzione</option>
-                  </select>
+                <div class="d-campo">
+                  <input type="hidden" id="andf" data-req>
+                  <div class="opz" role="radiogroup" aria-labelledby="lab-andf" data-per="andf">
+                    <label class="opt"><input type="radio" name="r_andf" value="1"><span class="seg"></span><span class="txt">in aumento</span></label>
+                    <label class="opt"><input type="radio" name="r_andf" value="2"><span class="seg"></span><span class="txt">nessuna variazione</span></label>
+                    <label class="opt"><input type="radio" name="r_andf" value="3"><span class="seg"></span><span class="txt">in riduzione</span></label>
+                  </div>
                 </div>
                 <p class="d-err" id="err-andf">Campo obbligatorio: indicare l'andamento atteso.</p>
               </div>
@@ -698,15 +718,15 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">7</span>
-                <label class="d-tit" for="inv">Investimenti programmati per i prossimi 6 mesi <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-                <div class="d-campo campo">
-                  <select id="inv" required data-req aria-describedby="err-inv">
-                    <option value="">— seleziona —</option>
-                    <option value="1">No, nessun investimento</option>
-                    <option value="2">Sì, solo immobiliari</option>
-                    <option value="3">Sì, solo non immobiliari</option>
-                    <option value="4">Sì, immobiliari e non immobiliari</option>
-                  </select>
+                <span class="d-tit" id="lab-inv">Investimenti programmati per i prossimi 6 mesi <abbr class="req" title="Campo obbligatorio">*</abbr></span>
+                <div class="d-campo">
+                  <input type="hidden" id="inv" data-req>
+                  <div class="opz larghe" role="radiogroup" aria-labelledby="lab-inv" data-per="inv">
+                    <label class="opt"><input type="radio" name="r_inv" value="1"><span class="seg"></span><span class="txt">No, nessun investimento</span></label>
+                    <label class="opt"><input type="radio" name="r_inv" value="2"><span class="seg"></span><span class="txt">Sì, solo immobiliari</span></label>
+                    <label class="opt"><input type="radio" name="r_inv" value="3"><span class="seg"></span><span class="txt">Sì, solo non immobiliari</span></label>
+                    <label class="opt"><input type="radio" name="r_inv" value="4"><span class="seg"></span><span class="txt">Sì, immobiliari e non immobiliari</span></label>
+                  </div>
                 </div>
                 <p class="d-err" id="err-inv">Campo obbligatorio: indicare gli investimenti programmati.</p>
               </div>
@@ -716,14 +736,14 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">8</span>
-                <label class="d-tit" for="occ">Andamento dell'occupazione dipendente <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-                <div class="d-campo campo">
-                  <select id="occ" required data-req aria-describedby="err-occ">
-                    <option value="">— seleziona —</option>
-                    <option value="1">in aumento</option>
-                    <option value="2">nessuna variazione</option>
-                    <option value="3">in riduzione</option>
-                  </select>
+                <span class="d-tit" id="lab-occ">Andamento dell'occupazione dipendente <abbr class="req" title="Campo obbligatorio">*</abbr></span>
+                <div class="d-campo">
+                  <input type="hidden" id="occ" data-req>
+                  <div class="opz" role="radiogroup" aria-labelledby="lab-occ" data-per="occ">
+                    <label class="opt"><input type="radio" name="r_occ" value="1"><span class="seg"></span><span class="txt">in aumento</span></label>
+                    <label class="opt"><input type="radio" name="r_occ" value="2"><span class="seg"></span><span class="txt">nessuna variazione</span></label>
+                    <label class="opt"><input type="radio" name="r_occ" value="3"><span class="seg"></span><span class="txt">in riduzione</span></label>
+                  </div>
                 </div>
                 <p class="d-err" id="err-occ">Campo obbligatorio: indicare l'andamento atteso.</p>
               </div>
@@ -733,14 +753,14 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">9</span>
-                <label class="d-tit" for="man">Ricorso alla manodopera esterna <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-                <div class="d-campo campo">
-                  <select id="man" required data-req aria-describedby="err-man">
-                    <option value="">— seleziona —</option>
-                    <option value="1">in aumento</option>
-                    <option value="2">nessuna variazione</option>
-                    <option value="3">in riduzione</option>
-                  </select>
+                <span class="d-tit" id="lab-man">Ricorso alla manodopera esterna <abbr class="req" title="Campo obbligatorio">*</abbr></span>
+                <div class="d-campo">
+                  <input type="hidden" id="man" data-req>
+                  <div class="opz" role="radiogroup" aria-labelledby="lab-man" data-per="man">
+                    <label class="opt"><input type="radio" name="r_man" value="1"><span class="seg"></span><span class="txt">in aumento</span></label>
+                    <label class="opt"><input type="radio" name="r_man" value="2"><span class="seg"></span><span class="txt">nessuna variazione</span></label>
+                    <label class="opt"><input type="radio" name="r_man" value="3"><span class="seg"></span><span class="txt">in riduzione</span></label>
+                  </div>
                 </div>
                 <p class="d-err" id="err-man">Campo obbligatorio: indicare l'andamento atteso.</p>
               </div>
@@ -750,14 +770,14 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">10</span>
-                <label class="d-tit" for="dq">Difficoltà a reperire manodopera specializzata o qualificata <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-                <div class="d-campo campo">
-                  <select id="dq" required data-req aria-describedby="err-dq">
-                    <option value="">— seleziona —</option>
-                    <option value="1">Sì</option>
-                    <option value="2">No, non ho difficoltà</option>
-                    <option value="3">No, la reperisco facilmente</option>
-                  </select>
+                <span class="d-tit" id="lab-dq">Difficoltà a reperire manodopera specializzata o qualificata <abbr class="req" title="Campo obbligatorio">*</abbr></span>
+                <div class="d-campo">
+                  <input type="hidden" id="dq" data-req>
+                  <div class="opz larghe" role="radiogroup" aria-labelledby="lab-dq" data-per="dq">
+                    <label class="opt"><input type="radio" name="r_dq" value="1"><span class="seg"></span><span class="txt">Sì</span></label>
+                    <label class="opt"><input type="radio" name="r_dq" value="2"><span class="seg"></span><span class="txt">No, non ho difficoltà</span></label>
+                    <label class="opt"><input type="radio" name="r_dq" value="3"><span class="seg"></span><span class="txt">No, la reperisco facilmente</span></label>
+                  </div>
                 </div>
                 <p class="d-err" id="err-dq">Campo obbligatorio: indicare la risposta.</p>
               </div>
@@ -767,14 +787,14 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">11</span>
-                <label class="d-tit" for="dg">Difficoltà a reperire manodopera generica <abbr class="req" title="Campo obbligatorio">*</abbr></label>
-                <div class="d-campo campo">
-                  <select id="dg" required data-req aria-describedby="err-dg">
-                    <option value="">— seleziona —</option>
-                    <option value="1">Sì</option>
-                    <option value="2">No, non ho difficoltà</option>
-                    <option value="3">No, la reperisco facilmente</option>
-                  </select>
+                <span class="d-tit" id="lab-dg">Difficoltà a reperire manodopera generica <abbr class="req" title="Campo obbligatorio">*</abbr></span>
+                <div class="d-campo">
+                  <input type="hidden" id="dg" data-req>
+                  <div class="opz larghe" role="radiogroup" aria-labelledby="lab-dg" data-per="dg">
+                    <label class="opt"><input type="radio" name="r_dg" value="1"><span class="seg"></span><span class="txt">Sì</span></label>
+                    <label class="opt"><input type="radio" name="r_dg" value="2"><span class="seg"></span><span class="txt">No, non ho difficoltà</span></label>
+                    <label class="opt"><input type="radio" name="r_dg" value="3"><span class="seg"></span><span class="txt">No, la reperisco facilmente</span></label>
+                  </div>
                 </div>
                 <p class="d-err" id="err-dg">Campo obbligatorio: indicare la risposta.</p>
               </div>
@@ -785,7 +805,7 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
         </section>
 
         <!-- ============ 03 · SITUAZIONE FINANZIARIA ============ -->
-        <section class="sezione">
+        <section class="sezione s3" id="sez3" data-nome="Situazione finanziaria">
           <header>
             <span class="ord" aria-hidden="true">03</span>
             <div>
@@ -864,14 +884,15 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <div class="d">
               <div class="d-testo">
                 <span class="d-ord" aria-hidden="true">14.1</span>
-                <label class="d-tit" for="credBanc">Il costo del credito bancario a breve è <span class="facolt">Facoltativo</span></label>
-                <div class="d-campo campo">
-                  <select id="credBanc">
-                    <option value="0">— non indicato —</option>
-                    <option value="1">in aumento</option>
-                    <option value="2">invariato</option>
-                    <option value="3">in riduzione</option>
-                  </select>
+                <span class="d-tit" id="lab-credBanc">Il costo del credito bancario a breve è <span class="facolt">Facoltativo</span></span>
+                <div class="d-campo">
+                  <input type="hidden" id="credBanc" value="0">
+                  <div class="opz" role="radiogroup" aria-labelledby="lab-credBanc" data-per="credBanc">
+                    <label class="opt"><input type="radio" name="r_credBanc" value="1"><span class="seg"></span><span class="txt">in aumento</span></label>
+                    <label class="opt"><input type="radio" name="r_credBanc" value="2"><span class="seg"></span><span class="txt">invariato</span></label>
+                    <label class="opt"><input type="radio" name="r_credBanc" value="3"><span class="seg"></span><span class="txt">in riduzione</span></label>
+                    <label class="opt neutra"><input type="radio" name="r_credBanc" value="0" checked><span class="seg"></span><span class="txt">non indicato</span></label>
+                  </div>
                 </div>
               </div>
               <div class="lato"><div id="bm-credBanc"></div></div>
@@ -937,8 +958,6 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
 /* =========================================================================
    BENCHMARK ANCE — confronto con la 48ª Indagine (I semestre 2026)
    Fonte: benchmark_I2026.json, generato da genera_benchmark.py sui microdati.
-   Nessun valore stimato: se un gruppo non ha dati sufficienti si risale
-   alla gerarchia provincia+classe -> provincia -> classe -> regione.
    ========================================================================= */
 const $ = id => document.getElementById(id);
 let BM = null, SOGLIA = 8;
@@ -951,9 +970,7 @@ fetch('benchmark_I2026.json', {cache:'no-store'})
   .then(j => { BM = j; SOGLIA = (j.meta && j.meta.soglia_min) || 8; aggiornaTutti(); })
   .catch(() => { BM = false; aggiornaTutti(); });
 
-/* ---- contatore dei questionari acquisiti nel semestre in corso ----
-   Prima si interroga la Web-App (dato aggiornato); se non risponde si ripiega
-   sul file statico conteggio_semestre.json rigenerato dal Centro Studi. ---- */
+/* ---- contatore dei questionari acquisiti nel semestre in corso ---- */
 function mostraContatore(c){
   if(!c || c.ok === false) return false;
   const box = $('contatore'), lista = $('cont-lista'), vuoto = $('cont-vuoto');
@@ -965,14 +982,11 @@ function mostraContatore(c){
   if(!prov.length){
     vuoto.textContent = 'Rilevazione appena avviata: non risultano ancora questionari registrati.';
     vuoto.hidden = false;
-  } else {
-    vuoto.hidden = true;
-  }
+  } else { vuoto.hidden = true; }
   $('cont-tot').textContent = (c.totale != null ? c.totale : 0);
   $('cont-agg').textContent = c.aggiornato
     ? ('Aggiornato al ' + c.aggiornato + (c.aggiornato_ora ? ', ore ' + c.aggiornato_ora : '')
-       + (c.periodo ? ' · ' + c.periodo : ''))
-    : '';
+       + (c.periodo ? ' · ' + c.periodo : '')) : '';
   box.hidden = false;
   return true;
 }
@@ -980,7 +994,7 @@ function contatoreDaFile(){
   fetch('conteggio_semestre.json', {cache:'no-store'})
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
     .then(mostraContatore)
-    .catch(() => { /* contatore non disponibile: il riquadro resta nascosto */ });
+    .catch(() => {});
 }
 fetch(ENDPOINT + '?azione=conteggio', {cache:'no-store'})
   .then(r => r.ok ? r.json() : Promise.reject(r.status))
@@ -988,7 +1002,7 @@ fetch(ENDPOINT + '?azione=conteggio', {cache:'no-store'})
   .catch(contatoreDaFile);
 
 /* ---- risoluzione del gruppo di confronto, a cascata ---- */
-const MIN_M = 5;   /* numerosita minima delle risposte sulla singola domanda */
+const MIN_M = 5;
 function catena(){
   const p = $('prov').value, c = $('cls').value, k = [];
   if(p && c) k.push('P'+p+'C'+c);
@@ -1055,13 +1069,20 @@ function svuota(el){ el.className = ''; el.innerHTML = ''; }
 const ETIC3  = ['in aumento','nessuna variazione','in riduzione'];
 const ETIC3B = ['in aumento','invariato','in riduzione'];
 const CLS3   = ['g1','g2','g3'];
-/* Modalita della 48ª Indagine per i quesiti 10 e 11: mantenute come rilevate. */
 const ETICSN = ['Sì','No','In parte'];
 const ETICINV= ['Nessun investimento','Sì, non immobiliari (anche misti)','Sì, solo immobiliari'];
 const NOTA_SN = 'Nella 48ª Indagine le modalità di risposta erano «Sì», «No», «In parte»: il confronto è pertanto solo indicativo.';
 
 function indiceInv(v){ v = Number(v); if(v===1) return 0; if(v===2) return 2; if(v===3||v===4) return 1; return -1; }
-const testoSel = id => { const e = $(id); return e.selectedIndex > 0 ? e.options[e.selectedIndex].text : ''; };
+/* testo della risposta scelta: vale sia per le tendine sia per i flag */
+function testoSel(id){
+  const e = $(id);
+  if(e.tagName === 'SELECT') return e.selectedIndex > 0 ? e.options[e.selectedIndex].text : '';
+  const r = document.querySelector('.opz[data-per="' + id + '"] input:checked');
+  if(!r || r.value === '0') return '';
+  const t = r.closest('.opt').querySelector('.txt');
+  return t ? t.textContent : '';
+}
 
 function dist(metrica, elId, etichette, classi, mioIdx, mioTesto, coda){
   const el = $(elId); if(!el) return;
@@ -1119,25 +1140,59 @@ function aggiornaTutti(){
   avanzamento();
 }
 
+/* ---- flag: la scelta viene copiata nel campo nascosto omonimo ----------
+   In questo modo tutta la logica successiva (payload, obbligatori,
+   avanzamento, benchmark) continua a leggere gli stessi id di sempre. */
+function sincronizzaOpz(gruppo){
+  const id = gruppo.dataset.per;
+  const scelto = gruppo.querySelector('input:checked');
+  $(id).value = scelto ? scelto.value : '';
+  gruppo.querySelectorAll('.opt').forEach(o => {
+    o.classList.toggle('sel', o.contains(scelto));
+  });
+}
+document.querySelectorAll('.opz').forEach(gruppo => {
+  gruppo.addEventListener('change', () => sincronizzaOpz(gruppo));
+  sincronizzaOpz(gruppo);
+});
+
 /* ---- stato visivo dei campi compilati (solo presentazione) ---- */
 function statoCampi(){
-  document.querySelectorAll('#q select, #q input').forEach(el => {
+  document.querySelectorAll('#q select, #q input[type=text], #q input[type=number]').forEach(el => {
     const c = el.closest('.campo'); if(!c) return;
     const v = el.value;
     c.classList.toggle('compilato', v !== '' && v !== '0');
   });
 }
 
-/* ---- avanzamento ---- */
+/* ---- avanzamento e sezione corrente ---- */
 function avanzamento(){
   const req = document.querySelectorAll('[data-req]');
   let ok = 0; req.forEach(e => { if(e.value) ok++; });
-  const tot = req.length, completo = ok === tot;
+  const tot = req.length, restano = tot - ok, completo = restano === 0;
   $('fill').style.width = (100*ok/tot) + '%';
   $('pista').setAttribute('aria-valuenow', ok);
-  $('cifre').textContent = completo ? (ok + ' / ' + tot + ' — Questionario completo') : (ok + ' / ' + tot);
+  $('cifre').textContent = completo ? (ok + ' / ' + tot + ' — completo') : (ok + ' / ' + tot);
+  $('mancano').textContent = completo
+    ? 'tutte le risposte obbligatorie sono state fornite'
+    : ('mancano ' + restano + (restano === 1 ? ' risposta obbligatoria' : ' risposte obbligatorie'));
   $('progresso').classList.toggle('completo', completo);
 }
+
+const SEZIONI = Array.prototype.slice.call(document.querySelectorAll('.sezione'));
+function sezioneCorrente(){
+  const soglia = 200;
+  let idx = 0;
+  SEZIONI.forEach((s,i) => { if(s.getBoundingClientRect().top <= soglia) idx = i; });
+  $('sez-num').textContent = 'Sezione ' + (idx+1) + ' di ' + SEZIONI.length;
+  $('sez-nome').textContent = SEZIONI[idx].dataset.nome;
+}
+let inCorso = false;
+window.addEventListener('scroll', () => {
+  if(inCorso) return;
+  inCorso = true;
+  window.requestAnimationFrame(() => { sezioneCorrente(); inCorso = false; });
+}, {passive:true});
 
 /* ---- campi "oltre 12 mesi" ---- */
 function toggleManual(sel, man, wrap){
@@ -1153,13 +1208,30 @@ document.querySelectorAll('#q select, #q input').forEach(el => {
   el.addEventListener('input', aggiornaTutti);
   el.addEventListener('change', () => {
     const d = el.closest('.d');
-    if(d && el.value){ d.classList.remove('errata'); el.removeAttribute('aria-invalid'); }
+    if(d && el.value) d.classList.remove('errata');
   });
 });
 
 /* ---- invio ---- */
-function show(type, text){ const m = $('msg'); m.className = 'esito ' + type; m.textContent = text;
-  m.scrollIntoView({block:'center', behavior:'smooth'}); }
+function mostraErrore(text){
+  const m = $('msg'); m.className = 'esito err'; m.textContent = text;
+}
+function schermataGrazie(res){
+  const prot = (res && res.nquest)
+    ? '<div class="prot"><div class="k">Numero di protocollo</div><div class="v">'
+      + res.nquest + ' · II semestre 2026</div></div>'
+    : '';
+  $('scena').innerHTML =
+    '<div class="grazie" style="grid-column:1/-1"><div class="box">'
+    + '<div class="segno"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'
+    + '<h2>Questionario inviato correttamente</h2>'
+    + prot
+    + '<p>Si ringrazia per la collaborazione. Le risposte confluiranno nella 49ª Indagine Congiunturale '
+    + 'e saranno elaborate esclusivamente in forma aggregata dal Centro Studi di ANCE Piemonte e Valle d\'Aosta.</p>'
+    + '<button type="button" class="di-nuovo" onclick="location.reload()">Compila un altro questionario</button>'
+    + '</div></div>';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
 
 $('q').addEventListener('submit', async ev => {
   ev.preventDefault();
@@ -1167,11 +1239,12 @@ $('q').addEventListener('submit', async ev => {
   document.querySelectorAll('.d.errata').forEach(e => e.classList.remove('errata'));
   for(const id of req){
     if(!$(id).value){
-      $(id).closest('.d').classList.add('errata');
-      $(id).setAttribute('aria-invalid','true');
-      const m = $('msg'); m.className = 'esito err';
-      m.textContent = 'Si prega di completare tutti i campi obbligatori prima dell’invio.';
-      $(id).scrollIntoView({block:'center', behavior:'smooth'}); $(id).focus();
+      const d = $(id).closest('.d');
+      d.classList.add('errata');
+      mostraErrore('Si prega di completare tutti i campi obbligatori prima dell’invio.');
+      d.scrollIntoView({block:'center', behavior:'smooth'});
+      const primo = d.querySelector('select, input:not([type=hidden])');
+      if(primo) primo.focus();
       return;
     }
   }
@@ -1204,20 +1277,19 @@ $('q').addEventListener('submit', async ev => {
   try{
     const r = await fetch(ENDPOINT, {method:'POST', body: JSON.stringify(payload)});
     const res = await r.json();
-    if(res.ok){
-      show('ok','Questionario inviato correttamente. Si ringrazia per la collaborazione.');
-      $('q').reset(); $('w-ppM').style.display='none'; $('w-pbM').style.display='none'; aggiornaTutti();
-    } else {
-      show('err','Invio non riuscito: ' + (res.error || 'errore sconosciuto') + '.');
-    }
+    if(res.ok){ schermataGrazie(res); return; }
+    mostraErrore('Invio non riuscito: ' + (res.error || 'errore sconosciuto') + '.');
+    $('msg').scrollIntoView({block:'center', behavior:'smooth'});
   }catch(err){
-    show('err','Errore di rete: ' + err + '. Si prega di verificare la connessione e riprovare.');
+    mostraErrore('Errore di rete: ' + err + '. Si prega di verificare la connessione e riprovare.');
+    $('msg').scrollIntoView({block:'center', behavior:'smooth'});
   }finally{
     btn.disabled = false;
     btn.innerHTML = 'Invia il questionario <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
   }
 });
 
+sezioneCorrente();
 aggiornaTutti();
 </script>
 </body>
