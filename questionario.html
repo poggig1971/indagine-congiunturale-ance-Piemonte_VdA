@@ -62,9 +62,9 @@ abbr{text-decoration:none}
 
 /* --- 3. TESTATA ---------------------------------------------------------- */
 .testata{position:sticky;top:0;z-index:50;background:var(--blu);color:var(--bianco);
-         height:var(--h-testata);display:flex;align-items:center}
-.testata .interno{width:100%;max-width:var(--max);margin:0 auto;padding:0 30px;
-                  display:flex;align-items:center;gap:34px}
+         min-height:92px;display:flex;align-items:center}
+.testata .interno{width:100%;max-width:var(--max);margin:0 auto;padding:10px 30px;
+                  display:flex;align-items:center;gap:12px 24px;flex-wrap:wrap}
 .sigla{display:flex;align-items:center;gap:22px;flex:none}
 .sigla .ance{font-size:38px;font-weight:700;letter-spacing:.055em;line-height:1;color:var(--bianco)}
 .sigla .filetto{width:2px;height:56px;background:rgba(255,255,255,.85);flex:none}
@@ -77,6 +77,18 @@ abbr{text-decoration:none}
 .chiavi .v.rilievo{color:var(--blu)}
 .chiavi .e{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2);margin-top:1px}
 .rilevazione{text-align:right;line-height:1.4;flex:none;margin-left:auto}
+.strumenti{display:flex;align-items:center;gap:9px;flex:none}
+.bt{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:40px;padding:0 16px;
+    border-radius:6px;font:inherit;font-size:12px;font-weight:700;letter-spacing:.07em;
+    text-transform:uppercase;cursor:pointer;border:0;transition:background-color var(--t),border-color var(--t)}
+.bt svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;flex:none}
+.bt-schermo{background:#E2711D;color:#fff}
+.bt-schermo:hover{background:#C55F13}
+.bt-schermo:focus-visible{outline:3px solid rgba(226,113,29,.45);outline-offset:2px}
+.bt-stampa{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);padding:0 13px}
+.bt-stampa:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.7)}
+.bt-stampa:focus-visible{outline:3px solid rgba(255,255,255,.5);outline-offset:2px}
+.solo-stampa{display:none}
 .rilevazione .r1{font-size:14.5px;font-weight:700;letter-spacing:.075em;text-transform:uppercase}
 .rilevazione .r2{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.7)}
 
@@ -327,13 +339,19 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   .fondo{grid-template-columns:minmax(0,1fr) 330px}
   .sez-corr{min-width:0}
 }
+@media(min-width:1181px){   /* fascia informativa su riga propria: sigla, rilevazione e strumenti restano in alto */
+  .chiavi{order:4;width:100%;margin:0}
+  .chiavi > div{flex:1}
+  .rilevazione{order:2}
+  .strumenti{order:3}
+}
 @media(max-width:1180px){
-  :root{--h-testata:auto}
-  .testata{position:static;height:auto;padding:14px 0}
-  .testata .interno{flex-wrap:wrap;gap:16px 24px}
-  .chiavi{margin:0;width:100%;order:3}
+  .testata{position:static;min-height:0;padding:6px 0}
+  .testata .interno{gap:14px 22px}
+  .chiavi{margin:0;width:100%;order:4}
   .chiavi > div{flex:1;padding:10px 16px}
-  .rilevazione{margin-left:auto}
+  .rilevazione{margin-left:auto;order:2}
+  .strumenti{order:3}
   .scena{grid-template-columns:1fr}
   .pannello{position:static;height:auto;overflow:visible;border-right:0;
             border-bottom:1px solid var(--bordo);padding:30px 24px}
@@ -355,6 +373,9 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   .sigla .ente .e1{font-size:12.5px}
   .rilevazione .r1{font-size:12px}
   .rilevazione .r2{font-size:10.5px}
+  .bt{height:36px;padding:0 12px;font-size:11px;gap:7px}
+  .bt .lab{display:none}
+  .bt-stampa{padding:0 11px}
   .chiavi > div{flex:1;padding:8px 8px;text-align:center;min-width:0;white-space:normal}
   .chiavi .v{font-size:12.5px;line-height:1.3;white-space:normal}
   .chiavi .e{font-size:8.5px;letter-spacing:.06em}
@@ -393,10 +414,48 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
        padding:11px 18px;z-index:99;font-size:14px;font-weight:600}
 .salta:focus{left:0}
 @media print{
-  .progresso,.lato,.invio,.salta,.contatore{display:none}
-  body{background:#fff}
-  .scena{display:block}
-  .pannello{position:static;height:auto;overflow:visible;border:0}
+  @page{margin:14mm 12mm}
+  .progresso,.lato,.invio,.salta,.contatore,.metodo,.strumenti{display:none!important}
+  body{background:#fff;font-size:11pt}
+  .solo-stampa{display:block}
+  .scena{display:block;max-width:none}
+  .testata{position:static;height:auto;padding:10px 0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pannello{position:static;height:auto;overflow:visible;border:0;border-bottom:1px solid #999;
+            padding:14px 0 16px;break-after:avoid}
+  .pannello h1{font-size:16pt}
+  .pannello .sommario,.pannello .obbligo{display:none}
+  .interno-lavoro,.fondo{padding:0}
+  .sezione{margin-top:16px;break-inside:auto}
+  .sezione > header{break-after:avoid;padding:8px 12px}
+  .sezione .ord{font-size:20pt}
+  .sezione h2{font-size:12pt}
+  .corpo{padding:0 12px;background:#fff!important}
+  .fascia{background:#fff!important;border-bottom:1px solid #ccc;padding:6px 12px;margin:0 -12px}
+  .d{grid-template-columns:1fr;gap:0;padding:9px 0;break-inside:avoid}
+  .d-testo{grid-template-columns:40px minmax(0,1fr)}
+  .d-tit{font-size:11.5pt}
+  .d-sup,.d-nota,.d-err{display:none}
+  .facolt{display:none}
+  .d-campo{margin-top:5px}
+  /* risposte a flag: si stampa solo quella scelta */
+  .opz{display:block;gap:0}
+  .opt{display:none!important}
+  .opt.sel{display:block!important;border:0;background:none!important;box-shadow:none!important;
+           padding:0;min-height:0;font-size:11.5pt}
+  .opt.sel .seg{display:none}
+  .opt.sel .txt{font-weight:700;color:#000}
+  .opt.sel::before{content:"\25A0\00a0";font-weight:700}
+  .opz.senza-scelta::after{content:"— non indicato —";color:#666;font-size:11pt}
+  select,input[type=text],input[type=number]{height:auto;padding:2px 0;border:0;border-bottom:1px solid #999;
+    border-radius:0;background:#fff!important;font-size:11.5pt;font-weight:700;color:#000;
+    appearance:none;-webkit-appearance:none;background-image:none!important}
+  input::placeholder{opacity:0}          /* i campi vuoti restano vuoti anche in stampa */
+  .campo.unita{display:flex;align-items:baseline;gap:8px}
+  .campo.unita input{padding-right:0;width:auto;flex:0 0 90px}
+  .campo.unita .um{position:static;transform:none;display:inline;font-weight:400;color:#333;font-size:10.5pt}
+  .coppia{grid-template-columns:1fr 1fr;gap:10px}
+  .piede{background:#fff!important;color:#333!important;border-top:1px solid #999;padding:10px 0;margin-top:14px}
+  .piede b{color:#000!important}
 }
 </style>
 </head>
@@ -424,6 +483,18 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
       <div class="r1">49ª Indagine Congiunturale</div>
       <div class="r2">Secondo semestre 2026</div>
     </div>
+    <div class="strumenti">
+      <button type="button" class="bt bt-schermo" id="bt-schermo" aria-pressed="false"
+              title="Visualizza il questionario a tutto schermo">
+        <svg viewBox="0 0 24 24" aria-hidden="true" id="ic-schermo"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="lab" id="testo-schermo">Tutto schermo</span>
+      </button>
+      <button type="button" class="bt bt-stampa" id="bt-stampa"
+              title="Stampa il questionario compilato" aria-label="Stampa il questionario compilato">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3h10v6M7 19H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M7 15h10v6H7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="lab">Stampa</span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -433,6 +504,7 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   <aside class="pannello">
     <h1>Questionario sulla congiuntura nel settore edile piemontese e valdostano</h1>
     <p class="periodo">Secondo semestre 2026</p>
+    <p class="solo-stampa" id="data-stampa"></p>
     <p class="sommario">La rilevazione monitora l'andamento e le prospettive del comparto attraverso le aspettative delle imprese su fatturato, occupazione, portafoglio ordini, investimenti, reperimento della manodopera e situazione finanziaria.</p>
     <p class="obbligo"><span class="ast">*</span> Campo obbligatorio. I restanti quesiti possono essere lasciati in bianco qualora il dato non sia disponibile.</p>
 
@@ -1151,6 +1223,7 @@ function sincronizzaOpz(gruppo, ricalcola){
   gruppo.querySelectorAll('.opt').forEach(o => {
     o.classList.toggle('sel', o.contains(scelto));
   });
+  gruppo.classList.toggle('senza-scelta', !scelto || scelto.value === '0');
   /* il campo nascosto va aggiornato PRIMA di ricalcolare avanzamento e
      benchmark: l'evento del radio raggiunge prima il radio stesso e solo
      dopo il contenitore, quindi il ricalcolo si fa qui. */
@@ -1221,6 +1294,52 @@ document.querySelectorAll('#q select, #q input').forEach(el => {
     if(d && el.value) d.classList.remove('errata');
   });
 });
+
+/* ---- altezza reale della testata: alimenta gli elementi agganciati ---- */
+function misuraTestata(){
+  const t = document.querySelector('.testata');
+  if(!t) return;
+  const fissa = getComputedStyle(t).position === 'sticky';
+  document.documentElement.style.setProperty('--h-testata', fissa ? t.offsetHeight + 'px' : '0px');
+}
+window.addEventListener('resize', misuraTestata);
+window.addEventListener('load', misuraTestata);
+misuraTestata();
+
+/* ---- barra strumenti: tutto schermo e stampa ---- */
+(function(){
+  const bt = $('bt-schermo'), testo = $('testo-schermo'), ic = $('ic-schermo'), rad = document.documentElement;
+  const chiedi = rad.requestFullscreen || rad.webkitRequestFullscreen || rad.msRequestFullscreen;
+  const esci = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+  if(!chiedi){ bt.hidden = true; }          /* browser senza supporto: pulsante nascosto */
+
+  const attivo = () => !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+  const ICONA_APRI  = '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke-linecap="round" stroke-linejoin="round"/>';
+  const ICONA_CHIUDI= '<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" stroke-linecap="round" stroke-linejoin="round"/>';
+  function aggiorna(){
+    const on = attivo();
+    testo.textContent = on ? 'Esci da tutto schermo' : 'Tutto schermo';
+    bt.setAttribute('aria-pressed', on ? 'true' : 'false');
+    bt.title = on ? 'Esci dalla visualizzazione a tutto schermo' : 'Visualizza il questionario a tutto schermo';
+    ic.innerHTML = on ? ICONA_CHIUDI : ICONA_APRI;
+  }
+  bt.addEventListener('click', () => {
+    try{
+      if(attivo()){ const r = esci.call(document); if(r && r.catch) r.catch(()=>{}); }
+      else { const r = chiedi.call(rad); if(r && r.catch) r.catch(()=>{ bt.hidden = true; }); }
+    }catch(e){ bt.hidden = true; }
+  });
+  ['fullscreenchange','webkitfullscreenchange','msfullscreenchange']
+    .forEach(ev => document.addEventListener(ev, aggiorna));
+  aggiorna();
+
+  $('bt-stampa').addEventListener('click', () => window.print());
+  window.addEventListener('beforeprint', () => {
+    const d = new Date(), due = n => String(n).padStart(2,'0');
+    $('data-stampa').textContent = 'Copia stampata il ' + due(d.getDate()) + '/' + due(d.getMonth()+1)
+      + '/' + d.getFullYear() + ' alle ' + due(d.getHours()) + ':' + due(d.getMinutes());
+  });
+})();
 
 /* ---- invio ---- */
 function mostraErrore(text){
