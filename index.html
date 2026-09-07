@@ -19,35 +19,111 @@
   .hbtn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.35);text-decoration:none}
   .hbtn.primary{background:#e9892f;border-color:#e9892f;color:#fff}
   .hbtn.ghost{background:transparent;color:#fff}
-  .wrap{max-width:1180px;margin:0 auto;padding:20px}
+  .wrap{max-width:1320px;margin:0 auto;padding:18px}
+  .dash{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  .col{display:flex;flex-direction:column;gap:18px}
   .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:18px;box-shadow:0 1px 2px rgba(20,40,90,.04)}
+  .dash .panel{margin-bottom:0}
   .panel h2{font-size:13px;letter-spacing:.3px;text-transform:uppercase;color:var(--navy);margin:0 0 4px;font-weight:600}
   .panel .hint{font-size:12px;color:var(--mut);margin:0 0 14px}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
-  .kpi{border:1px solid var(--line);border-radius:11px;padding:13px 14px;background:#fbfcfe;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+  .kpiwrap{display:flex;gap:16px;align-items:stretch}
+  .kpictl{flex:0 0 192px;display:flex;flex-direction:column;gap:7px;border-right:1px solid var(--line);padding-right:16px}
+  .kpictl label{margin-bottom:0}
+  .kpictl select{width:100%;min-width:0}
+  .kpictl button{margin-top:4px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:10px 12px}
+  .kpictl .ctlnote{font-size:10.5px;color:var(--mut);line-height:1.45;margin-top:2px}
+  .kpis{flex:1;min-width:0;display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+  @media(max-width:760px){.kpiwrap{flex-direction:column}.kpictl{flex:1 0 auto;border-right:0;border-bottom:1px solid var(--line);padding-right:0;padding-bottom:12px}}
+  .kpi{flex:0 0 148px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:#fbfcfe;cursor:pointer;transition:border-color .12s,box-shadow .12s}
   .kpi:hover{border-color:var(--navy2)}
   .kpi.sel{border-color:var(--navy);box-shadow:0 0 0 2px rgba(22,48,107,.18);background:#fff}
-  .kpi .t{font-size:11.5px;color:var(--mut);min-height:32px;line-height:1.3}
-  .kpi .v{font-size:24px;font-weight:600;margin-top:6px}
-  .kpi .v small{font-size:12px;color:var(--mut);font-weight:400}
-  .kpi .d{font-size:12px;margin-top:4px;font-weight:500}
-  .kpi .d.up{color:var(--up)} .kpi .d.down{color:var(--down)} .kpi .d.flat{color:var(--mut)}
-  .kpihead{grid-column:1/-1;font-size:12.5px;color:var(--mut);margin-bottom:2px}
+  .kpi .t{font-size:11.5px;color:var(--mut);min-height:26px;line-height:1.2}
+  .kpi .v{font-size:19px;font-weight:600;margin-top:2px}
+  .kpi .v small{font-size:11px;color:var(--mut);font-weight:400}
+  .kpi .d{font-size:11.5px;margin-top:2px;font-weight:600}
+  .smallbtn{font:inherit;font-size:11.5px;font-weight:600;text-transform:none;cursor:pointer;background:#fff;color:var(--navy);border:1px solid var(--line);border-radius:7px;padding:4px 11px}
+  .smallbtn:hover{background:#eef2f8}
+  .kpi .d.up{color:var(--up)} .kpi .d.down{color:var(--down)} .kpi .d.flat{color:#2c4fb0}
   .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-  .seg button{padding:8px 13px;border:1px solid var(--line);background:#fff;border-radius:8px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+  .seg button{padding:7px 12px;border:1px solid var(--line);background:#fff;border-radius:8px;font:inherit;font-size:12px;cursor:pointer;color:var(--ink)}
   .seg button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
   label{display:block;font-size:12px;font-weight:500;color:var(--mut);margin-bottom:6px}
-  select{padding:8px 9px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff;color:var(--ink);min-width:160px}
-  .chartbox{position:relative;height:420px}
-  .chartbox.sm{height:360px}
-  .cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+  select{padding:8px 9px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff;color:var(--ink);min-width:150px}
+  .chartbox{position:relative;height:380px}
+  .chartbox.sm{height:320px}
+  .plist{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+  .prow{display:grid;grid-template-columns:150px 64px 1fr;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:7px 0}
+  .prow .pname{font-size:12px;line-height:1.25}
+  .prow .pvar{font-size:13px;font-weight:600;text-align:right}
+  .prow .pvar.up{color:var(--up)} .prow .pvar.down{color:var(--down)} .prow .pvar.flat{color:#2c4fb0}
+  .pbars{display:flex;flex-direction:column;gap:4px}
+  .pbar{display:flex;align-items:center;gap:6px;font-size:11px}
+  .pbar .lab{flex:0 0 34px;color:var(--mut)}
+  .pbar .track{flex:1;background:#eef2f8;border-radius:4px;height:13px;position:relative}
+  .pbar .fill{position:absolute;top:0;height:100%;border-radius:4px;min-width:1px}
+  .pbar .val{flex:0 0 46px;text-align:right;color:var(--ink);font-weight:500}
+  @media(max-width:520px){.prow{grid-template-columns:116px 50px 1fr}}
+  .cgrid{display:grid;grid-template-columns:1fr;gap:14px}
   .cbox h3{font-size:12px;color:var(--navy);margin:0 0 6px;font-weight:600;text-align:center}
-  .cbox .cc{position:relative;height:250px}
+  .cbox .cc{position:relative;height:150px}
   .note{font-size:11.5px;color:var(--mut);margin-top:10px;line-height:1.5}
   .loading{padding:30px;text-align:center;color:var(--mut)}
   .err{background:#fdecef;color:var(--down);padding:12px 14px;border-radius:8px;font-size:13px}
   .inline{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
-  footer{max-width:1180px;margin:0 auto;padding:6px 24px 34px;font-size:11px;color:#8a93a6}
+  .helpb{min-width:40px;justify-content:center;font-size:16px}
+  .modal{position:fixed;inset:0;background:rgba(20,30,60,.45);display:none;align-items:flex-start;justify-content:center;z-index:50;padding:36px 16px;overflow:auto}
+  .modal.open{display:flex}
+  .modal .box{background:#fff;max-width:660px;width:100%;border-radius:12px;padding:24px}
+  .modal h3{margin:0 0 6px;color:var(--navy);font-size:16px}
+  .modal p{font-size:13px;color:var(--mut);margin:0 0 10px}
+  .modal ol{margin:8px 0;padding-left:20px;font-size:13.5px;line-height:1.65;color:var(--ink)}
+  .modal b{color:var(--navy)}
+  .modal code{background:#eef2f8;padding:1px 6px;border-radius:5px;font-family:var(--font-mono,monospace);font-size:12.5px}
+  .modal .x{float:right;cursor:pointer;border:0;background:#eef2f8;border-radius:8px;padding:7px 11px;font:inherit;font-weight:600}
+  footer{max-width:1320px;margin:0 auto;padding:6px 24px 34px;font-size:11px;color:#8a93a6}
+  .hstats{display:flex;gap:9px;flex-wrap:wrap}
+  .hstat{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:10px;padding:6px 13px;min-width:92px}
+  .hstat .l{font-size:9px;letter-spacing:.4px;text-transform:uppercase;opacity:.72}
+  .hstat .v{font-size:15px;font-weight:600;margin-top:2px}
+  .layout{display:flex;max-width:1320px;margin:0 auto;align-items:flex-start}
+  .sidebar{flex:0 0 180px;padding:18px 8px 18px 16px;position:sticky;top:8px}
+  .nav{display:flex;flex-direction:column;gap:3px}
+  .navitem{display:block;padding:10px 13px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--ink);cursor:pointer;text-decoration:none;border:1px solid transparent}
+  .navitem:hover{background:#e6ecf7}
+  .navitem.active{background:#fff;border-color:var(--line);color:var(--navy);font-weight:600;box-shadow:0 1px 2px rgba(20,40,90,.05)}
+  .navfilter{display:flex;flex-direction:column;gap:7px;padding:11px 12px 13px;border:1px solid var(--line);border-radius:9px;background:#fff;margin:1px 0 5px}
+  .navfilter label{margin-bottom:0}
+  .navfilter select{width:100%;min-width:0}
+  .navfilter button{margin-top:4px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:10px 12px}
+  .navfilter.collapsed{display:none}
+  .content{flex:1;min-width:0;padding:18px}
+  .view{display:none}
+  .view.active{display:block}
+  .mtxt{font-size:13.5px;line-height:1.7;color:var(--ink)}
+  .mtxt h3{color:var(--navy);font-size:14px;margin:16px 0 4px}
+  .mtxt b{color:var(--navy)}
+  .merch{color:var(--navy);font-size:14px;margin:16px 0 6px}
+  .merctbl{width:100%;border-collapse:collapse;font-size:12.5px}
+  .merctbl th,.merctbl td{border:1px solid var(--line);padding:7px 9px;text-align:right}
+  .merctbl th{background:var(--navy);color:#fff}
+  .merctbl th:first-child,.merctbl td:first-child,.merctbl td:nth-child(2){text-align:left}
+  .merctbl .up{color:var(--up);font-weight:600}.merctbl .down{color:var(--down);font-weight:600}.merctbl .flat{color:#2c4fb0;font-weight:600}
+  .mfonte{font-size:10.5px;color:var(--mut);margin:5px 0 4px}
+  .mkpi{display:flex;gap:12px;flex-wrap:wrap;margin:4px 0 14px}
+  .mk{border:1px solid var(--line);border-radius:10px;padding:9px 14px;min-width:140px;background:#fbfcfe}
+  .mk .t{font-size:11px;color:var(--mut)}
+  .mk .v{font-size:19px;font-weight:600;margin-top:2px}
+  .mk .v.up{color:var(--up)}.mk .v.down{color:var(--down)}.mk .v.flat{color:#2c4fb0}
+  .navgroup{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#fff;background:var(--navy);border-radius:6px;padding:5px 9px;margin:14px 2px 6px}
+  .nav .navgroup:first-child{margin-top:0}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+  .chip{padding:6px 11px;border:1px solid var(--line);background:#fff;border-radius:16px;font-size:12px;cursor:pointer;color:var(--ink)}
+  .chip:hover{border-color:var(--navy2)}
+  .chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .chip.tot{border-color:#e9892f;color:#b3600f}
+  .chip.tot.on{background:#e9892f;border-color:#e9892f;color:#fff}
+  @media(max-width:980px){.dash{grid-template-columns:1fr}}
+  @media(max-width:860px){.layout{flex-direction:column}.sidebar{flex:1 0 auto;position:static;width:100%;padding:12px 14px 0}.nav{flex-direction:row;flex-wrap:wrap}.navitem{flex:1 1 auto;text-align:center}}
 </style>
 </head>
 <body>
@@ -57,82 +133,307 @@
     <h1>Indagine Congiunturale - ANCE Piemonte e Valle d'Aosta</h1>
     <p>Serie storiche degli indicatori - dal II semestre 2002</p>
   </div>
+  <div class="hstats">
+    <div class="hstat"><div class="l">Ultimo semestre</div><div class="v" id="stSem">-</div></div>
+    <div class="hstat"><div class="l">Semestri archivio</div><div class="v" id="stN">-</div></div>
+    <div class="hstat"><div class="l">Imprese campione</div><div class="v" id="stImp">-</div></div>
+    <div class="hstat"><div class="l">Versione</div><div class="v">1.0</div></div>
+  </div>
   <a class="hbtn primary" href="questionario.html">COMPILA</a>
+  <button class="hbtn ghost helpb" id="helpBtn" type="button" aria-label="Guida">?</button>
   <button class="hbtn ghost" id="fsBtn" type="button">Schermo intero</button>
 </header>
-<div class="wrap">
-  <div id="msg"></div>
-  <div class="panel">
-    <h2>Quadro del semestre piu recente</h2>
-    <p class="hint">Clicca una card per vederne la serie storica nel grafico sotto; selezionane 2 o 3 per confrontarle.</p>
-    <div id="kpis" class="kpis"><div class="loading">Caricamento dati...</div></div>
-  </div>
-  <div class="panel">
-    <h2>Caratteristiche delle imprese del campione</h2>
-    <div class="inline"><div><label>Territorio</label><select id="carattTerr"></select></div></div>
-    <div class="cgrid">
-      <div class="cbox"><h3>1.1 Attivita prevalente (% imprese)</h3><div class="cc"><canvas id="cAttiv"></canvas></div></div>
-      <div class="cbox"><h3>1.2 Classe dimensionale</h3><div class="cc"><canvas id="cDim"></canvas></div></div>
-      <div class="cbox"><h3>1.3 Classe di fatturato</h3><div class="cc"><canvas id="cFat"></canvas></div></div>
-    </div>
-    <div id="carattNote" class="note"></div>
-  </div>
-  <div class="panel">
-    <h2>Andamento nel tempo</h2>
-    <div class="inline">
-      <div>
-        <label>Intervallo temporale</label>
-        <div class="seg" id="rangeSeg" style="margin:0">
-          <button data-r="all" class="on">Tutta la serie</button>
-          <button data-r="10">Ultimi 10</button>
-          <button data-r="20">Ultimi 20</button>
-          <button data-r="custom">Personalizzato</button>
+<div id="msg" style="max-width:1320px;margin:8px auto 0;padding:0 18px"></div>
+<div class="layout">
+  <aside class="sidebar">
+    <nav class="nav">
+      <div class="navgroup">Indagine congiunturale</div>
+      <a class="navitem active" data-view="sintesi">Quadro di sintesi</a>
+      <div class="navfilter" id="navfilter">
+        <label>Semestre A (riferimento)</label>
+        <select id="repA"></select>
+        <label>Semestre B (mostrato nelle card)</label>
+        <select id="repB"></select>
+        <button id="repBtn" type="button">Genera rapporto</button>
+      </div>
+      <a class="navitem" data-view="province">Confronto tra province</a>
+      <div class="navfilter collapsed" id="provFilter">
+        <label>Semestre A</label>
+        <select id="provA"></select>
+        <label>Semestre B</label>
+        <select id="provB"></select>
+        <label>Provincia</label>
+        <select id="provTer"></select>
+      </div>
+      <a class="navitem" data-view="caratteristiche">Caratteristiche campione</a>
+      <div class="navgroup">Dati di mercato</div>
+      <a class="navitem" data-view="mercato">Mercato</a>
+      <div class="navgroup">Informazioni</div>
+      <a class="navitem" data-view="metodo">Metodologia e fonti</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <section id="view-sintesi" class="view active">
+      <div class="panel">
+        <h2>Quadro di confronto tra due semestri <button id="clearKpi" type="button" class="smallbtn" style="float:right">Cancella filtri</button></h2>
+        <p class="hint" id="kpiHint">Le card mostrano il valore del semestre B e la variazione rispetto al semestre A.</p>
+        <div id="kpis" class="kpis"><div class="loading">Caricamento dati...</div></div>
+      </div>
+      <div class="panel">
+        <h2>Andamento nel tempo</h2>
+        <div class="inline">
+          <div>
+            <label>Intervallo temporale</label>
+            <div class="seg" id="rangeSeg" style="margin:0">
+              <button data-r="all" class="on">Tutta la serie</button>
+              <button data-r="10">Ultimi 10</button>
+              <button data-r="20">Ultimi 20</button>
+              <button data-r="custom">Personalizzato</button>
+            </div>
+          </div>
+          <div id="customWrap" style="display:none"><label>Da</label><select id="fromSel"></select></div>
+          <div id="customWrap2" style="display:none"><label>A</label><select id="toSel"></select></div>
+        </div>
+        <div class="chartbox"><canvas id="chart"></canvas></div>
+      </div>
+    </section>
+    <section id="view-province" class="view">
+      <div class="panel">
+        <h2 id="provTitle">Confronto provinciale tra due semestri</h2>
+        <p class="hint" id="provHint">Scegli i due semestri e la provincia dal menu a sinistra: per ogni indicatore vedi la variazione e i valori dei due periodi.</p>
+        <div id="provList" class="plist"></div>
+        <div id="provNote" class="note"></div>
+      </div>
+    </section>
+    <section id="view-caratteristiche" class="view">
+      <div class="panel">
+        <h2>Caratteristiche delle imprese del campione</h2>
+        <p class="hint">Riferito a: <b>I sem 2026</b> (ultimo semestre con microdati). Non segue il confronto A/B.</p>
+        <div class="inline"><div><label>Territorio</label><select id="carattTerr"></select></div></div>
+        <div class="cgrid">
+          <div class="cbox"><h3>1.1 Attivita prevalente (% imprese)</h3><div class="cc"><canvas id="cAttiv"></canvas></div></div>
+          <div class="cbox"><h3>1.2 Classe dimensionale</h3><div class="cc"><canvas id="cDim"></canvas></div></div>
+          <div class="cbox"><h3>1.3 Classe di fatturato</h3><div class="cc"><canvas id="cFat"></canvas></div></div>
+          <div class="cbox"><h3>1.4 Fatturato fuori provincia (% imprese)</h3><div class="cc"><canvas id="cFP"></canvas></div></div>
+        </div>
+        <div id="carattNote" class="note"></div>
+      </div>
+    </section>
+    <section id="view-mercato" class="view">
+      <div class="panel">
+        <h2>Mercato - indicatori di contesto</h2>
+        <p class="hint">Scegli la categoria, poi attiva uno o piu' indicatori e territori: le serie compaiono insieme nel grafico. Verde = aumento, rosso = diminuzione.</p>
+        <div class="inline" style="align-items:flex-start">
+          <div><label>Categoria</label><select id="mCat"></select></div>
+          <div style="flex:1;min-width:220px"><label>Indicatori</label><div id="mIndChips" class="chips" style="margin:4px 0 0"></div></div>
+        </div>
+        <label>Territori</label>
+        <div id="mTerChips" class="chips"></div>
+        <div id="mKpi" class="mkpi"><div class="loading">Caricamento dati...</div></div>
+        <div class="chartbox sm"><canvas id="mChart"></canvas></div>
+        <div id="mNote" class="note"></div>
+      </div>
+    </section>
+    <section id="view-metodo" class="view">
+      <div class="panel">
+        <h2>Metodologia e fonti</h2>
+        <div class="mtxt">
+          <p>L'Indagine Congiunturale dell'ANCE Piemonte e Valle d'Aosta, avviata a giugno del 2002 e svolta con cadenza semestrale, rileva le aspettative delle imprese edili associate sull'andamento delle principali variabili dell'attivita' per i sei mesi successivi.</p>
+          <h3>Indicatori</h3>
+          <p>I <b>saldi</b> (fatturato, occupazione, ricorso a manodopera esterna) sono calcolati come differenza fra la percentuale di imprese che prevede un aumento e quella che prevede una riduzione. Gli altri indicatori riguardano intenzioni di investimento, portafoglio ordini, difficolta' di reperimento manodopera, tempi di pagamento di committenti e fornitori e costo del credito.</p>
+          <h3>Fonti dei dati</h3>
+          <p>Gli indicatori <b>regionali</b> sono letti dalla serie storica ufficiale (dal II semestre 2002). Il dettaglio <b>provinciale</b> proviene dall'archivio aggregati per semestre (dal 2003). Le <b>caratteristiche del campione</b> sono calcolate sui microdati del semestre piu' recente.</p>
+          <h3>Avvertenze</h3>
+          <p>Per le province con pochi rispondenti i valori possono essere molto variabili. Alcuni semestri o province possono non essere disponibili nell'archivio provinciale. I tempi di pagamento dei committenti a livello regionale includono rettifiche editoriali rispetto al calcolo automatico.</p>
         </div>
       </div>
-      <div id="customWrap" style="display:none"><label>Da</label><select id="fromSel"></select></div>
-      <div id="customWrap2" style="display:none"><label>A</label><select id="toSel"></select></div>
-    </div>
-    <div class="chartbox"><canvas id="chart"></canvas></div>
-  </div>
-  <div class="panel">
-    <h2>Confronto tra territori - semestre piu recente</h2>
-    <div class="inline"><div><label>Indicatore</label><select id="provInd"></select></div></div>
-    <div id="provBox" class="chartbox sm"><canvas id="provChart"></canvas></div>
-    <div id="provNote" class="note"></div>
-  </div>
+    </section>
+  </main>
 </div>
 <footer>Fonte: ANCE Piemonte e Valle d'Aosta - Centro Studi. I saldi sono calcolati come percentuale aumento meno percentuale riduzione. Dati letti in tempo reale dai CSV pubblicati del foglio master.</footer>
+<div class="modal" id="helpModal">
+  <div class="box">
+    <button class="x" id="helpClose" type="button">Chiudi</button>
+    <h3>Guida rapida - Centro Studi</h3>
+    <p>Come gestire la raccolta, l'elaborazione e i rapporti dell'indagine semestrale.</p>
+    <ol>
+      <li><b>Aprire la raccolta di un nuovo semestre.</b> Nel Google Sheet master, menu <b>ANCE - Indagine &gt; Imposta semestre aperto alla raccolta</b>, inserire il codice (es. <code>226</code> = II semestre 2026). I questionari compilati dalle imprese arriveranno nel foglio <code>Microdati</code> con quel semestre.</li>
+      <li><b>Inviare il questionario alle imprese.</b> Il link del questionario puo essere inviato via email; le imprese compilano senza passare dalla dashboard.</li>
+      <li><b>Chiudere ed elaborare il semestre.</b> Nel foglio <code>Aggregati I 2026</code>, cella <code>C3</code>, scrivere il codice semestre; poi menu <b>ANCE - Indagine &gt; Accoda semestre</b>: aggiunge la colonna alla <code>Serie storica</code> e le righe al <code>DB_serie_storica</code>. La dashboard si aggiorna da sola.</li>
+      <li><b>Tempi di pagamento committenti (rettifica editoriale).</b> Se serve, modificare a mano le 2 celle nella <code>Serie storica</code> e lanciare <b>Sincronizza pagamenti committenti nel DB</b>.</li>
+      <li><b>Grafici caratteristiche.</b> Il file <code>caratteristiche.csv</code> va rigenerato dai microdati del nuovo semestre e ricaricato nel repository.</li>
+      <li><b>Generare i rapporti.</b> Dalla relazione automatica (nota di sintesi regionale + focus per provincia) in stile ANCE, prodotta dagli aggregati del semestre.</li>
+    </ol>
+  </div>
+</div>
 <script>
 var DB_CSV   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=1413930767&single=true&output=csv";
-var PROV_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=249249362&single=true&output=csv";
+var PROVH_CSV = "provinciali_storico.csv";
 var CARATT_CSV = "caratteristiche.csv";
+var MERCATO_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqIyvAR0W3y4TiBGLNq-b3_e11QPJqEtKg2OXqAqIgwnS67C0wWE62qdzLDs4ZRVeYaXrZt3lxxp8y/pub?gid=2103970429&single=true&output=csv";
 var PALETTE = ['#16306b','#c0392b','#1f9d55','#d68910','#7d3c98','#117a8b'];
 function num(v){ if(v===null||v===undefined||v==='') return null; var n=parseFloat(String(v).replace(',','.')); return isNaN(n)?null:n; }
+function numEU(v){ if(v===null||v===undefined||v==='') return null; var s=String(v).trim(); if(s.indexOf(',')>=0){ s=s.replace(/\./g,'').replace(/,/g,'.'); } var n=parseFloat(s); return isNaN(n)?null:n; }
+function fmtNum(v){ if(v==null) return '-'; var p=(Math.round(v*100)/100).toString().split('.'); p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.'); return p.length>1?p.join(','):p[0]; }
 function norm(s){ return String(s===null||s===undefined?'':s).replace(/\s+/g,' ').trim(); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function clearLabel(grp,ind){ var g=String(grp).toLowerCase(); if(g.indexOf('investiment')>=0){ return ind==='No'?'Investimenti: No':'Investimenti: '+ind.replace('S\u00ec, ',''); } if(g.indexOf('portafoglio')>=0) return 'Portafoglio: '+ind; if(g.indexOf('reperimento')>=0) return 'Difficolta manodopera: '+ind; if(g.indexOf('committenti')>=0) return 'Pagam. committenti: '+ind; if(g.indexOf('fornitori')>=0) return ind==='Fornitori'?'Pagam. fornitori':'Pagam. fornitori: '+ind; return ind; }
 var DB=[], periods=[], indicators=[], selected={}, range='all', chart=null, provChart=null;
 function selKeys(){ var a=[]; for(var k in selected){ if(selected[k]) a.push(k); } return a; }
 function msgErr(t){ document.getElementById('msg').innerHTML='<div class="err">'+t+'</div>'; }
-
 document.getElementById('fsBtn').addEventListener('click',function(){
   if(!document.fullscreenElement){ if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); }
   else { if(document.exitFullscreen) document.exitFullscreen(); }
 });
-
+var hm=document.getElementById('helpModal');
+document.getElementById('helpBtn').addEventListener('click',function(){ hm.classList.add('open'); });
+document.getElementById('helpClose').addEventListener('click',function(){ hm.classList.remove('open'); });
+hm.addEventListener('click',function(e){ if(e.target===hm) hm.classList.remove('open'); });
+var navitems=document.querySelectorAll('.navitem');
+for(var ni=0;ni<navitems.length;ni++){ navitems[ni].addEventListener('click',function(){ showView(this.getAttribute('data-view')); }); }
+var ck=document.getElementById('clearKpi'); if(ck) ck.addEventListener('click',function(){ if(!indicators.length) return; selected={}; selected[indicators[0].key]=true; buildKpis(); draw(); });
+loadMercato();
+function showView(v){
+  var its=document.querySelectorAll('.navitem');
+  for(var i=0;i<its.length;i++) its[i].classList.toggle('active', its[i].getAttribute('data-view')===v);
+  var vs=document.querySelectorAll('.view');
+  for(var j=0;j<vs.length;j++) vs[j].classList.toggle('active', vs[j].id==='view-'+v);
+  var nf=document.getElementById('navfilter'); if(nf) nf.classList.toggle('collapsed', v!=='sintesi');
+  var pf=document.getElementById('provFilter'); if(pf) pf.classList.toggle('collapsed', v!=='province');
+  if(v==='sintesi') draw();
+  else if(v==='caratteristiche'){ if(CAR.length) drawCaratt(); }
+  else if(v==='province') drawProvComp();
+  else if(v==='mercato'){ if(MERC.rows.length) drawMercato(); }
+}
+function updateStatus(){
+  if(periods.length){ document.getElementById('stSem').textContent=periods[periods.length-1]; document.getElementById('stN').textContent=periods.length; }
+}
 Papa.parse(DB_CSV, { download:true, header:true, skipEmptyLines:true,
   complete: function(r){ try{ initDB(r.data); }catch(e){ msgErr('Errore nel caricamento dati: '+e.message); } },
   error: function(e){ msgErr('Impossibile leggere il CSV della serie storica. Verificare che il foglio sia pubblicato sul web.'); }
 });
 function initDB(rows){
   rows = rows.filter(function(x){ return x.Indicatore && x.Periodo; });
-  if(!rows.length){ msgErr('Il CSV non contiene righe valide: verificare URL del foglio DB_serie_storica.'); return; }
+  if(!rows.length){ msgErr('Il CSV non contiene righe valide.'); return; }
   DB = rows.map(function(x){ return { grp:norm(x.Gruppo), ind:norm(x.Indicatore), unit:norm(x.Unita), per:norm(x.Periodo), ord:num(x.Ordine), val:num(x.Valore) }; });
   var pmap={}; DB.forEach(function(d){ if(d.ord!=null) pmap[d.per]=d.ord; });
   periods = Object.keys(pmap).sort(function(a,b){ return pmap[a]-pmap[b]; });
   var seen={}; indicators=[];
   DB.forEach(function(d){ var k=d.grp+'|'+d.ind; if(!seen[k]){ seen[k]=1; indicators.push({grp:d.grp,ind:d.ind,unit:d.unit,key:k}); } });
   selected[indicators[0].key]=true;
-  buildRange(); buildKpis(); buildProvSelect(); buildCaratt(); draw();
+  updateStatus(); buildRange(); buildRepSelect(); buildKpis(); loadProvH(); buildCaratt(); draw();
+}
+function buildRepSelect(){
+  var a=document.getElementById('repA'), b=document.getElementById('repB');
+  var opts=periods.map(function(p){ return '<option>'+esc(p)+'</option>'; }).join('');
+  a.innerHTML=opts; b.innerHTML=opts;
+  a.value=periods[Math.max(0,periods.length-2)]; b.value=periods[periods.length-1];
+  a.addEventListener('change',function(){ buildKpis(); });
+  b.addEventListener('change',function(){ buildKpis(); });
+  document.getElementById('repBtn').addEventListener('click',genReport);
+}
+function itnum(v){ return (v===null||v===undefined)?'n.d.':String(v).replace('.',','); }
+function hbFor(grp,ind){
+  var g=(String(grp)+' '+String(ind)).toLowerCase();
+  if(g.indexOf('difficolt')>=0||g.indexOf('reperimento')>=0) return false;
+  if(g.indexOf('pagament')>=0||g.indexOf('committenti')>=0||g.indexOf('fornitori')>=0||g.indexOf('noleggi')>=0||g.indexOf('posa')>=0) return false;
+  if(g.indexOf('credito')>=0) return false;
+  if(g.indexOf('extracom')>=0) return null;
+  if(g.indexOf('investiment')>=0 && /^\s*no\b/i.test(String(ind))) return false;
+  return true;
+}
+function genReport(){
+  var a=document.getElementById('repA').value, b=document.getElementById('repB').value;
+  if(a===b){ alert('Scegli due semestri diversi.'); return; }
+  var rows='', lastGrp='', syn=[];
+  indicators.forEach(function(it){
+    var m=seriesFor(it.key), va=(a in m)?m[a]:null, vb=(b in m)?m[b]:null;
+    if(it.grp!==lastGrp){ lastGrp=it.grp;
+      rows+='<tr class="grp"><td colspan="4">'+esc(it.grp)+'</td></tr>'; }
+    var dcell='-', cls='';
+    if(va!=null && vb!=null){
+      var diff=Math.round((vb-va)*10)/10, hb=hbFor(it.grp,it.ind);
+      var arrow=diff>0?(String.fromCharCode(9650)+' +'):(diff<0?(String.fromCharCode(9660)+' '):'= ');
+      cls = diff===0?'flat':((hb===null)?'flat':(((diff>0)===hb)?'up':'down'));
+      dcell='<span class="'+cls+'">'+arrow+itnum(diff)+'</span>';
+    }
+    rows+='<tr><td class="ind">'+esc(clearLabel(it.grp,it.ind))+'</td>'+
+          '<td>'+itnum(va)+'</td><td>'+itnum(vb)+'</td><td>'+dcell+'</td></tr>';
+    var nm=(it.ind||'').toLowerCase();
+    if((nm.indexOf('fatturato')>=0||nm.indexOf('occupazione')>=0||nm.indexOf('manodopera esterna')>=0) && va!=null && vb!=null){
+      var d2=Math.round((vb-va)*10)/10, w=d2>0?'migliora':(d2<0?'peggiora':'resta stabile');
+      syn.push('il saldo su '+clearLabel(it.grp,it.ind).toLowerCase()+' passa da '+itnum(va)+' a '+itnum(vb)+' ('+w+')');
+    }
+  });
+  var synTxt = syn.length ? ('Nel confronto tra '+esc(a)+' e '+esc(b)+', '+syn.join('; ')+'.') :
+               ('Confronto tra '+esc(a)+' e '+esc(b)+'.');
+  // --- dettaglio provinciale per indicatore (stessi due semestri) ---
+  function varCell(va,vb,grp,ind){
+    if(va==null||vb==null) return '-';
+    var diff=Math.round((vb-va)*10)/10, hb=hbFor(grp,ind);
+    var ar=diff>0?(String.fromCharCode(9650)+' +'):(diff<0?(String.fromCharCode(9660)+' '):'= ');
+    var cl=diff===0?'flat':((hb===null)?'flat':(((diff>0)===hb)?'up':'down'));
+    return '<span class="'+cl+'">'+ar+itnum(diff)+'</span>';
+  }
+  var provHTML='';
+  if(PROVH.inds && PROVH.inds.length){
+    var pa=PROVH.byPeriod[npar(a)]||{}, pb=PROVH.byPeriod[npar(b)]||{}, blocks='', anyProv=false;
+    PROVH.order.forEach(function(t){
+      var tn=(t==='Aosta')?'Valle d\'Aosta':t, trs='', hasrow=false;
+      PROVH.inds.forEach(function(it){
+        var va=(pa[it.key]&&t in pa[it.key])?pa[it.key][t]:null;
+        var vb=(pb[it.key]&&t in pb[it.key])?pb[it.key][t]:null;
+        if(va==null && vb==null) return;
+        hasrow=true;
+        trs+='<tr><td class="ind">'+esc(it.label)+'</td><td>'+itnum(va)+'</td><td>'+itnum(vb)+'</td><td>'+varCell(va,vb,it.grp,it.ind)+'</td></tr>';
+      });
+      if(hasrow){ anyProv=true;
+        blocks+='<h3>'+esc(tn)+'</h3><table><thead><tr><th>Indicatore</th><th>'+esc(a)+'</th><th>'+esc(b)+'</th><th>Variazione</th></tr></thead><tbody>'+trs+'</tbody></table>'; }
+    });
+    if(anyProv) provHTML='<h2>Confronto per provincia (tutti gli indicatori)</h2>'+
+      '<p class="syn">Per ciascuna provincia, tutti gli indicatori nei due semestri ('+esc(a)+' e '+esc(b)+'). Dato provinciale storico dal 2003; alcuni semestri o province possono non essere disponibili.</p>'+blocks;
+  }
+  var content =
+    '<div id="report">'+
+    '<h1>Indagine Congiunturale ANCE Piemonte e Valle d\'Aosta</h1>'+
+    '<p class="st">Centro Studi - Rapporto sintetico di confronto tra semestri</p>'+
+    '<h2>Confronto: '+esc(a)+' &nbsp;&middot;&nbsp; '+esc(b)+'</h2>'+
+    '<p class="syn">'+synTxt+'</p>'+
+    '<table><thead><tr><th>Indicatore regionale</th><th>'+esc(a)+'</th><th>'+esc(b)+'</th><th>Variazione</th></tr></thead>'+
+    '<tbody>'+rows+'</tbody></table>'+
+    provHTML+
+    '<p class="fnt">Fonte: ANCE Piemonte e Valle d\'Aosta - Centro Studi. Serie storica ufficiale (regionale) e archivio aggregati provinciali. '+
+    'I saldi sono calcolati come differenza fra la percentuale di imprese che prevede un aumento e quella che prevede una riduzione. '+
+    'Il verde indica miglioramento, il rosso peggioramento.</p>'+
+    '</div>';
+  var css='body{font-family:Calibri,Arial,sans-serif;color:#1b2230;margin:32px;}'+
+    'h1{color:#16306b;font-size:18px;margin:0 0 2px;}h2{color:#16306b;font-size:15px;margin:18px 0 8px;}'+
+    '.st{font-size:12px;color:#697086;margin:0 0 4px;}.syn{font-size:13px;text-align:justify;}'+
+    'table{border-collapse:collapse;width:100%;font-size:12px;margin-top:6px;}'+
+    'th,td{border:1px solid #cfd6e4;padding:6px 8px;text-align:right;}th{background:#16306b;color:#fff;text-align:right;}'+
+    'th:first-child,td.ind{text-align:left;}td.ind{width:48%;}'+
+    'tr.grp td{background:#eef2f8;color:#16306b;font-weight:600;text-align:left;}'+
+    'h3{color:#16306b;font-size:13px;margin:16px 0 4px;}tr.reg td{background:#f0f4fb;font-weight:600;}'+
+    '.up{color:#0a7d34;font-weight:600;}.down{color:#c0392b;font-weight:600;}.flat{color:#2c4fb0;font-weight:600;}'+
+    '.fnt{font-size:10px;color:#697086;margin-top:14px;text-align:justify;}.firma{font-size:12px;margin-top:18px;}'+
+    '.toolbar{margin-bottom:16px;}.toolbar button{font:inherit;font-size:13px;font-weight:600;cursor:pointer;'+
+    'background:#16306b;color:#fff;border:0;border-radius:8px;padding:9px 16px;margin-right:8px;}'+
+    '@media print{.toolbar{display:none;}body{margin:0;}}';
+  var dl="function dl(){var pre='<html xmlns:w=\\'urn:schemas-microsoft-com:office:word\\'><head><meta charset=\\'utf-8\\'><style>"+
+    "table{border-collapse:collapse;width:100%;font-size:12px;}th,td{border:1px solid #cfd6e4;padding:6px 8px;}"+
+    "th{background:#16306b;color:#fff;}tr.grp td{background:#eef2f8;font-weight:600;}tr.reg td{background:#f0f4fb;font-weight:600;}h1,h2,h3{color:#16306b;}"+
+    ".up{color:#0a7d34;}.down{color:#c0392b;}.flat{color:#2c4fb0;}</style></head><body>';"+
+    "var html=pre+document.getElementById('report').innerHTML+'</body></html>';"+
+    "var blob=new Blob(['\\ufeff'+html],{type:'application/msword'});var u=URL.createObjectURL(blob);"+
+    "var x=document.createElement('a');x.href=u;x.download='Rapporto_confronto_"+a.replace(/\s/g,'_')+"_"+b.replace(/\s/g,'_')+".doc';x.click();URL.revokeObjectURL(u);}";
+  var doc='<!DOCTYPE html><html lang="it"><head><meta charset="utf-8"><title>Rapporto di confronto</title>'+
+    '<style>'+css+'</style></head><body>'+
+    '<div class="toolbar"><button onclick="window.print()">Stampa / Salva PDF</button>'+
+    '<button onclick="dl()">Scarica Word (.doc)</button></div>'+
+    content+'<script>'+dl+'<\/script></body></html>';
+  var w=window.open('','_blank');
+  if(!w){ alert('Abilita i popup per generare il rapporto.'); return; }
+  w.document.open(); w.document.write(doc); w.document.close();
 }
 function seriesFor(key){
   var parts=key.split('|'), g=parts[0], ind=parts[1];
@@ -141,15 +442,17 @@ function seriesFor(key){
 }
 function buildKpis(){
   var box=document.getElementById('kpis');
-  var last=periods[periods.length-1], prev=periods[periods.length-2];
-  var html='<div class="kpihead">Semestre: <b>'+esc(last)+'</b> - variazione rispetto a '+esc(prev)+'</div>';
+  var last=document.getElementById('repB').value || periods[periods.length-1];
+  var prev=document.getElementById('repA').value || periods[periods.length-2];
+  document.getElementById('kpiHint').innerHTML='Card: semestre <b>'+esc(last)+'</b>, variazione rispetto a <b>'+esc(prev)+'</b>. Clicca una card per la serie storica; selezionane 2 o 3 per confrontarle.';
+  var html='';
   indicators.forEach(function(it){
     var m=seriesFor(it.key), v=m[last], p=m[prev];
     var d='', cls='flat';
-    if(v!=null && p!=null){ var diff=Math.round((v-p)*10)/10; cls=diff>0?'up':(diff<0?'down':'flat'); d=(diff>0?'+':'')+diff+' '+it.unit; }
+    if(v!=null && p!=null){ var diff=Math.round((v-p)*10)/10; cls=diff>0?'up':(diff<0?'down':'flat'); var ar=diff>0?'\u25B2 +':(diff<0?'\u25BC ':'= '); d=ar+diff+' '+it.unit; }
     var val = v!=null ? (v+' <small>'+esc(it.unit)+'</small>') : 'n.d.';
     var selcls = selected[it.key] ? ' sel' : '';
-    html += '<div class="kpi'+selcls+'" data-k="'+esc(it.key)+'"><div class="t">'+esc(it.ind)+'</div><div class="v">'+val+'</div><div class="d '+cls+'">'+d+'</div></div>';
+    html += '<div class="kpi'+selcls+'" data-k="'+esc(it.key)+'"><div class="t">'+esc(clearLabel(it.grp,it.ind))+'</div><div class="v">'+val+'</div><div class="d '+cls+'">'+d+'</div></div>';
   });
   box.innerHTML=html;
   var cards=box.querySelectorAll('.kpi');
@@ -192,7 +495,7 @@ function draw(){
   var units=[]; sel.forEach(function(s){ if(units.indexOf(s.unit)<0) units.push(s.unit); });
   var ds=sel.map(function(it,i){
     var m=seriesFor(it.key);
-    return { label:it.ind+' ('+it.unit+')', data:labels.map(function(p){ return (p in m)?m[p]:null; }),
+    return { label:clearLabel(it.grp,it.ind)+' ('+it.unit+')', data:labels.map(function(p){ return (p in m)?m[p]:null; }),
       borderColor:PALETTE[i%PALETTE.length], backgroundColor:PALETTE[i%PALETTE.length],
       yAxisID: units.indexOf(it.unit)===1?'y2':'y', tension:.25, spanGaps:true,
       pointRadius:labels.length>24?0:2, borderWidth:2 };
@@ -204,8 +507,7 @@ function draw(){
     options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
       plugins:{ legend:{position:'bottom',labels:{font:{size:11},boxWidth:14}} }, scales:scales } });
 }
-
-var CAR=[], cAttiv=null, cDim=null, cFat=null;
+var CAR=[], cAttiv=null, cDim=null, cFat=null, cFP=null;
 function buildCaratt(){
   Papa.parse(CARATT_CSV,{download:true,header:true,skipEmptyLines:true,
     complete:function(r){ try{ initCaratt(r.data); }catch(e){ document.getElementById('carattNote').innerHTML='Errore caratteristiche: '+e.message; } },
@@ -213,6 +515,8 @@ function buildCaratt(){
 }
 function initCaratt(rows){
   CAR = rows.filter(function(x){ return x.Territorio && x.Categoria; }).map(function(x){ return {terr:norm(x.Territorio),car:norm(x.Caratteristica),cat:norm(x.Categoria),ord:num(x.Ordine),pct:num(x.Percentuale),n:num(x.N_imprese)}; });
+  var rg=CAR.filter(function(d){ return /piemonte/i.test(d.terr); });
+  if(rg.length && rg[0].n!=null){ var si=document.getElementById('stImp'); if(si) si.textContent=rg[0].n; }
   var terr=[]; CAR.forEach(function(d){ if(terr.indexOf(d.terr)<0) terr.push(d.terr); });
   var sel=document.getElementById('carattTerr');
   sel.innerHTML=terr.map(function(t){ return '<option>'+esc(t)+'</option>'; }).join('');
@@ -240,49 +544,195 @@ function drawCaratt(){
     data:{labels:sD.labels,datasets:[{data:sD.data,backgroundColor:['#16306b','#2c4fb0','#1f9d55','#d68910','#c0392b','#7d3c98']}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:12}},tooltip:{callbacks:{label:function(c){return c.label+': '+c.parsed+'%';}}}}} });
   cFat=barChart('cFat',cFat,sF,'#e9892f');
-  document.getElementById('carattNote').innerHTML='Territorio: <b>'+esc(terr)+'</b> - '+(sA.n!=null?sA.n+' imprese':'')+'. Attivita prevalente e multi-risposta (la somma supera 100%).';
+  var sFP=carSeries(terr,'Fatturato fuori provincia');
+  cFP=barChart('cFP',cFP,sFP,'#1f9d55');
+  document.getElementById('carattNote').innerHTML='Territorio: <b>'+esc(terr)+'</b>. Riferito a I sem 2026. Attivita prevalente e multi-risposta (la somma supera 100%).';
 }
-
-var PROV={terr:[],regIdx:-1,inds:[]};
-function buildProvSelect(){
-  if(!PROV_CSV){ document.getElementById('provBox').style.display='none'; document.getElementById('provNote').innerHTML='Aggregati provinciali non collegati.'; return; }
-  Papa.parse(PROV_CSV,{download:true,header:false,skipEmptyLines:true,
-    complete:function(r){ try{ initProv(r.data); }catch(e){ document.getElementById('provNote').innerHTML='Errore aggregati provinciali: '+e.message; } },
-    error:function(){ document.getElementById('provNote').innerHTML='CSV aggregati provinciali non leggibile.'; } });
+var PROVH={byPeriod:{},inds:[],order:['Alessandria','Asti','Biella','Vercelli','Cuneo','Novara','Torino','Verbania','Aosta']};
+function npar(p){ return String(p).replace(/\./g,'').replace(/\s+/g,' ').trim().toLowerCase(); }
+function deacc(s){ return String(s).toLowerCase().replace(/[àáâ]/g,'a').replace(/[èé]/g,'e').replace(/[ìí]/g,'i').replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/[^a-z0-9]/g,''); }
+function provGroupShort(g){ g=String(g).toLowerCase();
+  if(g.indexOf('previsioni')>=0) return 'Saldo';
+  if(g.indexOf('investiment')>=0) return 'Investimenti';
+  if(g.indexOf('portafoglio')>=0) return 'Portafoglio';
+  if(g.indexOf('difficolt')>=0) return 'Difficolta manodopera';
+  if(g.indexOf('committenti')>=0) return 'Pagam. committenti';
+  if(g.indexOf('fornitori')>=0) return 'Pagam. fornitori';
+  if(g.indexOf('credito')>=0) return 'Credito';
+  return g; }
+function loadProvH(){
+  Papa.parse(PROVH_CSV,{download:true,header:true,skipEmptyLines:true,
+    complete:function(r){ try{ initProvH(r.data); }catch(e){ document.getElementById('provNote').innerHTML='Errore dati provinciali: '+e.message; } },
+    error:function(){ document.getElementById('provNote').innerHTML='File provinciali_storico.csv non trovato nel repository.'; } });
 }
-function initProv(rows){
-  var note=document.getElementById('provNote');
-  var h=-1;
-  for(var i=0;i<rows.length;i++){ if(norm(rows[i][0]).toLowerCase()==='indicatore'){ h=i; break; } }
-  if(h<0){ document.getElementById('provBox').style.display='none'; note.innerHTML='Formato del foglio aggregati non riconosciuto.'; return; }
-  PROV.terr = rows[h].slice(2).map(norm).filter(function(x){ return x; });
-  PROV.regIdx = -1;
-  for(var t=0;t<PROV.terr.length;t++){ if(/piemonte/i.test(PROV.terr[t])){ PROV.regIdx=t; break; } }
-  for(var r2=h+1;r2<rows.length;r2++){
-    var ind=norm(rows[r2][0]), unit=norm(rows[r2][1]);
-    if(!ind || !unit) continue;
-    if(/numero imprese|^tempi medi|valore pubblicato|rettifica|note metodolog/i.test(ind)) continue;
-    var vals=PROV.terr.map(function(_,k){ return num(rows[r2][2+k]); });
-    var allnull=true; for(var z=0;z<vals.length;z++){ if(vals[z]!==null){ allnull=false; break; } }
-    if(allnull) continue;
-    PROV.inds.push({ind:ind,unit:unit,vals:vals});
+function initProvH(rows){
+  rows=rows.filter(function(x){ return x.Indicatore && x.Periodo && x.Territorio; });
+  PROVH.byPeriod={}; PROVH.inds=[]; var seen={};
+  rows.forEach(function(x){
+    var key=norm(x.Gruppo)+'|'+norm(x.Indicatore), per=npar(x.Periodo);
+    if(!PROVH.byPeriod[per]) PROVH.byPeriod[per]={};
+    if(!PROVH.byPeriod[per][key]) PROVH.byPeriod[per][key]={};
+    PROVH.byPeriod[per][key][norm(x.Territorio)]=num(x.Valore);
+    if(!seen[key]){ seen[key]=1; PROVH.inds.push({key:key,grp:norm(x.Gruppo),ind:norm(x.Indicatore),unit:norm(x.Unita),
+      label:provGroupShort(x.Gruppo)+' - '+norm(x.Indicatore)+' ('+norm(x.Unita)+')'}); }
+  });
+  if(!PROVH.inds.length){ document.getElementById('provNote').innerHTML='Nessun dato provinciale nel CSV.'; return; }
+  var pmap={};
+  rows.forEach(function(x){ var o=num(x.Ordine); if(o!=null) pmap[norm(x.Periodo)]=o; });
+  PROVH.periods=Object.keys(pmap).sort(function(a,b){ return pmap[b]-pmap[a]; }); // recente -> vecchio
+  var opts=PROVH.periods.map(function(p){ return '<option>'+esc(p)+'</option>'; }).join('');
+  var sA=document.getElementById('provA'), sB=document.getElementById('provB');
+  sA.innerHTML=opts; sB.innerHTML=opts;
+  sB.value=PROVH.periods[0]; sA.value=PROVH.periods[1]||PROVH.periods[0];
+  var st=document.getElementById('provTer');
+  st.innerHTML=PROVH.order.map(function(t){ return '<option value="'+esc(t)+'">'+esc(t==='Aosta'?'Valle d\'Aosta':t)+'</option>'; }).join('');
+  sA.addEventListener('change',drawProvComp); sB.addEventListener('change',drawProvComp); st.addEventListener('change',drawProvComp);
+  drawProvComp();
+}
+function regFromDB(it,perLabel){
+  var target=deacc(it.grp)+deacc(it.ind);
+  for(var i=0;i<indicators.length;i++){ var d=indicators[i];
+    if(deacc(d.grp)+deacc(d.ind)===target){
+      var m=seriesFor(d.key);
+      if(perLabel in m) return {v:m[perLabel],u:d.unit};
+      for(var k in m){ if(npar(k)===npar(perLabel)) return {v:m[k],u:d.unit}; }
+    }
   }
-  if(!PROV.inds.length){ document.getElementById('provBox').style.display='none'; note.innerHTML='Nessun indicatore provinciale trovato.'; return; }
-  var sel=document.getElementById('provInd');
-  sel.innerHTML = PROV.inds.map(function(it,i){ return '<option value="'+i+'">'+esc(it.ind)+' ('+esc(it.unit)+')</option>'; }).join('');
-  sel.addEventListener('change',drawProv); drawProv();
+  return null;
 }
-function drawProv(){
-  var it=PROV.inds[Number(document.getElementById('provInd').value)];
-  var labels=[], data=[];
-  for(var k=0;k<PROV.terr.length;k++){ if(k===PROV.regIdx) continue; labels.push(PROV.terr[k]); data.push(it.vals[k]); }
-  if(provChart) provChart.destroy();
-  provChart=new Chart(document.getElementById('provChart'),{ type:'bar',
-    data:{labels:labels,datasets:[{label:it.ind+' ('+it.unit+')',data:data,backgroundColor:'#16306b'}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{ticks:{font:{size:10},maxRotation:60,minRotation:30}},y:{beginAtZero:true}} }});
-  var reg = PROV.regIdx>=0 ? it.vals[PROV.regIdx] : null;
-  document.getElementById('provNote').innerHTML = (reg!=null?'Media regionale (Piemonte e Valle d\'Aosta): <b>'+reg+' '+esc(it.unit)+'</b>. ':'')+'Attenzione ai campioni provinciali ridotti (Valle d Aosta n=2, Vercelli n=3, Novara n=5, Asti n=7).';
+function shortSem(p){ var m=String(p).match(/(I{1,2})\s*sem\.?\s*(\d{4})/i); return m?(m[1]+" '"+m[2].slice(2)):String(p); }
+function provBar(v, lo, hi, color){
+  if(v==null) return '<div class="track"></div><span class="val">n.d.</span>';
+  var span=(hi-lo)||1, z=(0-lo)/span*100, p=(v-lo)/span*100;
+  var left=Math.min(z,p), w=Math.max(Math.abs(p-z),0.6);
+  return '<div class="track"><span class="fill" style="left:'+left+'%;width:'+w+'%;background:'+color+'"></span></div>'+
+         '<span class="val">'+itnum(Math.round(v*10)/10)+'</span>';
+}
+function drawProvComp(){
+  if(!PROVH.inds.length) return;
+  var a=document.getElementById('provA').value, b=document.getElementById('provB').value, terr=document.getElementById('provTer').value;
+  var tdisp=(terr==='Aosta')?'Valle d\'Aosta':terr;
+  document.getElementById('provTitle').innerHTML='Confronto provinciale: '+esc(tdisp);
+  document.getElementById('provHint').innerHTML='Provincia di <b>'+esc(tdisp)+'</b>: variazione tra <b>'+esc(a)+'</b> e <b>'+esc(b)+'</b> per ogni indicatore.';
+  var pa=PROVH.byPeriod[npar(a)]||{}, pb=PROVH.byPeriod[npar(b)]||{}, html='', any=false;
+  PROVH.inds.forEach(function(it){
+    var va=(pa[it.key]&&terr in pa[it.key])?pa[it.key][terr]:null;
+    var vb=(pb[it.key]&&terr in pb[it.key])?pb[it.key][terr]:null;
+    if(va==null && vb==null) return;
+    any=true;
+    var dvar='-', cls='flat';
+    if(va!=null && vb!=null){
+      var diff=Math.round((vb-va)*10)/10, hb=hbFor(it.grp,it.ind);
+      var ar=diff>0?(String.fromCharCode(9650)+' +'):(diff<0?(String.fromCharCode(9660)+' '):'= ');
+      cls=diff===0?'flat':((hb===null)?'flat':(((diff>0)===hb)?'up':'down'));
+      dvar=ar+itnum(diff);
+    }
+    var lo=Math.min(0,(va==null?0:va),(vb==null?0:vb)), hi=Math.max(0,(va==null?0:va),(vb==null?0:vb));
+    html+='<div class="prow"><div class="pname">'+esc(it.label)+'</div>'+
+      '<div class="pvar '+cls+'">'+dvar+'</div><div class="pbars">'+
+      '<div class="pbar"><span class="lab">'+esc(shortSem(a))+'</span>'+provBar(va,lo,hi,'#9bc4e2')+'</div>'+
+      '<div class="pbar"><span class="lab">'+esc(shortSem(b))+'</span>'+provBar(vb,lo,hi,'#16306b')+'</div>'+
+      '</div></div>';
+  });
+  document.getElementById('provList').innerHTML = any ? html : '<div class="note">Nessun dato per questa provincia nei semestri scelti.</div>';
+  document.getElementById('provNote').innerHTML='Verde = miglioramento, rosso = peggioramento (per pagamenti, difficolta e credito un aumento e\' peggioramento). Le barre sono in scala per ciascun indicatore.';
+}
+var MERC={rows:[]}, mChart=null, mSel={ind:{},ter:{}};
+function mord(p){ var s=String(p); var q=s.match(/(\d{4})-Q(\d)/); if(q) return parseInt(q[1],10)*12+parseInt(q[2],10)*3; var m=s.match(/(\d{4})-(\d{2})/); if(m) return parseInt(m[1],10)*12+parseInt(m[2],10); return 0; }
+function loadMercato(){
+  Papa.parse(MERCATO_CSV,{download:true,header:true,skipEmptyLines:true,
+    complete:function(r){ try{ initMercato(r.data); }catch(e){ document.getElementById('mNote').innerHTML='Errore dati mercato: '+e.message; } },
+    error:function(){ document.getElementById('mNote').innerHTML='Foglio Mercato_serie non raggiungibile (verifica la pubblicazione CSV).'; } });
+}
+function initMercato(rows){
+  MERC.rows=rows.filter(function(x){ return x.Categoria && x.Indicatore && x.Territorio && x.Periodo; })
+    .map(function(x){ return {cat:norm(x.Categoria),ind:norm(x.Indicatore),ter:norm(x.Territorio),per:norm(x.Periodo),val:num(x.Valore),unita:norm(x.Unita),fonte:norm(x.Fonte),ord:mord(x.Periodo)}; });
+  // aggregato regionale (somma delle province) per Compravendite
+  var agg={};
+  MERC.rows.forEach(function(r){ if(r.cat==='Compravendite' && r.val!=null){ var k=r.ind+''+r.per;
+    if(!agg[k]) agg[k]={cat:'Compravendite',ind:r.ind,ter:'Piemonte e Valle d\'Aosta',per:r.per,val:0,unita:r.unita,fonte:r.fonte,ord:r.ord};
+    agg[k].val+=r.val; } });
+  Object.keys(agg).forEach(function(k){ MERC.rows.push(agg[k]); });
+  var aggP={};
+  MERC.rows.forEach(function(r){ if(r.cat==='Compravendite' && r.ter!=='Aosta' && r.ter!=='Piemonte' && r.ter.indexOf('Valle')<0 && r.val!=null){ var k=r.ind+'|'+r.per;
+    if(!aggP[k]) aggP[k]={cat:'Compravendite',ind:r.ind,ter:'Piemonte',per:r.per,val:0,unita:r.unita,fonte:r.fonte,ord:r.ord};
+    aggP[k].val+=r.val; } });
+  Object.keys(aggP).forEach(function(k){ MERC.rows.push(aggP[k]); });
+  if(!MERC.rows.length){ document.getElementById('mKpi').innerHTML='<div class="note">Nessun dato di mercato disponibile.</div>'; return; }
+  var cats=[]; MERC.rows.forEach(function(r){ if(cats.indexOf(r.cat)<0) cats.push(r.cat); });
+  var cs=document.getElementById('mCat'); cs.innerHTML=cats.map(function(c){ return '<option>'+esc(c)+'</option>'; }).join('');
+  cs.addEventListener('change',mCatChange);
+  mCatChange();
+}
+function mList(cat,key){ var a=[]; MERC.rows.forEach(function(r){ if(r.cat===cat && a.indexOf(r[key])<0) a.push(r[key]); }); return a; }
+function mChips(boxId,items,selObj){
+  var box=document.getElementById(boxId);
+  box.innerHTML=items.map(function(it){ var tot=/TOTALE/i.test(it)?' tot':''; return '<span class="chip'+tot+(selObj[it]?' on':'')+'" data-v="'+esc(it)+'">'+esc(it)+'</span>'; }).join('');
+  var ch=box.querySelectorAll('.chip');
+  for(var i=0;i<ch.length;i++){ ch[i].addEventListener('click',function(){ var v=this.getAttribute('data-v'); selObj[v]=!selObj[v]; this.classList.toggle('on',!!selObj[v]); drawMercato(); }); }
+}
+function mCatChange(){
+  var cat=document.getElementById('mCat').value, inds=mList(cat,'ind'), ters=mList(cat,'ter');
+  var TORD=['Alessandria','Asti','Biella','Cuneo','Novara','Torino','Verbania','Vercelli','Piemonte','Piemonte e Valle d\'Aosta','Italia','Aosta'];
+  ters.sort(function(a,b){ var ia=TORD.indexOf(a),ib=TORD.indexOf(b); if(ia<0)ia=50; if(ib<0)ib=50; return ia-ib || (a<b?-1:1); });
+  mSel.ind={}; mSel.ter={};
+  var MDEF={
+    'Prezzi':{ter:'Torino',ind:['Prezzi abitazioni - totale (H1)']},
+    'Compravendite':{ter:'Piemonte',ind:['Compravendite residenziale - totale (NTN)','Compravendite residenziale - capoluogo (NTN)']},
+    'Credito':{ter:'Piemonte',ind:['Investimenti costruzioni - TOTALE non finanziari','Acquisto immobili - TOTALE famiglie']},
+    'Appalti':{ter:'Piemonte',ind:['Appalti lavori (importo)','Appalti lavori (numero)']}
+  };
+  var dft=MDEF[cat];
+  if(dft){ dft.ind.forEach(function(i){ if(inds.indexOf(i)>=0) mSel.ind[i]=true; }); if(ters.indexOf(dft.ter)>=0) mSel.ter[dft.ter]=true; }
+  if(!Object.keys(mSel.ind).length && inds.length) mSel.ind[inds[0]]=true;
+  if(!Object.keys(mSel.ter).length && ters.length) mSel.ter[ters[0]]=true;
+  mChips('mIndChips',inds,mSel.ind);
+  mChips('mTerChips',ters,mSel.ter);
+  drawMercato();
+}
+function mVar(curr, base){ return (base==null||curr==null||base===0)?null:(Math.round((curr-base)/base*1000)/10); }
+function mBadge(label, v){
+  if(v==null) return '<div class="mk"><div class="t">'+label+'</div><div class="v flat">n.d.</div></div>';
+  var cls=v>0?'up':(v<0?'down':'flat'), ar=v>0?(String.fromCharCode(9650)+' +'):(v<0?(String.fromCharCode(9660)+' '):'= ');
+  return '<div class="mk"><div class="t">'+label+'</div><div class="v '+cls+'">'+ar+itnum(v)+'%</div></div>';
+}
+function mSeriesFor(cat,ter,ind){ return MERC.rows.filter(function(r){ return r.cat===cat&&r.ter===ter&&r.ind===ind&&r.val!=null; }).sort(function(a,b){ return a.ord-b.ord; }); }
+function mShort(ind){ return String(ind).replace('Compravendite residenziale - ','').replace('Prezzi abitazioni - ','').replace('Appalti ','').replace(' (NTN)','').replace(/\s*\(H\d+\)/,''); }
+function drawMercato(){
+  if(!MERC.rows.length) return;
+  var cat=document.getElementById('mCat').value;
+  var selT=Object.keys(mSel.ter).filter(function(k){return mSel.ter[k];});
+  var selI=Object.keys(mSel.ind).filter(function(k){return mSel.ind[k];});
+  if(mChart){ mChart.destroy(); mChart=null; }
+  var allPer={}, ds=[], ci=0, unit='', fonte='';
+  selT.forEach(function(t){ selI.forEach(function(ind){
+    var s=mSeriesFor(cat,t,ind); if(!s.length) return;
+    unit=s[0].unita; fonte=s[0].fonte;
+    var map={}; s.forEach(function(r){ allPer[r.per]=r.ord; map[r.per]=r.val; });
+    ds.push({_t:t,_i:ind,label:t+' - '+mShort(ind),color:PALETTE[ci%PALETTE.length],map:map,tot:/TOTALE/i.test(ind),unit:s[0].unita}); ci++;
+  });});
+  var box=document.getElementById('mKpi');
+  if(!ds.length){ box.innerHTML='<div class="note">Seleziona almeno un indicatore e un territorio.</div>'; document.getElementById('mNote').innerHTML=''; return; }
+  var pers=Object.keys(allPer).sort(function(a,b){return allPer[a]-allPer[b];});
+  var units=[]; ds.forEach(function(d){ if(units.indexOf(d.unit)<0) units.push(d.unit); });
+  var axisOf={}; units.forEach(function(u,i){ axisOf[u]=(i===0?'y':'y1'); }); // 1a unita a sinistra, 2a a destra
+  var datasets=ds.map(function(d){ return {label:d.label,data:pers.map(function(p){return (p in d.map)?d.map[p]:null;}),borderColor:d.color,backgroundColor:d.color,borderDash:d.tot?[6,4]:[],tension:.2,pointRadius:pers.length>30?0:2,borderWidth:2,spanGaps:true,yAxisID:(axisOf[d.unit]==='y1'?'y1':'y')}; });
+  var scales={x:{ticks:{maxRotation:60,minRotation:45,font:{size:9},autoSkip:true,maxTicksLimit:16}},
+    y:{position:'left',beginAtZero:false,title:{display:!!units[0],text:units[0]||'',font:{size:10}}}};
+  if(units.length>1){ scales.y1={position:'right',beginAtZero:false,title:{display:true,text:units[1],font:{size:10}},grid:{drawOnChartArea:false}}; }
+  mChart=new Chart(document.getElementById('mChart'),{ type:'line', data:{labels:pers,datasets:datasets},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:ds.length>1,position:'bottom',labels:{font:{size:10},boxWidth:12}}},
+      scales:scales} });
+  if(ds.length===1){
+    var s=mSeriesFor(cat,ds[0]._t,ds[0]._i), last=s[s.length-1], prevQ=s.length>=2?s[s.length-2].val:null, yoy=null;
+    for(var i=0;i<s.length;i++){ if(s[i].ord===last.ord-12) yoy=s[i].val; }
+    box.innerHTML='<div class="mk"><div class="t">Ultimo ('+esc(last.per)+')</div><div class="v">'+fmtNum(last.val)+'</div></div>'+
+      mBadge('Var. periodo prec.',mVar(last.val,prevQ))+mBadge('Var. annua',mVar(last.val,yoy));
+  } else {
+    box.innerHTML='<div class="note">'+ds.length+' serie a confronto. Attiva una sola combinazione (un indicatore + un territorio) per vedere valore e variazioni.</div>';
+  }
+  document.getElementById('mNote').innerHTML='Fonte: '+esc(fonte)+' &middot; unita: '+esc(unit)+'. Verde = aumento, rosso = diminuzione.';
 }
 </script>
 </body>

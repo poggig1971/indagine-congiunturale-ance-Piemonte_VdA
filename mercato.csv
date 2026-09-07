@@ -1,0 +1,12 @@
+Categoria,Indicatore,Territorio,Unita,PeriodoA,ValoreA,PeriodoB,ValoreB,VarPct,Fonte
+Credito,Investimenti costruzioni - abitazioni,Torino,migliaia EUR,30/09/2025,31082,31/12/2025,29775,-4.20,Banca d'Italia (Infostat TFR10430)
+Credito,Investimenti costruzioni - fabbricati non residenziali,Torino,migliaia EUR,30/09/2025,33829,31/12/2025,52181,54.25,Banca d'Italia (Infostat TFR10430)
+Credito,Investimenti costruzioni - opere del genio civile,Torino,migliaia EUR,30/09/2025,411,31/12/2025,17,-95.86,Banca d'Italia (Infostat TFR10430)
+Credito,Totale investimenti non finanziari in costruzioni,Torino,migliaia EUR,30/09/2025,65322,31/12/2025,81973,25.49,Banca d'Italia (Infostat TFR10430)
+Credito,Acquisto immobili - abitazioni famiglie consumatrici,Torino,migliaia EUR,30/09/2025,535893,31/12/2025,620952,15.87,Banca d'Italia (Infostat TFR10430)
+Credito,Acquisto immobili - abitazioni altri soggetti,Torino,migliaia EUR,30/09/2025,20544,31/12/2025,29200,42.13,Banca d'Italia (Infostat TFR10430)
+Credito,Totale acquisto abitazioni (famiglie),Torino,migliaia EUR,30/09/2025,556437,31/12/2025,650152,16.84,Banca d'Italia (Infostat TFR10430)
+Compravendite,Compravendite residenziale (NTN),Torino (capoluogo),NTN,2025-Q4,4565.53,2026-Q1,3913.11,-14.29,Agenzia delle Entrate (OMI)
+Prezzi,Prezzi abitazioni - totale (H1),Torino,numero indice,2025-Q3,111,2025-Q4,114,2.70,ISTAT (IPAB)
+Prezzi,Prezzi abitazioni - nuove (H11),Torino,numero indice,2025-Q3,108,2025-Q4,121,12.04,ISTAT (IPAB)
+Prezzi,Prezzi abitazioni - esistenti (H12),Torino,numero indice,2025-Q3,111,2025-Q4,112,0.90,ISTAT (IPAB)
