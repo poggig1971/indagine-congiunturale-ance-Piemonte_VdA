@@ -218,7 +218,8 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
 .opt.sel .seg{border-color:var(--blu)}
 .opt.sel .seg::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--blu)}
 .opt.sel .txt{font-weight:600;color:var(--blu)}
-.opt:focus-within{box-shadow:0 0 0 3px rgba(0,59,115,.16)}
+.opt:focus-within{box-shadow:0 0 0 3px rgba(0,59,115,.22)}
+.opt.sel:focus-within{box-shadow:inset 0 0 0 1px var(--blu),0 0 0 3px rgba(0,59,115,.22)}
 .opt.neutra{color:var(--testo-2)}
 
 /* --- 10. BENCHMARK ------------------------------------------------------- */
@@ -1143,17 +1144,21 @@ function aggiornaTutti(){
 /* ---- flag: la scelta viene copiata nel campo nascosto omonimo ----------
    In questo modo tutta la logica successiva (payload, obbligatori,
    avanzamento, benchmark) continua a leggere gli stessi id di sempre. */
-function sincronizzaOpz(gruppo){
+function sincronizzaOpz(gruppo, ricalcola){
   const id = gruppo.dataset.per;
   const scelto = gruppo.querySelector('input:checked');
   $(id).value = scelto ? scelto.value : '';
   gruppo.querySelectorAll('.opt').forEach(o => {
     o.classList.toggle('sel', o.contains(scelto));
   });
+  /* il campo nascosto va aggiornato PRIMA di ricalcolare avanzamento e
+     benchmark: l'evento del radio raggiunge prima il radio stesso e solo
+     dopo il contenitore, quindi il ricalcolo si fa qui. */
+  if(ricalcola) aggiornaTutti();
 }
 document.querySelectorAll('.opz').forEach(gruppo => {
-  gruppo.addEventListener('change', () => sincronizzaOpz(gruppo));
-  sincronizzaOpz(gruppo);
+  gruppo.addEventListener('change', () => sincronizzaOpz(gruppo, true));
+  sincronizzaOpz(gruppo, false);
 });
 
 /* ---- stato visivo dei campi compilati (solo presentazione) ---- */
@@ -1167,6 +1172,7 @@ function statoCampi(){
 
 /* ---- avanzamento e sezione corrente ---- */
 function avanzamento(){
+  if(inviato || !$('fill')) return;
   const req = document.querySelectorAll('[data-req]');
   let ok = 0; req.forEach(e => { if(e.value) ok++; });
   const tot = req.length, restano = tot - ok, completo = restano === 0;
@@ -1180,12 +1186,16 @@ function avanzamento(){
 }
 
 const SEZIONI = Array.prototype.slice.call(document.querySelectorAll('.sezione'));
+let inviato = false;   /* dopo l'invio la pagina cambia: niente piu' ricalcoli */
 function sezioneCorrente(){
+  if(inviato) return;
+  const eNum = $('sez-num'), eNome = $('sez-nome');
+  if(!eNum || !eNome || !SEZIONI.length) return;
   const soglia = 200;
   let idx = 0;
   SEZIONI.forEach((s,i) => { if(s.getBoundingClientRect().top <= soglia) idx = i; });
-  $('sez-num').textContent = 'Sezione ' + (idx+1) + ' di ' + SEZIONI.length;
-  $('sez-nome').textContent = SEZIONI[idx].dataset.nome;
+  eNum.textContent = 'Sezione ' + (idx+1) + ' di ' + SEZIONI.length;
+  eNome.textContent = SEZIONI[idx].dataset.nome;
 }
 let inCorso = false;
 window.addEventListener('scroll', () => {
@@ -1217,6 +1227,7 @@ function mostraErrore(text){
   const m = $('msg'); m.className = 'esito err'; m.textContent = text;
 }
 function schermataGrazie(res){
+  inviato = true;
   const prot = (res && res.nquest)
     ? '<div class="prot"><div class="k">Numero di protocollo</div><div class="v">'
       + res.nquest + ' · II semestre 2026</div></div>'
