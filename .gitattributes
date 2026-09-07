@@ -1,0 +1,31 @@
+# ---------------------------------------------------------------------------
+# Normalizzazione dei fine riga.
+# I file di testo sono conservati nel repository con terminazione LF; sui client
+# Windows la conversione avviene in automatico. Evita i conflitti "fantasma"
+# fra i file generati in locale (CRLF) e quelli caricati dall'editor web di
+# GitHub (LF), che nel giugno 2026 hanno reso necessario un merge manuale.
+# ---------------------------------------------------------------------------
+
+* text=auto eol=lf
+
+# --- dati e sorgenti -------------------------------------------------------
+*.csv   text eol=lf
+*.json  text eol=lf
+*.html  text eol=lf
+*.css   text eol=lf
+*.js    text eol=lf
+*.md    text eol=lf
+*.py    text eol=lf
+*.txt   text eol=lf
+*.svg   text eol=lf
+
+# --- file binari: nessuna conversione, nessun diff testuale ----------------
+*.jpg   binary
+*.jpeg  binary
+*.png   binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.xlsx  binary
+*.xlsm  binary
+*.zip   binary
