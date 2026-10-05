@@ -1,17 +1,19 @@
 {
  "periodo": "II semestre 2026",
  "periodo_cod": 226,
- "aggiornato": "07/09/2026",
- "totale": 2,
+ "aggiornato": "05/10/2026",
+ "chiusa": true,
+ "totale": 156,
  "province": [
-  {
-   "nome": "Cuneo",
-   "n": 1
-  },
-  {
-   "nome": "Torino",
-   "n": 1
-  }
+  {"nome": "Torino", "n": 43},
+  {"nome": "Alessandria", "n": 27},
+  {"nome": "Cuneo", "n": 25},
+  {"nome": "Biella", "n": 19},
+  {"nome": "Asti", "n": 14},
+  {"nome": "Verbano-Cusio-Ossola", "n": 12},
+  {"nome": "Novara", "n": 6},
+  {"nome": "Vercelli", "n": 6},
+  {"nome": "Valle d'Aosta", "n": 4}
  ],
- "fonte": "Microdati Indagine Congiunturale ANCE Piemonte e Valle d'Aosta"
+ "fonte": "Microdati Indagine Congiunturale ANCE Piemonte e Valle d'Aosta, II sem 2026 — rilevazione chiusa il 05/10/2026"
 }

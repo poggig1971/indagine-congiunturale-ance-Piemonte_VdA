@@ -9,6 +9,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+/* ===========================================================================
+   INTERRUTTORE DELLA RACCOLTA
+   true  = questionario aperto alla compilazione
+   false = rilevazione conclusa: al posto del modulo compare l'avviso di chiusura
+   Per riaprire la raccolta del semestre successivo basta rimettere true
+   (e reimpostare SEM_APERTO nel foglio tramite il menu "ANCE - Indagine").
+   =========================================================================== */
+window.RACCOLTA_APERTA = false;
+document.documentElement.className = window.RACCOLTA_APERTA ? 'aperta' : 'chiusa';
+if(!window.RACCOLTA_APERTA){
+  document.title = "Rilevazione conclusa — 49ª Indagine Congiunturale ANCE Piemonte e Valle d'Aosta";
+}
+</script>
 <style>
 /* ==========================================================================
    CENTRO STUDI ANCE PIEMONTE E VALLE D'AOSTA
@@ -454,6 +468,46 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   .piede{padding:22px 18px}
 }
 
+/* --- RILEVAZIONE CONCLUSA ------------------------------------------------ */
+.aperta .solo-chiusa{display:none!important}
+.chiusa .solo-aperta{display:none!important}
+.chiusa .progresso,.chiusa #modulo,.chiusa .fondo{display:none!important}
+
+.chiusura{background:var(--bianco);border:1px solid var(--bordo);border-top:3px solid var(--blu);
+          margin:34px;padding:50px 46px 44px}
+.chiusura .bollo{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;background:var(--velo);
+                 border:1px solid #C9DCEC;font-size:11px;font-weight:700;letter-spacing:.12em;
+                 text-transform:uppercase;color:var(--blu)}
+.chiusura .bollo svg{width:14px;height:14px;stroke:var(--blu);fill:none;stroke-width:2}
+.chiusura h2{margin-top:22px;font-size:31px;font-weight:600;letter-spacing:-.015em;
+             color:var(--blu-scuro);line-height:1.25;max-width:22ch}
+.chiusura .testo{margin-top:20px;font-size:16.5px;line-height:1.75;color:var(--testo-2);max-width:68ch}
+.chiusura .testo + .testo{margin-top:14px}
+.chiusura .esito{display:flex;flex-wrap:wrap;gap:0;margin:34px 0 0;border-top:1px solid var(--bordo);
+                 border-bottom:1px solid var(--bordo);background:none;padding:0}
+.chiusura .esito > div{flex:1 1 200px;padding:22px 30px 24px;border-left:1px solid var(--bordo)}
+.chiusura .esito > div:first-child{border-left:0;padding-left:0}
+.chiusura .esito .v{font-size:30px;font-weight:600;color:var(--blu);line-height:1;
+                    letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.chiusura .esito .v.piccolo{font-size:19px;letter-spacing:0}
+.chiusura .esito .e{margin-top:6px;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--testo-2)}
+.chiusura .seguito{margin-top:30px;padding-left:16px;border-left:4px solid var(--s3);
+                   font-size:15px;line-height:1.7;color:var(--testo);max-width:68ch}
+.chiusura .vai{display:inline-flex;align-items:center;gap:11px;margin-top:32px;height:50px;padding:0 28px;
+               border:1px solid var(--blu);color:var(--blu);background:var(--bianco);text-decoration:none;
+               font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+               border-radius:6px;transition:background-color var(--t),color var(--t)}
+.chiusura .vai:hover{background:var(--blu);color:var(--bianco)}
+.chiusura .vai svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+@media(max-width:860px){
+  .chiusura{margin:24px 18px;padding:32px 22px 30px}
+  .chiusura h2{font-size:24px}
+  .chiusura .testo{font-size:15.5px}
+  .chiusura .esito > div{flex:1 1 100%;border-left:0;border-top:1px solid var(--bordo);padding:16px 0 18px}
+  .chiusura .esito > div:first-child{border-top:0}
+  .chiusura .vai{width:100%;justify-content:center}
+}
+
 /* --- ACCESSIBILITÀ E STAMPA --------------------------------------------- */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
@@ -527,10 +581,15 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
         <span class="e2">Centro Studi</span>
       </span>
     </div>
-    <div class="chiavi">
+    <div class="chiavi solo-aperta">
       <div><div class="v">5 minuti</div><div class="e">Tempo stimato</div></div>
       <div><div class="v">Anonima</div><div class="e">Compilazione anonima</div></div>
       <div><div class="v rilievo">5 ottobre 2026</div><div class="e">Termine per la compilazione</div></div>
+    </div>
+    <div class="chiavi solo-chiusa">
+      <div><div class="v rilievo">Conclusa</div><div class="e">Stato della rilevazione</div></div>
+      <div><div class="v">5 ottobre 2026</div><div class="e">Termine scaduto</div></div>
+      <div><div class="v" id="chiusura-totale-2">—</div><div class="e">Questionari pervenuti</div></div>
     </div>
     <div class="rilevazione">
       <div class="r1">49ª Indagine Congiunturale</div>
@@ -559,7 +618,8 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
     <p class="periodo">Secondo semestre 2026</p>
     <p class="solo-stampa" id="data-stampa"></p>
     <p class="sommario">La rilevazione monitora l'andamento e le prospettive del comparto attraverso le aspettative delle imprese su fatturato, occupazione, portafoglio ordini, investimenti, reperimento della manodopera e situazione finanziaria.</p>
-    <p class="obbligo"><span class="ast">*</span> Campo obbligatorio. I restanti quesiti possono essere lasciati in bianco qualora il dato non sia disponibile.</p>
+    <p class="obbligo solo-chiusa" style="display:block">La raccolta delle risposte si è chiusa il 5 ottobre 2026. I dati sono in elaborazione presso il Centro Studi.</p>
+    <p class="obbligo solo-aperta"><span class="ast">*</span> Campo obbligatorio. I restanti quesiti possono essere lasciati in bianco qualora il dato non sia disponibile.</p>
 
     <section class="contatore" id="contatore" hidden>
       <h2>Numero progressivo di nuovi Questionari acquisiti</h2>
@@ -572,6 +632,29 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
 
   <!-- ===================== RIQUADRO DI COMPILAZIONE ===================== -->
   <div class="lavoro">
+
+    <section class="chiusura solo-chiusa" aria-labelledby="tit-chiusura">
+      <span class="bollo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Rilevazione conclusa
+      </span>
+      <h2 id="tit-chiusura">La raccolta delle risposte è terminata</h2>
+      <p class="testo">La 49ª Indagine Congiunturale tra le imprese edili del Piemonte e della Valle d'Aosta, relativa al secondo semestre 2026, si è chiusa il <strong>5 ottobre 2026</strong>. Non è più possibile compilare il questionario.</p>
+      <p class="testo">Il Centro Studi di ANCE Piemonte e Valle d'Aosta ringrazia le imprese che hanno partecipato e i Collegi territoriali per la collaborazione nella diffusione della rilevazione.</p>
+
+      <div class="esito">
+        <div><div class="v" id="chiusura-totale">—</div><div class="e">Questionari pervenuti</div></div>
+        <div><div class="v piccolo">Secondo semestre 2026</div><div class="e">Periodo di rilevazione</div></div>
+        <div><div class="v piccolo">9 province</div><div class="e">Copertura territoriale</div></div>
+      </div>
+
+      <p class="seguito">Le risposte sono ora in elaborazione. I risultati confluiranno nella nota di sintesi regionale e nei focus territoriali curati dal Centro Studi, e andranno ad aggiornare la serie storica dell'Indagine. La rilevazione ha cadenza semestrale: l'avvio della prossima edizione sarà comunicato alle imprese associate tramite i Collegi.</p>
+
+      <a class="vai" href="index.html">
+        Consulta la dashboard dell'Indagine
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </section>
 
     <div class="progresso" id="progresso">
       <span class="sez-corr">
@@ -1102,6 +1185,7 @@ fetch('benchmark_I2026.json', {cache:'no-store'})
 function mostraContatore(c){
   if(!c || c.ok === false) return false;
   const box = $('contatore'), lista = $('cont-lista'), vuoto = $('cont-vuoto');
+  if(!box || !lista) return true;   /* pagina gia' sostituita dalla conferma */
   const prov = Array.isArray(c.province) ? c.province : [];
   const max = prov.reduce((m,p) => Math.max(m, p.n||0), 0) || 1;
   lista.innerHTML = prov.map(p =>
@@ -1112,6 +1196,9 @@ function mostraContatore(c){
     vuoto.hidden = false;
   } else { vuoto.hidden = true; }
   $('cont-tot').textContent = (c.totale != null ? c.totale : 0);
+  ['chiusura-totale','chiusura-totale-2'].forEach(id => {
+    const e = $(id); if(e) e.textContent = (c.totale != null ? c.totale : 0);
+  });
   $('cont-agg').textContent = c.aggiornato
     ? ('Aggiornato al ' + c.aggiornato + (c.aggiornato_ora ? ', ore ' + c.aggiornato_ora : '')
        + (c.periodo ? ' · ' + c.periodo : '')) : '';
@@ -1124,10 +1211,23 @@ function contatoreDaFile(){
     .then(mostraContatore)
     .catch(() => {});
 }
-fetch(ENDPOINT + '?azione=conteggio', {cache:'no-store'})
-  .then(r => r.ok ? r.json() : Promise.reject(r.status))
-  .then(c => { if(!mostraContatore(c)) contatoreDaFile(); })
-  .catch(contatoreDaFile);
+/* il contatore non viene letto solo all'apertura: si aggiorna da solo ogni due
+   minuti e quando si torna sulla scheda, cosi' chi lascia la pagina aperta non
+   resta con un numero fermo. */
+let ultimaLettura = 0;
+function aggiornaContatore(forza){
+  if(!$('contatore')) return;            /* pagina sostituita dalla conferma */
+  const ora = Date.now();
+  if(!forza && ora - ultimaLettura < 30000) return;
+  ultimaLettura = ora;
+  fetch(ENDPOINT + '?azione=conteggio', {cache:'no-store'})
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(c => { if(!mostraContatore(c)) contatoreDaFile(); })
+    .catch(contatoreDaFile);
+}
+aggiornaContatore(true);
+setInterval(() => aggiornaContatore(true), 120000);
+document.addEventListener('visibilitychange', () => { if(!document.hidden) aggiornaContatore(false); });
 
 /* ---- risoluzione del gruppo di confronto, a cascata ---- */
 const MIN_M = 5;
