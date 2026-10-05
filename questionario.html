@@ -491,21 +491,14 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
                     letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .chiusura .esito .v.piccolo{font-size:19px;letter-spacing:0}
 .chiusura .esito .e{margin-top:6px;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--testo-2)}
-.chiusura .seguito{margin-top:30px;padding-left:16px;border-left:4px solid var(--s3);
+.chiusura .seguito{margin-top:30px;margin-bottom:6px;padding-left:16px;border-left:4px solid var(--s3);
                    font-size:15px;line-height:1.7;color:var(--testo);max-width:68ch}
-.chiusura .vai{display:inline-flex;align-items:center;gap:11px;margin-top:32px;height:50px;padding:0 28px;
-               border:1px solid var(--blu);color:var(--blu);background:var(--bianco);text-decoration:none;
-               font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
-               border-radius:6px;transition:background-color var(--t),color var(--t)}
-.chiusura .vai:hover{background:var(--blu);color:var(--bianco)}
-.chiusura .vai svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
 @media(max-width:860px){
   .chiusura{margin:24px 18px;padding:32px 22px 30px}
   .chiusura h2{font-size:24px}
   .chiusura .testo{font-size:15.5px}
   .chiusura .esito > div{flex:1 1 100%;border-left:0;border-top:1px solid var(--bordo);padding:16px 0 18px}
   .chiusura .esito > div:first-child{border-top:0}
-  .chiusura .vai{width:100%;justify-content:center}
 }
 
 /* --- ACCESSIBILITÀ E STAMPA --------------------------------------------- */
@@ -648,12 +641,7 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
         <div><div class="v piccolo">9 province</div><div class="e">Copertura territoriale</div></div>
       </div>
 
-      <p class="seguito">Le risposte sono ora in elaborazione. I risultati confluiranno nella nota di sintesi regionale e nei focus territoriali curati dal Centro Studi, e andranno ad aggiornare la serie storica dell'Indagine. La rilevazione ha cadenza semestrale: l'avvio della prossima edizione sarà comunicato alle imprese associate tramite i Collegi.</p>
-
-      <a class="vai" href="index.html">
-        Consulta la dashboard dell'Indagine
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+      <p class="seguito">Le risposte sono ora in elaborazione a cura del Centro Studi. <strong>L'Indagine Congiunturale sarà trasmessa a breve alle imprese partecipanti e ai Collegi territoriali.</strong> I risultati andranno inoltre ad aggiornare la serie storica della rilevazione, che ha cadenza semestrale: l'avvio della prossima edizione sarà comunicato alle imprese associate tramite i Collegi.</p>
     </section>
 
     <div class="progresso" id="progresso">
