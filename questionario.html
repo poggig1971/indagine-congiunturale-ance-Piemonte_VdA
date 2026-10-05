@@ -11,17 +11,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>
 /* ===========================================================================
-   INTERRUTTORE DELLA RACCOLTA
-   true  = questionario aperto alla compilazione
-   false = rilevazione conclusa: al posto del modulo compare l'avviso di chiusura
-   Per riaprire la raccolta del semestre successivo basta rimettere true
-   (e reimpostare SEM_APERTO nel foglio tramite il menu "ANCE - Indagine").
+   Lo stato della rilevazione NON e' scritto in questa pagina: viene chiesto
+   alla Web-App a ogni apertura (?azione=stato). Aperta o chiusa, periodi,
+   numero di edizione e scadenza arrivano tutti da li', e si governano dai
+   pulsanti della dashboard. Finche' la risposta non arriva la pagina resta
+   in attesa, per non mostrare un modulo che potrebbe essere gia' chiuso.
    =========================================================================== */
-window.RACCOLTA_APERTA = false;
-document.documentElement.className = window.RACCOLTA_APERTA ? 'aperta' : 'chiusa';
-if(!window.RACCOLTA_APERTA){
-  document.title = "Rilevazione conclusa — 49ª Indagine Congiunturale ANCE Piemonte e Valle d'Aosta";
-}
+document.documentElement.className = 'verifica';
 </script>
 <style>
 /* ==========================================================================
@@ -472,6 +468,21 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
 .aperta .solo-chiusa{display:none!important}
 .chiusa .solo-aperta{display:none!important}
 .chiusa .progresso,.chiusa #modulo,.chiusa .fondo{display:none!important}
+/* in attesa della risposta del server non si mostra nulla di definitivo */
+.verifica .solo-aperta,.verifica .solo-chiusa,
+.verifica .progresso,.verifica #modulo,.verifica .fondo{display:none!important}
+.verifica .pannello .obbligo{display:none!important}
+.aperta #attesa,.chiusa #attesa{display:none!important}
+#attesa{background:var(--bianco);border:1px solid var(--bordo);border-top:3px solid var(--s3);
+        margin:34px;padding:44px 46px;max-width:760px}
+#attesa .t{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--testo-2)}
+#attesa h2{margin-top:14px;font-size:24px;font-weight:600;color:var(--blu-scuro);line-height:1.3}
+#attesa p{margin-top:14px;font-size:15.5px;line-height:1.7;color:var(--testo-2)}
+#attesa button{margin-top:24px;height:46px;padding:0 24px;border:1px solid var(--blu);border-radius:6px;
+               background:var(--bianco);color:var(--blu);font:inherit;font-size:13.5px;font-weight:700;
+               letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+#attesa button:hover{background:var(--blu);color:var(--bianco)}
+@media(max-width:860px){#attesa{margin:24px 18px;padding:28px 22px}}
 
 .chiusura{background:var(--bianco);border:1px solid var(--bordo);border-top:3px solid var(--blu);
           margin:34px;padding:50px 46px 44px}
@@ -577,16 +588,16 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
     <div class="chiavi solo-aperta">
       <div><div class="v">5 minuti</div><div class="e">Tempo stimato</div></div>
       <div><div class="v">Anonima</div><div class="e">Compilazione anonima</div></div>
-      <div><div class="v rilievo">5 ottobre 2026</div><div class="e">Termine per la compilazione</div></div>
+      <div><div class="v rilievo" id="t-scadenza">—</div><div class="e">Termine per la compilazione</div></div>
     </div>
     <div class="chiavi solo-chiusa">
       <div><div class="v rilievo">Conclusa</div><div class="e">Stato della rilevazione</div></div>
-      <div><div class="v">5 ottobre 2026</div><div class="e">Termine scaduto</div></div>
+      <div><div class="v" id="t-scadenza-chiusa">—</div><div class="e">Termine scaduto</div></div>
       <div><div class="v" id="chiusura-totale-2">—</div><div class="e">Questionari pervenuti</div></div>
     </div>
     <div class="rilevazione">
-      <div class="r1">49ª Indagine Congiunturale</div>
-      <div class="r2">Secondo semestre 2026</div>
+      <div class="r1" id="t-edizione">Indagine Congiunturale</div>
+      <div class="r2" id="t-periodo">—</div>
     </div>
     <div class="strumenti">
       <button type="button" class="bt bt-schermo" id="bt-schermo" aria-pressed="false"
@@ -608,10 +619,10 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   <!-- ===================== PANNELLO SINISTRO ===================== -->
   <aside class="pannello">
     <h1>Questionario sulla congiuntura nel settore edile piemontese e valdostano</h1>
-    <p class="periodo">Secondo semestre 2026</p>
+    <p class="periodo" id="t-periodo-2">—</p>
     <p class="solo-stampa" id="data-stampa"></p>
     <p class="sommario">La rilevazione monitora l'andamento e le prospettive del comparto attraverso le aspettative delle imprese su fatturato, occupazione, portafoglio ordini, investimenti, reperimento della manodopera e situazione finanziaria.</p>
-    <p class="obbligo solo-chiusa" style="display:block">La raccolta delle risposte si è chiusa il 5 ottobre 2026. I dati sono in elaborazione presso il Centro Studi.</p>
+    <p class="obbligo solo-chiusa" style="display:block">La raccolta delle risposte si è chiusa il <span id="t-scadenza-3">—</span>. I dati sono in elaborazione presso il Centro Studi.</p>
     <p class="obbligo solo-aperta"><span class="ast">*</span> Campo obbligatorio. I restanti quesiti possono essere lasciati in bianco qualora il dato non sia disponibile.</p>
 
     <section class="contatore" id="contatore" hidden>
@@ -626,18 +637,25 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
   <!-- ===================== RIQUADRO DI COMPILAZIONE ===================== -->
   <div class="lavoro">
 
+    <section id="attesa" aria-live="polite">
+      <p class="t" id="attesa-eti">Verifica in corso</p>
+      <h2 id="attesa-tit">Verifica dello stato della rilevazione…</h2>
+      <p id="attesa-testo">Un istante: la pagina sta controllando se la raccolta delle risposte è aperta.</p>
+      <button type="button" id="attesa-riprova" hidden>Riprova</button>
+    </section>
+
     <section class="chiusura solo-chiusa" aria-labelledby="tit-chiusura">
       <span class="bollo">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Rilevazione conclusa
       </span>
       <h2 id="tit-chiusura">La raccolta delle risposte è terminata</h2>
-      <p class="testo">La 49ª Indagine Congiunturale tra le imprese edili del Piemonte e della Valle d'Aosta, relativa al secondo semestre 2026, si è chiusa il <strong>5 ottobre 2026</strong>. Non è più possibile compilare il questionario.</p>
+      <p class="testo">La <span id="t-edizione-2">—</span> tra le imprese edili del Piemonte e della Valle d'Aosta, relativa al <span id="t-periodo-esteso">—</span>, si è chiusa il <strong id="t-scadenza-4">—</strong>. Non è più possibile compilare il questionario.</p>
       <p class="testo">Il Centro Studi di ANCE Piemonte e Valle d'Aosta ringrazia le imprese che hanno partecipato e i Collegi territoriali per la collaborazione nella diffusione della rilevazione.</p>
 
       <div class="esito">
         <div><div class="v" id="chiusura-totale">—</div><div class="e">Questionari pervenuti</div></div>
-        <div><div class="v piccolo">Secondo semestre 2026</div><div class="e">Periodo di rilevazione</div></div>
+        <div><div class="v piccolo" id="t-periodo-3">—</div><div class="e">Periodo di rilevazione</div></div>
         <div><div class="v piccolo">9 province</div><div class="e">Copertura territoriale</div></div>
       </div>
 
@@ -845,7 +863,7 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <span class="ord" aria-hidden="true">02</span>
             <div>
               <h2>Previsioni</h2>
-              <p class="occhiello">Semestre luglio–dicembre 2026</p>
+              <p class="occhiello">Semestre <span id="t-previsioni">—</span></p>
             </div>
           </header>
           <div class="corpo">
@@ -1010,11 +1028,11 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
             <span class="ord" aria-hidden="true">03</span>
             <div>
               <h2>Situazione finanziaria</h2>
-              <p class="occhiello">Semestre gennaio–giugno 2026</p>
+              <p class="occhiello">Semestre <span id="t-finanziaria">—</span></p>
             </div>
           </header>
           <div class="corpo">
-            <div class="fascia">Dati riferiti al semestre gennaio–giugno 2026 · lasciare vuoto se il dato non è applicabile o non è disponibile</div>
+            <div class="fascia">Dati riferiti al semestre <span id="t-finanziaria-2">—</span> · lasciare vuoto se il dato non è applicabile o non è disponibile</div>
 
             <div class="d">
               <div class="d-testo">
@@ -1126,9 +1144,9 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
         </summary>
         <div class="testo">
           <p><b>Anonimato e trattamento dei dati.</b> Il questionario è anonimo. L'eventuale nominativo dell'impresa è impiegato unicamente per il controllo dei doppioni e non compare in alcuna elaborazione. I dati sono trattati esclusivamente in forma aggregata dal Centro Studi di ANCE Piemonte e Valle d'Aosta.</p>
-          <p><b>Fonte dei confronti.</b> I riquadri di benchmark riportano i dati della 48ª Indagine Congiunturale (I semestre 2026, 117 imprese rispondenti), elaborati sui microdati del Centro Studi.</p>
+          <p><b>Fonte dei confronti.</b> I riquadri di benchmark riportano i dati della <span id="t-bench-nota">precedente Indagine Congiunturale</span>, elaborati sui microdati del Centro Studi.</p>
           <p><b>Criterio del gruppo di confronto.</b> Il gruppo di confronto è il più specifico fra provincia e classe dimensionale, provincia, classe dimensionale e totale regionale che disponga di almeno 8 imprese e di almeno 5 risposte sulla singola domanda. Il gruppo effettivamente utilizzato e la relativa numerosità sono sempre indicati all'interno di ciascun riquadro.</p>
-          <p><b>Difficoltà di reperimento della manodopera (quesiti 10 e 11).</b> Nella 48ª Indagine le modalità di risposta erano «Sì», «No» e «In parte»: i riquadri di benchmark riportano pertanto quelle diciture e non sono puntualmente confrontabili con le modalità adottate nella presente rilevazione.</p>
+          <p><b>Difficoltà di reperimento della manodopera (quesiti 10 e 11).</b> Nella precedente Indagine le modalità di risposta erano «Sì», «No» e «In parte»: i riquadri di benchmark riportano pertanto quelle diciture e non sono puntualmente confrontabili con le modalità adottate nella presente rilevazione.</p>
           <p><b>Tempi di pagamento dei committenti.</b> I valori di confronto sono espressi come media dei microdati e possono differire dai valori rettificati pubblicati nella serie storica.</p>
           <p><b>Numero progressivo di questionari acquisiti.</b> Il contatore riporta le risposte registrate nei microdati del semestre in corso alla data indicata; è aggiornato periodicamente dal Centro Studi e non in tempo reale.</p>
         </div>
@@ -1141,13 +1159,13 @@ select:focus-visible,input:focus-visible{outline:none;border-color:var(--blu);bo
           Invia il questionario
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <p class="privacy">Dati raccolti in forma anonima e trattati esclusivamente in forma aggregata dal Centro Studi. Termine: 5 ottobre 2026.</p>
+        <p class="privacy">Dati raccolti in forma anonima e trattati esclusivamente in forma aggregata dal Centro Studi. Termine: <span id="t-scadenza-5">—</span>.</p>
       </div>
     </div>
 
     <footer class="piede">
       <div><b>ANCE Piemonte Valle d'Aosta</b> — Centro Studi<br>Corso Duca degli Abruzzi 15 – 10129 Torino</div>
-      <div><b>49ª Indagine Congiunturale</b><br>Secondo semestre 2026</div>
+      <div><b id="t-edizione-3">Indagine Congiunturale</b><br><span id="t-periodo-4">—</span></div>
     </footer>
 
   </div>
@@ -1164,10 +1182,64 @@ let BM = null, SOGLIA = 8;
 /* Web-App Apps Script: riceve i questionari (POST) e restituisce i conteggi (GET). */
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbwL9yJKQb1cQJacZQ6b-ZfTh2HLhWBW0ZuN4d5B8T6_hWXmpJQyFv_65yLKn28gf4JL/exec";
 
-fetch('benchmark_I2026.json', {cache:'no-store'})
-  .then(r => r.ok ? r.json() : Promise.reject(r.status))
-  .then(j => { BM = j; SOGLIA = (j.meta && j.meta.soglia_min) || 8; aggiornaTutti(); })
-  .catch(() => { BM = false; aggiornaTutti(); });
+/* ---- stato della rilevazione: comanda tutto il resto ---------------------- */
+let STATO = null;
+
+function testo(id, v){ const e = $(id); if(e) e.textContent = v; }
+
+function applicaStato(st){
+  STATO = st;
+  const ediz = st.edizione ? st.edizione + 'ª Indagine Congiunturale' : 'Indagine Congiunturale';
+  const per  = st.periodoBreve || '';
+  const perE = st.periodoEsteso || per.toLowerCase();
+
+  testo('t-edizione', ediz);  testo('t-edizione-2', ediz);  testo('t-edizione-3', ediz);
+  testo('t-periodo', per);    testo('t-periodo-2', per);
+  testo('t-periodo-3', per);  testo('t-periodo-4', per);    testo('t-periodo-esteso', perE);
+  ['t-scadenza','t-scadenza-chiusa','t-scadenza-3','t-scadenza-4','t-scadenza-5']
+    .forEach(id => testo(id, st.scadenza || '—'));
+  testo('t-previsioni', st.previsioni || '');
+  testo('t-finanziaria', st.finanziaria || '');
+  testo('t-finanziaria-2', st.finanziaria || '');
+
+  document.title = (st.aperta ? 'Questionario — ' : 'Rilevazione conclusa — ')
+                 + ediz + " ANCE Piemonte e Valle d'Aosta";
+  document.documentElement.className = st.aperta ? 'aperta' : 'chiusa';
+
+  /* il confronto usa il file del semestre precedente, indicato dal server */
+  const file = st.benchFile || 'benchmark_I2026.json';
+  fetch(file, {cache:'no-store'})
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(j => {
+      BM = j; SOGLIA = (j.meta && j.meta.soglia_min) || 8;
+      const n = j.meta && j.meta.n_totale;
+      testo('t-bench-nota', (st.benchEdizione ? st.benchEdizione + 'ª Indagine Congiunturale' : 'precedente Indagine')
+            + (st.benchPeriodo ? ' (' + st.benchPeriodo : '')
+            + (n ? ', ' + n + ' imprese rispondenti)' : (st.benchPeriodo ? ')' : '')));
+      aggiornaTutti();
+    })
+    .catch(() => { BM = false; aggiornaTutti(); });
+}
+
+function statoNonDisponibile(){
+  testo('attesa-eti', 'Stato non disponibile');
+  testo('attesa-tit', 'Non è stato possibile verificare la rilevazione');
+  testo('attesa-testo', 'Il servizio non ha risposto. Riprovare fra qualche minuto; '
+      + 'se il problema persiste, segnalarlo al Centro Studi di ANCE Piemonte e Valle d\'Aosta.');
+  const b = $('attesa-riprova'); if(b) b.hidden = false;
+}
+
+function chiediStato(){
+  const b = $('attesa-riprova'); if(b) b.hidden = true;
+  fetch(ENDPOINT + '?azione=stato', {cache:'no-store'})
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(st => { if(st && st.ok) applicaStato(st); else statoNonDisponibile(); })
+    .catch(statoNonDisponibile);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const b = $('attesa-riprova'); if(b) b.addEventListener('click', chiediStato);
+});
+chiediStato();
 
 /* ---- contatore dei questionari acquisiti nel semestre in corso ---- */
 function mostraContatore(c){
@@ -1242,7 +1314,7 @@ function testata(res, n, chiave){
   const k = (n == null ? res.g.n : n);
   return '<p class="bm-t">Benchmark ANCE</p>'
        + '<p class="bm-s">Confronto con imprese analoghe</p>'
-       + '<p class="bm-f">48ª Indagine Congiunturale · I semestre 2026</p>'
+       + '<p class="bm-f">' + etichettaConfronto() + '</p>'
        + '<div class="bm-g"><p class="k">Imprese comparabili</p><p class="v">' + res.et + '</p>'
        + '<p class="q">' + k + ' imprese rispondenti</p></div>'
        + '<div class="bm-d"><p class="k">' + chiave + '</p>';
@@ -1287,7 +1359,12 @@ const ETIC3B = ['in aumento','invariato','in riduzione'];
 const CLS3   = ['g1','g2','g3'];
 const ETICSN = ['Sì','No','In parte'];
 const ETICINV= ['Nessun investimento','Sì, non immobiliari (anche misti)','Sì, solo immobiliari'];
-const NOTA_SN = 'Nella 48ª Indagine le modalità di risposta erano «Sì», «No», «In parte»: il confronto è pertanto solo indicativo.';
+function etichettaConfronto(){
+  if(!STATO) return 'Precedente Indagine Congiunturale';
+  return (STATO.benchEdizione ? STATO.benchEdizione + 'ª Indagine Congiunturale' : 'Precedente Indagine')
+       + (STATO.benchPeriodo ? ' · ' + STATO.benchPeriodo : '');
+}
+const NOTA_SN = 'Nella precedente Indagine le modalità di risposta erano «Sì», «No», «In parte»: il confronto è pertanto solo indicativo.';
 
 function indiceInv(v){ v = Number(v); if(v===1) return 0; if(v===2) return 2; if(v===3||v===4) return 1; return -1; }
 /* testo della risposta scelta: vale sia per le tendine sia per i flag */
@@ -1325,7 +1402,7 @@ function aggiornaTutti(){
   if(res && ($('prov').value || $('cls').value)){
     const txt = '<p class="bm-t">Benchmark ANCE</p>'
               + '<p class="bm-s">Confronto con imprese analoghe</p>'
-              + '<p class="bm-f">48ª Indagine Congiunturale · I semestre 2026</p>'
+              + '<p class="bm-f">' + etichettaConfronto() + '</p>'
               + '<div class="bm-g"><p class="k">Imprese comparabili</p><p class="v">' + res.et + '</p>'
               + '<p class="q">' + res.g.n + ' imprese rispondenti</p></div>';
     pieno(gEl, txt); pieno(cEl, txt);

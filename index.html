@@ -67,6 +67,28 @@
   .cbox h3{font-size:12px;color:var(--navy);margin:0 0 6px;font-weight:600;text-align:center}
   .cbox .cc{position:relative;height:150px}
   .note{font-size:11.5px;color:var(--mut);margin-top:10px;line-height:1.5}
+  /* --- gestione della rilevazione --- */
+  .rstato{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--line);border-radius:10px;background:#fff;flex-wrap:wrap}
+  .rpallino{width:13px;height:13px;border-radius:50%;background:#9aa6b6;flex:none}
+  .rstato.aperta .rpallino{background:#17913f}
+  .rstato.chiusa .rpallino{background:#b0202f}
+  .rstato .rtit{font-size:16px;font-weight:700;color:var(--navy)}
+  .rstato .rdett{font-size:12.5px;color:var(--mut);margin-top:2px}
+  .rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:16px}
+  .rgrid .rb{border:1px solid var(--line);border-radius:10px;padding:13px 15px;background:#fff}
+  .rgrid .rb .l{font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mut)}
+  .rgrid .rb .v{font-size:15px;font-weight:600;color:var(--ink);margin-top:3px}
+  .rform{margin-top:20px;padding:18px;border:1px solid var(--line);border-radius:10px;background:#f7f9fc}
+  .rform label{display:block;font-size:12px;font-weight:600;color:var(--mut);margin:0 0 5px}
+  .rform .riga{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+  .rform input{height:42px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:14px;background:#fff}
+  .rbtn{height:44px;padding:0 22px;border:0;border-radius:8px;font:inherit;font-size:13px;font-weight:700;letter-spacing:.4px;cursor:pointer;color:#fff}
+  .rbtn.apri{background:#17913f} .rbtn.apri:hover{background:#127333}
+  .rbtn.chiudi{background:#b0202f} .rbtn.chiudi:hover{background:#8e1826}
+  .rbtn:disabled{background:#9aa6b6;cursor:default}
+  .resito{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:13.5px;display:none;border:1px solid transparent;border-left-width:4px}
+  .resito.ok{display:block;background:#eef7f1;border-color:#c6e2d0;border-left-color:#17913f;color:#116330}
+  .resito.ko{display:block;background:#fbeff0;border-color:#eccdd1;border-left-color:#b0202f;color:#8e1826}
   .loading{padding:30px;text-align:center;color:var(--mut)}
   .err{background:#fdecef;color:var(--down);padding:12px 14px;border-radius:8px;font-size:13px}
   .inline{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
@@ -168,6 +190,8 @@
       <a class="navitem" data-view="caratteristiche">Caratteristiche campione</a>
       <div class="navgroup">Dati di mercato</div>
       <a class="navitem" data-view="mercato">Mercato</a>
+      <div class="navgroup">Gestione</div>
+      <a class="navitem" data-view="rilevazione">Apertura e chiusura rilevazione</a>
       <div class="navgroup">Informazioni</div>
       <a class="navitem" data-view="metodo">Metodologia e fonti</a>
     </nav>
@@ -234,6 +258,53 @@
         <div id="mNote" class="note"></div>
       </div>
     </section>
+    <section id="view-rilevazione" class="view">
+      <div class="panel">
+        <h2>Apertura e chiusura della rilevazione</h2>
+        <p class="hint">Da qui si accende e si spegne il questionario online. Non occorre modificare il sito né aprire il foglio di lavoro: la pagina del questionario legge lo stato da qui a ogni apertura e aggiorna da sola periodi, numero di edizione e data di scadenza.</p>
+
+        <div class="rstato" id="rStato">
+          <span class="rpallino"></span>
+          <div>
+            <div class="rtit" id="rTit">Lettura dello stato in corso…</div>
+            <div class="rdett" id="rDett">&nbsp;</div>
+          </div>
+        </div>
+
+        <div class="rgrid" id="rGrid" style="display:none">
+          <div class="rb"><div class="l">Edizione</div><div class="v" id="rEdiz">-</div></div>
+          <div class="rb"><div class="l">Periodo rilevato</div><div class="v" id="rPeriodo">-</div></div>
+          <div class="rb"><div class="l">Previsioni sul semestre</div><div class="v" id="rPrev">-</div></div>
+          <div class="rb"><div class="l">Situazione finanziaria</div><div class="v" id="rFin">-</div></div>
+          <div class="rb"><div class="l">Termine compilazione</div><div class="v" id="rScad">-</div></div>
+          <div class="rb"><div class="l">Confronto mostrato alle imprese</div><div class="v" id="rBench">-</div></div>
+          <div class="rb"><div class="l">Questionari pervenuti</div><div class="v" id="rConta">-</div></div>
+        </div>
+
+        <div class="rform">
+          <div class="riga">
+            <div>
+              <label for="rSem">Semestre da aprire</label>
+              <input type="number" id="rSem" min="101" max="299" step="1" placeholder="127" style="width:130px">
+            </div>
+            <div>
+              <label for="rScadIn">Termine per la compilazione</label>
+              <input type="date" id="rScadIn" style="width:190px">
+            </div>
+            <button type="button" class="rbtn apri" id="rApri">APRI LA RILEVAZIONE</button>
+            <button type="button" class="rbtn chiudi" id="rChiudi">CHIUDI LA RILEVAZIONE</button>
+          </div>
+          <p class="note" id="rAnteprima">Il codice del semestre si compone come semestre×100 + (anno−2000): 127 = I semestre 2027, 227 = II semestre 2027. Numero di edizione, periodi e file di confronto sono ricavati automaticamente.</p>
+        </div>
+
+        <div class="resito" id="rEsito"></div>
+
+        <div class="note" style="margin-top:18px">
+          Due passaggi restano manuali e non dipendono da questi pulsanti: rigenerare il file di confronto del semestre precedente con <code>genera_benchmark.py</code> e pubblicarlo nel repository, e aggiornare i CSV della dashboard dopo l'elaborazione. Se il file di confronto manca, il questionario resta pienamente funzionante e mostra «Confronto non disponibile» accanto alle domande.
+        </div>
+      </div>
+    </section>
+
     <section id="view-metodo" class="view">
       <div class="panel">
         <h2>Metodologia e fonti</h2>
@@ -734,6 +805,111 @@ function drawMercato(){
   }
   document.getElementById('mNote').innerHTML='Fonte: '+esc(fonte)+' &middot; unita: '+esc(unit)+'. Verde = aumento, rosso = diminuzione.';
 }
+</script>
+
+<script>
+/* =========================================================================
+   GESTIONE DELLA RILEVAZIONE
+   Blocco autonomo: non dipende dal resto della dashboard, cosi' i comandi
+   restano utilizzabili anche se una fonte dati non risponde.
+   Apre e chiude il questionario online agendo sulla Web-App Apps Script.
+   Nessuna modifica al sito e nessun accesso al foglio di lavoro.
+   ========================================================================= */
+var R_EP = "https://script.google.com/macros/s/AKfycbwL9yJKQb1cQJacZQ6b-ZfTh2HLhWBW0ZuN4d5B8T6_hWXmpJQyFv_65yLKn28gf4JL/exec";
+
+function rTesto(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; }
+function rEsito(tipo,msg){
+  var e=document.getElementById('rEsito');
+  e.className='resito '+tipo; e.textContent=msg;
+}
+function rAttendi(att){
+  ['rApri','rChiudi'].forEach(function(id){ document.getElementById(id).disabled=att; });
+}
+
+function rMostra(st){
+  var box=document.getElementById('rStato');
+  var griglia=document.getElementById('rGrid');
+  if(!st || st.ok===false){
+    box.className='rstato';
+    rTesto('rTit','Stato non disponibile');
+    rTesto('rDett', (st && st.error) ? st.error : 'Il servizio non ha risposto.');
+    griglia.style.display='none';
+    return;
+  }
+  if(st.mai_configurata){
+    box.className='rstato chiusa';
+    rTesto('rTit','Nessuna rilevazione configurata');
+    rTesto('rDett','Indicare semestre e termine, poi premere APRI LA RILEVAZIONE.');
+    griglia.style.display='none';
+    return;
+  }
+  box.className='rstato '+(st.aperta?'aperta':'chiusa');
+  rTesto('rTit', st.aperta ? 'Rilevazione APERTA' : 'Rilevazione CHIUSA');
+  rTesto('rDett', st.aperta
+      ? ('Il questionario è compilabile. Aperta il '+(st.apertaIl||'-')+'.')
+      : ('Chi apre il link trova l\'avviso di chiusura.'+(st.chiusaIl?' Chiusa il '+st.chiusaIl+'.':'')));
+  griglia.style.display='';
+  rTesto('rEdiz', st.edizione ? st.edizione+'ª Indagine' : '-');
+  rTesto('rPeriodo', st.periodoBreve||'-');
+  rTesto('rPrev', st.previsioni||'-');
+  rTesto('rFin', st.finanziaria||'-');
+  rTesto('rScad', st.scadenza||'-');
+  rTesto('rBench', (st.benchEdizione? st.benchEdizione+'ª · ':'')+(st.benchPeriodo||'-'));
+  if(!document.getElementById('rSem').value && st.semestre) document.getElementById('rSem').value=st.semestre;
+  if(!document.getElementById('rScadIn').value && st.scadenzaISO) document.getElementById('rScadIn').value=st.scadenzaISO;
+  rConteggio();
+}
+
+function rConteggio(){
+  fetch(R_EP+'?azione=conteggio',{cache:'no-store'})
+    .then(function(r){return r.json();})
+    .then(function(c){ rTesto('rConta', (c && c.ok!==false && c.totale!=null) ? c.totale : '-'); })
+    .catch(function(){ rTesto('rConta','-'); });
+}
+
+function rLeggiStato(){
+  fetch(R_EP+'?azione=stato',{cache:'no-store'})
+    .then(function(r){return r.json();})
+    .then(rMostra)
+    .catch(function(){ rMostra(null); });
+}
+
+function rChiamata(url, atteso){
+  rAttendi(true);
+  rEsito('ok','Operazione in corso…');
+  fetch(url,{cache:'no-store'})
+    .then(function(r){return r.json();})
+    .then(function(st){
+      rAttendi(false);
+      if(st && st.ok===false){ rEsito('ko','Operazione non riuscita: '+(st.error||'errore sconosciuto')); return; }
+      rMostra(st);
+      rEsito('ok', atteso);
+    })
+    .catch(function(e){ rAttendi(false); rEsito('ko','Errore di rete: '+e+'. Riprovare.'); });
+}
+
+document.getElementById('rApri').addEventListener('click',function(){
+  var sem=document.getElementById('rSem').value.trim();
+  var scad=document.getElementById('rScadIn').value;
+  if(!sem){ rEsito('ko','Indicare il codice del semestre da aprire.'); return; }
+  if(!scad){ rEsito('ko','Indicare il termine per la compilazione.'); return; }
+  var s=Math.floor(Number(sem)/100), anno=2000+(Number(sem)%100);
+  if(s!==1&&s!==2){ rEsito('ko','Codice semestre non valido: atteso 1xx o 2xx.'); return; }
+  var etich=(s===1?'I':'II')+' semestre '+anno;
+  if(!confirm('Aprire la rilevazione per il '+etich+', con termine al '+scad+'?\n\n'
+      +'Da quel momento il questionario online tornerà compilabile.')) return;
+  rChiamata(R_EP+'?azione=apri&semestre='+encodeURIComponent(sem)+'&scadenza='+encodeURIComponent(scad),
+            'Rilevazione aperta: il questionario online è ora compilabile.');
+});
+
+document.getElementById('rChiudi').addEventListener('click',function(){
+  if(!confirm('Chiudere la rilevazione?\n\nDa quel momento il questionario non sarà più compilabile '
+      +'e chi apre il link troverà l\'avviso di chiusura. L\'operazione è reversibile.')) return;
+  rChiamata(R_EP+'?azione=chiudi',
+            'Rilevazione chiusa: il questionario non accetta più risposte.');
+});
+
+rLeggiStato();
 </script>
 </body>
 </html>
